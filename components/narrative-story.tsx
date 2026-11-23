@@ -9,6 +9,7 @@ import {
   BelfiMemory,
   HandDrawnCharacters,
   HandmadeEnvelope,
+  InkFigures,
   OriginalLetterMemory,
   PressedBotanical,
 } from "./personal-memories";
@@ -104,6 +105,7 @@ function PaperPage({ section }: { section: NarrativeSection }) {
         {section.highlight && <blockquote>{section.highlight}</blockquote>}
         {section.threadText && (
           <div className="thread-interlude">
+            <InkFigures />
             <Paragraphs text={section.threadText} />
           </div>
         )}
@@ -196,6 +198,7 @@ export function NarrativeStory({
                     className="letter-paragraphs"
                     text={section.body}
                   />
+                  <InkFigures />
                   <div className="letter-signature">
                     <strong>{content.sender}</strong>
                     <span className="signature-line" />
@@ -218,9 +221,7 @@ export function NarrativeStory({
                   <CopyText text={section.title} />
                 </h2>
                 <Paragraphs text={section.body} />
-                <span className="closing-monogram" aria-hidden="true">
-                  M<span>✦</span>A
-                </span>
+                <InkFigures />
                 <button className="text-button" onClick={onReplay}>
                   {ui.revisitMemories}
                   <ArrowUp size={16} />

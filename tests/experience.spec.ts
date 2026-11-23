@@ -29,7 +29,7 @@ test("the complete approved narrative opens with the birthday greeting and remai
   await expect(page.locator(".story-section").first().locator("h2")).toHaveText(
     copy.greeting.birthdayGreetingTitle,
   );
-  const path = page.locator(".red-thread-journey path");
+  const path = page.locator(".red-thread-journey path").first();
   await expect(path).toHaveAttribute("d", /^M /);
   for (const id of [
     "birthday-greeting",
@@ -144,7 +144,7 @@ test("320px keyboard and reduced-motion reading keeps original text and the surp
   await page.locator(".envelope").focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("#birthday-greeting")).toBeVisible();
-  await expect(page.locator(".red-thread-journey path")).toHaveCSS(
+  await expect(page.locator(".red-thread-journey path").first()).toHaveCSS(
     "stroke-dasharray",
     "none",
   );

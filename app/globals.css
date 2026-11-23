@@ -360,65 +360,6 @@ h3 {
 .envelope:focus-visible {
   outline-offset: 18px;
 }
-.envelope-shadow {
-  position: absolute;
-  top: 205px;
-  left: 9%;
-  width: 84%;
-  height: 60px;
-  background: #4f382b;
-  opacity: 0.22;
-  border-radius: 50%;
-  filter: blur(20px);
-  transform: rotate(-6deg);
-}
-.envelope-back {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(150deg, #eee2c9, #dfcdb0);
-  box-shadow:
-    0 12px 24px #4d35202b,
-    0 1px 3px #4d35203b;
-  border-radius: 3px;
-}
-.envelope-flap {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  background: linear-gradient(170deg, #fbf3e1 20%, #e9dcc3 62%);
-  clip-path: polygon(0 0, 100% 0, 50% 64%);
-  transform-origin: 50% 0;
-  filter: drop-shadow(0 3px 2px #54402c22);
-  backface-visibility: visible;
-}
-.envelope-fold {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-.envelope-fold.left {
-  clip-path: polygon(0 0, 57% 53%, 0 100%);
-  background: linear-gradient(90deg, #efe2c9, #e5d4b4);
-}
-.envelope-fold.right {
-  clip-path: polygon(100% 0, 43% 53%, 100% 100%);
-  background: linear-gradient(-90deg, #f6ebd4, #dfcaaa);
-}
-.envelope-front {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  clip-path: polygon(0 100%, 0 91%, 50% 40%, 100% 91%, 100% 100%);
-  background: linear-gradient(160deg, #f4e8d0, #eee0c5 65%, #e8d9bb);
-  border-radius: 0 0 3px 3px;
-}
-.envelope-print {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-}
 .envelope-inscription {
   position: absolute;
   inset-inline-start: 7%;
@@ -428,120 +369,6 @@ h3 {
   text-align: start;
   font-size: clamp(15px, 4.5vw, 22px);
   color: #674733;
-}
-.envelope-postmark {
-  position: absolute;
-  bottom: 24px;
-  left: 27px;
-  border: 1px solid #ac957450;
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  font-family: var(--serif);
-  font-style: italic;
-  line-height: 1.1;
-  padding-top: 7px;
-  color: #9a7e576e;
-  font-size: 25px;
-  transform: rotate(-15deg);
-}
-.envelope-postmark span {
-  font-size: 5px;
-  letter-spacing: 1px;
-  font-style: normal;
-  vertical-align: top;
-  line-height: 12px;
-  display: block;
-}
-.letter-insert {
-  position: absolute;
-  inset: 12px 14px 10px;
-  z-index: 2;
-  background: linear-gradient(100deg, #fffdf5, #f8f1e2);
-  box-shadow: 0 2px 8px #57412925;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  padding-top: 26px;
-  transform-origin: center;
-}
-.letter-insert .flourish {
-  width: 95px;
-}
-.insert-to {
-  font-size: 21px;
-  color: var(--wine);
-  margin: 14px 0 20px;
-}
-.insert-lines {
-  display: block;
-  width: 55%;
-  height: 1px;
-  background: #b5a18466;
-  margin-top: 13px;
-  transform: scaleX(0.8);
-}
-.insert-lines.short {
-  width: 37%;
-}
-.wax-seal {
-  position: absolute;
-  z-index: 7;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -10%);
-  width: 69px;
-  height: 70px;
-  border-radius: 46% 51% 46% 49%;
-  background: radial-gradient(
-    ellipse at 30% 15%,
-    #a84c54 0%,
-    #873440 30%,
-    #702633 70%,
-    #963e48
-  );
-  box-shadow:
-    2px 5px 7px #3e1a204d,
-    inset 2px 3px 2px #b7736a88,
-    inset -2px -3px 3px #3f172f66;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: box-shadow 0.3s;
-}
-.envelope:hover .wax-seal {
-  box-shadow:
-    2px 5px 10px #3e1a2060,
-    inset 2px 3px 3px #bc837288,
-    inset -2px -3px 3px #3f172f66;
-}
-.seal-ring {
-  width: 54px;
-  height: 54px;
-  border: 1px solid #561b2d80;
-  box-shadow:
-    0 1px 1px #c87b6b80,
-    inset 0 1px 2px #43132390;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: #e1b0a0;
-  opacity: 0.75;
-}
-.seal-letter {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 29px;
-  line-height: 1.05;
-  text-shadow: 0 1px #481225;
-}
-.seal-sprig {
-  line-height: 0.65;
-  font-size: 23px;
-  transform: rotate(-20deg);
-  color: #c68c7b;
 }
 /* The open letter keeps the tabletop visible in its outer margins. */
 main {
@@ -558,7 +385,7 @@ main {
 }
 .paper {
   background-color: #fffaf0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23694b2a' opacity='.035' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+  background-image: var(--paper-grain);
   box-shadow:
     0 4px 7px #6b4b2410,
     0 24px 60px #6b4b241b;
@@ -1307,9 +1134,6 @@ dialog::backdrop {
   .envelope-stage {
     height: 355px;
   }
-  .envelope-shadow {
-    top: 225px;
-  }
 }
 @media (max-height: 820px) and (min-width: 761px) {
   .hero {
@@ -1400,36 +1224,6 @@ dialog::backdrop {
   }
   .envelope-stage {
     height: 285px;
-  }
-  .envelope-shadow {
-    top: 165px;
-    height: 50px;
-    left: 5%;
-    width: 90%;
-  }
-  .wax-seal {
-    width: 61px;
-    height: 62px;
-  }
-  .seal-ring {
-    width: 47px;
-    height: 47px;
-  }
-  .seal-letter {
-    font-size: 26px;
-  }
-  .seal-sprig {
-    font-size: 19px;
-  }
-  .envelope-postmark {
-    width: 47px;
-    height: 47px;
-    font-size: 21px;
-    bottom: 17px;
-    left: 22px;
-  }
-  .envelope-postmark span {
-    font-size: 4px;
   }
   .hero-side {
     font-size: 7px;
@@ -1825,9 +1619,6 @@ dialog::backdrop {
   .envelope-stage {
     height: 265px;
   }
-  .envelope-postmark {
-    bottom: 12px;
-  }
   .hero-scroll {
     font-size: 8px;
   }
@@ -1881,7 +1672,7 @@ dialog::backdrop {
       #8b67400a 50%,
       transparent 50.3%
     ),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath opacity='.035' fill='%23945d3c' filter='url(%23p)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+    var(--paper-grain);
   border-inline: 1px solid #b99a7040;
 }
 .memory-scrapbook:before {
@@ -1945,51 +1736,11 @@ dialog::backdrop {
 .characters-section {
   padding-top: 75px;
 }
-.characters-paper {
-  max-width: 780px;
-  margin: auto;
-  padding: 35px 25px 45px;
-  transform: rotate(-1.5deg);
-  background-color: #f9edd7;
-  clip-path: polygon(
-    0 0,
-    15% 0.6%,
-    35% 0,
-    55% 0.4%,
-    75% 0,
-    100% 0.4%,
-    99.6% 25%,
-    100% 48%,
-    99.7% 80%,
-    100% 100%,
-    80% 99.5%,
-    65% 100%,
-    45% 99.5%,
-    25% 100%,
-    0 99.4%,
-    0.4% 70%,
-    0 40%
-  );
-}
-.characters-art {
-  width: 100%;
-  height: auto;
-  display: block;
-}
 .characters-caption {
   font-size: 10px;
   text-align: center;
   display: block;
   color: #927456;
-}
-.characters-paper > .pressed-botanical {
-  position: absolute;
-  bottom: 18px;
-  left: 7px;
-  width: 90px;
-  height: 135px;
-  transform: rotate(22deg);
-  opacity: 0.75;
 }
 .artifact-caption {
   font-size: 8px;
@@ -2224,16 +1975,6 @@ dialog::backdrop {
 .handmade-envelope summary::-webkit-details-marker {
   display: none;
 }
-.pocket-flap {
-  position: absolute;
-  inset: 0;
-  clip-path: polygon(0 0, 100% 0, 50% 39%);
-  background: linear-gradient(#f2e1c7, #debe97);
-  transform-origin: top;
-  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 2;
-  pointer-events: none;
-}
 .pocket-number {
   font-size: 9px;
   color: #987d58;
@@ -2278,10 +2019,6 @@ dialog::backdrop {
   font-size: 8px;
   color: #a68d70;
   margin-top: 20px;
-}
-.handmade-envelope[open] .pocket-flap {
-  transform: rotateX(180deg);
-  z-index: -1;
 }
 .handmade-envelope[open] .pocket-action svg {
   transform: rotate(45deg);
@@ -2339,19 +2076,6 @@ dialog::backdrop {
   .scrapbook-heading p {
     font-size: 11px;
     line-height: 2.5;
-  }
-  .characters-paper {
-    padding: 25px 8px 40px;
-  }
-  .characters-art {
-    min-height: 180px;
-  }
-  .characters-paper > .pressed-botanical {
-    width: 56px;
-    height: 90px;
-    left: 0;
-    bottom: 0;
-    opacity: 0.55;
   }
   .characters-caption {
     font-size: 8px;
@@ -2945,8 +2669,6 @@ body {
 .latin {
   font-family: inherit;
 }
-.envelope-postmark,
-.seal-letter,
 .closing-monogram,
 .letter-wax,
 .lightbox-toolbar small {
@@ -2973,22 +2695,6 @@ body {
   width: 22px;
   height: 22px;
   background: linear-gradient(135deg, #cdb79788 49%, #fff6e500 51%);
-}
-.letter-insert {
-  transform-style: preserve-3d;
-}
-.letter-wing {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: 45%;
-  background: linear-gradient(#f3ebda, #fffbf1 12%, #fcf5e7);
-  transform-origin: center top;
-  transform: rotateX(-179deg);
-  backface-visibility: visible;
-  box-shadow: 0 1px 7px #57412920;
-  border-top: 1px solid #c6b18b33;
 }
 /* Optical sizes for the smaller glyph height of Mahboubeh Mehravar. */
 .hero-subtitle {
@@ -3487,13 +3193,6 @@ body {
 .original-photo-link {
   font-size: 15px;
 }
-.reading-final .petals {
-  opacity: 0;
-  transition: opacity 1s;
-}
-.reading-final .red-thread-journey {
-  opacity: 0.25;
-}
 @media (max-width: 1000px) {
   .narrative-memory {
     gap: 35px;
@@ -3769,9 +3468,6 @@ body {
   .envelope {
     top: 0;
   }
-  .envelope-shadow {
-    top: 74%;
-  }
   .hero-bottom {
     position: static;
     flex-direction: column-reverse;
@@ -3972,9 +3668,6 @@ body {
     height: auto;
     aspect-ratio: 1.64;
   }
-  .envelope-shadow {
-    top: 75%;
-  }
   .hero-bottom {
     position: static;
     grid-area: action;
@@ -4009,5 +3702,266 @@ body {
     right: 6px;
     left: auto;
     top: 6px;
+  }
+}
+
+/* Only the closed image starts immediately. The seven remaining slices are decoded before opening. */
+.envelope-stage {
+  perspective: none;
+}
+.envelope {
+  isolation: isolate;
+  transform: rotate(-4deg);
+}
+.envelope:hover:not([aria-disabled="true"]) {
+  filter: brightness(1.03);
+}
+.envelope[aria-disabled="true"] {
+  cursor: wait;
+}
+.envelope-art {
+  position: absolute;
+  inset-inline-start: -8%;
+  bottom: -9%;
+  width: 116%;
+  aspect-ratio: 365 / 443;
+  pointer-events: none;
+}
+.envelope-frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.envelope-frame[data-frame="0"],
+.envelope[data-opened="true"] .envelope-frame[data-frame="7"] {
+  opacity: 1;
+}
+.envelope[data-opened="true"] .envelope-frame[data-frame="0"] {
+  opacity: 0;
+}
+.envelope-inscription {
+  z-index: 1;
+  bottom: 10%;
+  color: #562e29;
+  text-shadow: 0 1px #fff8e8b0;
+}
+.hero-heading {
+  animation: enter-paper 720ms 120ms backwards;
+  transition: opacity 330ms ease;
+}
+.opening-letter .hero-heading,
+.book-open .hero-heading {
+  opacity: 0;
+}
+.hero-scroll:disabled svg,
+.book-open .hero-scroll svg {
+  animation: none;
+}
+@keyframes enter-paper {
+  from {
+    opacity: 0;
+    transform: translateY(13px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Photographed paper applies to the scroll canvas and actual HTML reading surfaces. */
+.paper {
+  background-color: #fff7e9;
+  background-image: linear-gradient(#fffbf0ae, #fff8ea96), var(--paper-grain);
+  background-size:
+    auto,
+    440px 330px;
+}
+.memory-scrapbook {
+  background-image:
+    linear-gradient(
+      90deg,
+      #f9eddb94,
+      #f6ead790 49%,
+      #aa815822 50%,
+      #f6ead790 51%,
+      #f9eddb94
+    ),
+    var(--paper-grain);
+  background-size:
+    auto,
+    560px 420px;
+}
+.book-open .scene-photo {
+  animation: none;
+  transform: none;
+}
+.handmade-envelope summary {
+  padding: 25px 18px 24px;
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+}
+.pocket-art {
+  display: block;
+  width: min(100%, 210px);
+  aspect-ratio: 1;
+  margin: -35px auto -46px;
+  flex-shrink: 0;
+  position: relative;
+  pointer-events: none;
+}
+.pocket-art::before,
+.pocket-art::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: var(--pocket-closed) center/contain no-repeat;
+  transition:
+    opacity 300ms ease,
+    transform 420ms ease;
+}
+.pocket-art::after {
+  background-image: var(--pocket-open);
+  opacity: 0;
+  transform: translateY(6px);
+}
+.handmade-envelope[open] .pocket-art::before {
+  opacity: 0;
+}
+.handmade-envelope[open] .pocket-art::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+.pocket-title,
+.pocket-action {
+  position: relative;
+  z-index: 1;
+}
+.pocket-number {
+  display: none;
+}
+.pocket-note {
+  background-image: linear-gradient(#fff8e4dc, #fff8e4db), var(--paper-grain);
+  border-radius: 3px;
+  box-shadow: 0 5px 14px #66452a21;
+}
+.pin-caption-paper {
+  background: var(--flower-note) center / min(100%, 300px) auto no-repeat;
+  min-height: 210px;
+  display: grid;
+  align-content: center;
+  padding-inline: 28px;
+}
+
+/* The path is painted in bounded slices; scrolling never invalidates a book-height SVG. */
+.red-thread-journey {
+  inset: 0;
+  width: auto;
+  height: auto;
+  color: #982c3c;
+  opacity: 0.83;
+  z-index: 0;
+}
+.ink-segment {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: visible;
+}
+.ink-path {
+  stroke: currentColor;
+  stroke-width: 4.5px;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.ink-visible .ink-path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 900ms cubic-bezier(0.23, 0.65, 0.35, 1);
+}
+@supports (animation-timeline: scroll(root block)) {
+  .ink-path {
+    animation: trace-ink linear both;
+    animation-timeline: scroll(root block);
+    animation-range: var(--ink-start) var(--ink-end);
+  }
+}
+@keyframes trace-ink {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.ink-figures {
+  width: min(100%, 470px);
+  margin: 24px auto;
+  text-align: center;
+}
+.ink-figures img {
+  width: 100%;
+  height: auto;
+}
+.ink-figures figcaption {
+  color: #775747;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.fade-on-scroll {
+  opacity: 0;
+  transform: translateY(11px);
+  transition:
+    opacity 470ms ease-out,
+    transform 520ms cubic-bezier(0.2, 0.65, 0.35, 1);
+}
+.fade-on-scroll.has-entered,
+.fade-on-scroll:focus-within {
+  opacity: 1;
+  transform: translateY(0);
+}
+.narrative-memory .gallery-photo.fade-on-scroll.has-entered {
+  transform: none;
+}
+.photo-load {
+  opacity: 0;
+  transition: opacity 320ms ease-out;
+}
+.photo-load.photo-decoded {
+  opacity: 1;
+}
+@media (max-width: 760px) {
+  .ink-path {
+    stroke-width: 3.8px;
+  }
+  .envelope-art {
+    bottom: -7%;
+  }
+  .envelope-inscription {
+    bottom: 12%;
+  }
+  .fade-on-scroll {
+    transition-duration: 430ms;
+  }
+  .ink-figures {
+    width: min(100%, 360px);
+  }
+  .pocket-art {
+    width: min(100%, 190px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ink-path {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .fade-on-scroll,
+  .photo-load {
+    opacity: 1;
+    transform: none;
   }
 }

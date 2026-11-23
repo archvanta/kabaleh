@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Box, MoveHorizontal, X } from "lucide-react";
 import type { LetterContent } from "@/lib/content";
 import { ui } from "@/lib/ui";
@@ -80,7 +78,6 @@ export function KeepsakeTimeline({
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [active, setActive] = useState<Item | null>(null);
-  const root = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!active) return;
     const before = document.body.style.overflow;
@@ -89,40 +86,6 @@ export function KeepsakeTimeline({
       document.body.style.overflow = before;
     };
   }, [active]);
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      gsap.from(".bracelet-preview", {
-        rotate: 5,
-        y: 18,
-        stagger: 0.14,
-        duration: 1.1,
-        ease: "power2.out",
-        scrollTrigger: { trigger: root.current, start: "top 70%", once: true },
-      });
-      const path = root.current?.querySelector<SVGPathElement>(
-        ".keepsake-connecting-thread path",
-      );
-      if (path) {
-        const len = path.getTotalLength();
-        gsap.fromTo(
-          path,
-          { strokeDasharray: len, strokeDashoffset: len },
-          {
-            strokeDashoffset: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: root.current,
-              start: "top 65%",
-              end: "bottom 70%",
-              scrub: 0.7,
-            },
-          },
-        );
-      }
-    }, root);
-    return () => ctx.revert();
-  }, []);
   const open = (item: Item) => {
     setActive(item);
     dialog.current?.showModal();
@@ -132,11 +95,7 @@ export function KeepsakeTimeline({
     setActive(null);
   };
   return (
-    <section
-      id="keepsakes"
-      className="keepsakes-section story-section"
-      ref={root}
-    >
+    <section id="keepsakes" className="keepsakes-section story-section">
       <div className="scrapbook-heading reveal">
         <h2>{data.title}</h2>
         <p>{data.text}</p>

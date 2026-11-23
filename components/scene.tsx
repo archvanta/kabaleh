@@ -1,5 +1,5 @@
 import { asset } from "@/lib/assets";
-export function Scene() {
+export function Scene({ petals = true }: { petals?: boolean }) {
   return (
     <div className="scene" aria-hidden="true">
       <div
@@ -7,11 +7,13 @@ export function Scene() {
         style={{ backgroundImage: `url("${asset("/images/tabletop.webp")}")` }}
       />
       <div className="scene-light" />
-      <div className="petals">
-        {Array.from({ length: 9 }, (_, i) => (
-          <i key={i} style={{ "--i": i } as React.CSSProperties} />
-        ))}
-      </div>
+      {petals && (
+        <div className="petals">
+          {Array.from({ length: 6 }, (_, i) => (
+            <i key={i} style={{ "--i": i } as React.CSSProperties} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

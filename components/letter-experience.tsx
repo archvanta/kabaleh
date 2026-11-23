@@ -1,7 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import type { LetterContent } from "@/lib/content";
 import { Scene } from "./scene";
@@ -9,176 +7,95 @@ import { Envelope } from "./envelope";
 import { Story } from "./story";
 import { MemoryScrapbook } from "./red-thread-journey";
 import { ui } from "@/lib/ui";
-gsap.registerPlugin(ScrollTrigger);
+import { stationery } from "@/lib/stationery";
 export function LetterExperience({ content }: { content: LetterContent }) {
-  const root = useRef<HTMLDivElement>(null);
   const envelope = useRef<HTMLDivElement>(null);
   const story = useRef<HTMLElement>(null);
-  const timeline = useRef<gsap.core.Timeline | null>(null);
   const [opened, setOpened] = useState(false);
   const [opening, setOpening] = useState(false);
-  useEffect(() => {
-    const mm = gsap.matchMedia();
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const ctx = gsap.context(() => {
-        gsap.from(".hero-reveal", {
-          y: 18,
-          opacity: 0,
-          duration: 1.2,
-          stagger: 0.15,
-          ease: "power2.out",
-        });
-        gsap.from(".envelope-stage", {
-          y: 35,
-          rotation: -2,
-          opacity: 0,
-          duration: 1.6,
-          delay: 0.25,
-          ease: "power3.out",
-        });
-      }, root);
-      return () => ctx.revert();
-    });
-    return () => {
-      mm.revert();
-      timeline.current?.kill();
-    };
+  const completeOpening = useCallback(() => {
+    setOpened(true);
+    setOpening(false);
   }, []);
+
   useEffect(() => {
-    if (!opened || !story.current) return;
-    const reduce = window.matchMedia(
+    const book = story.current;
+    if (!opened || !book) return;
+
+    const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const ctx = gsap.context(() => {
-      if (!reduce) {
-        gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
-          gsap.fromTo(
-            el,
-            { y: 32, autoAlpha: 0 },
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 1,
-              ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top 94%", once: true },
+    const observer =
+      !reduced && "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                entry.target.classList.add("has-entered");
+                observer?.unobserve(entry.target);
+              }
             },
-          );
+            { rootMargin: "0px 0px -7% 0px", threshold: 0 },
+          )
+        : null;
+
+    if (observer) {
+      book
+        .querySelectorAll(".reveal, .narrative-prose > p, .gallery-photo")
+        .forEach((element) => {
+          // Album rows are hidden until their native details element opens.
+          if (element.closest(".complete-album")) return;
+          element.classList.add("fade-on-scroll");
+          observer.observe(element);
         });
-        gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
-          gsap.fromTo(
-            el,
-            { y: 12 },
-            {
-              y: -12,
-              ease: "none",
-              scrollTrigger: {
-                trigger: el,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 1.2,
-              },
-            },
-          );
-        });
-      }
-      ScrollTrigger.create({
-        trigger: story.current?.querySelector("#letter"),
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleClass: { targets: root.current!, className: "reading-final" },
-      });
-    }, story);
+    }
+
     const frame = requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-      story.current?.scrollIntoView({
-        behavior: reduce ? "instant" : "smooth",
+      book.scrollIntoView({
+        behavior: reduced ? "instant" : "smooth",
         block: "start",
       });
-      story.current?.focus({ preventScroll: true });
+      book.focus({ preventScroll: true });
     });
     return () => {
       cancelAnimationFrame(frame);
-      ctx.revert();
+      observer?.disconnect();
     };
   }, [opened]);
+
   const open = () => {
     if (opening) return;
     if (opened) {
-      story.current?.scrollIntoView({ behavior: "smooth" });
+      story.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
       return;
     }
     setOpening(true);
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    const q = gsap.utils.selector(envelope);
-    timeline.current = gsap
-      .timeline({
-        onComplete: () => {
-          setOpened(true);
-          setOpening(false);
-        },
-      })
-      .to(q(".wax-seal"), { scale: 1.08, duration: reduce ? 0 : 0.18 })
-      .to(q(".wax-seal"), {
-        scale: 0.75,
-        opacity: 0,
-        y: 24,
-        rotation: 12,
-        duration: reduce ? 0 : 0.38,
-        ease: "power2.in",
-      })
-      .set(q(".envelope-flap"), { zIndex: 1 })
-      .to(q(".envelope-flap"), {
-        rotationX: 180,
-        duration: reduce ? 0 : 0.85,
-        ease: "power2.inOut",
-      })
-      .to(
-        q(".letter-insert"),
-        {
-          yPercent: -65,
-          rotation: -2,
-          duration: reduce ? 0 : 1,
-          ease: "power3.inOut",
-        },
-        reduce ? ">" : "-=.2",
-      )
-      .set(q(".letter-insert"), { zIndex: 8 })
-      .to(q(".letter-insert"), {
-        yPercent: -85,
-        scale: 1.12,
-        rotation: 0,
-        duration: reduce ? 0 : 0.65,
-        ease: "power2.out",
-      })
-      .to(q(".letter-wing"), {
-        rotationX: 0,
-        duration: reduce ? 0 : 0.65,
-        ease: "power2.inOut",
-      })
-      .to(
-        q(".insert-lines"),
-        { scaleX: 1, duration: reduce ? 0 : 0.3, stagger: 0.12 },
-        ">",
-      );
   };
+
   const replay = () => {
-    window.scrollTo({ top: 0, behavior: "instant" });
     setOpened(false);
     setOpening(false);
-    timeline.current?.kill();
-    const q = gsap.utils.selector(envelope);
-    gsap.set(q(".wax-seal"), { clearProps: "all" });
-    gsap.set(q(".envelope-flap"), { clearProps: "all" });
-    gsap.set(q(".letter-insert"), { clearProps: "all" });
-    gsap.set(q(".insert-lines"), { clearProps: "all" });
-    gsap.set(q(".letter-wing"), { clearProps: "all" });
+    window.scrollTo({ top: 0, behavior: "instant" });
     envelope.current?.querySelector("button")?.focus({ preventScroll: true });
   };
+
   return (
-    <div ref={root} className="experience">
-      <Scene />
+    <div
+      className={`experience${opened ? " book-open" : ""}${opening ? " opening-letter" : ""}`}
+      style={
+        {
+          "--paper-grain": `url("${stationery.grain}")`,
+          "--pocket-closed": `url("${stationery.pocketClosed}")`,
+          "--pocket-open": `url("${stationery.pocketOpen}")`,
+          "--flower-note": `url("${stationery.flowerNote}")`,
+        } as React.CSSProperties
+      }
+    >
+      <Scene petals={!opened} />
       <a href={opened ? "#story" : "#open-letter"} className="skip-link">
         {ui.skipToLetter}
       </a>
@@ -204,6 +121,7 @@ export function LetterExperience({ content }: { content: LetterContent }) {
             opening={opening}
             opened={opened}
             onOpen={open}
+            onOpened={completeOpening}
           />
         </div>
         <span className="hero-side hero-side-left latin">{ui.brand}</span>

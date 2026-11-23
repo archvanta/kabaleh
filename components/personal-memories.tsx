@@ -1,14 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpLeft, Plus } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { LetterContent } from "@/lib/content";
 import { Photo } from "./photo-gallery";
 import { Flourish } from "./scene";
 import { asset } from "@/lib/assets";
 import { ui } from "@/lib/ui";
-gsap.registerPlugin(ScrollTrigger);
+import { stationery } from "@/lib/stationery";
 export function PressedBotanical({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -59,6 +57,22 @@ export function PressedBotanical({ className = "" }: { className?: string }) {
     </svg>
   );
 }
+export function InkFigures({ caption = false }: { caption?: boolean }) {
+  return (
+    <figure className="ink-figures reveal">
+      <img
+        src={stationery.figures}
+        width={1000}
+        height={333}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+      {caption && <figcaption>{ui.illustrationCaption}</figcaption>}
+    </figure>
+  );
+}
+
 export function HandDrawnCharacters({
   data,
   embedded = false,
@@ -66,42 +80,8 @@ export function HandDrawnCharacters({
   data: LetterContent["redThreadScene"];
   embedded?: boolean;
 }) {
-  const root = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const thread =
-        root.current?.querySelector<SVGPathElement>(".characters-thread");
-      if (thread) {
-        const n = thread.getTotalLength();
-        gsap.fromTo(
-          thread,
-          { strokeDasharray: n, strokeDashoffset: n },
-          {
-            strokeDashoffset: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: root.current,
-              start: "top 70%",
-              end: "bottom 70%",
-              scrub: 0.6,
-            },
-          },
-        );
-      }
-      gsap.from(".hand-person", {
-        opacity: 0,
-        y: 8,
-        stagger: 0.2,
-        duration: 1,
-        scrollTrigger: { trigger: root.current, start: "top 70%", once: true },
-      });
-    }, root);
-    return () => ctx.revert();
-  }, []);
   return (
     <section
-      ref={root}
       id={embedded ? undefined : "red-thread"}
       className={
         embedded
@@ -113,48 +93,11 @@ export function HandDrawnCharacters({
         {data.title && <h2>{data.title}</h2>}
         <p>{data.text}</p>
       </div>
-      <div className="characters-paper paper">
-        <span className="tape" />
-        <svg
-          className="characters-art"
-          viewBox="0 0 700 320"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            className="characters-thread"
-            d="M 3 224 C 83 276 183 212 175 145 C 165 92 103 115 135 149 C 167 181 183 105 244 92 C 299 80 347 190 401 137 C 458 80 381 48 376 103 C 370 170 545 145 548 223 C 554 278 620 280 631 249 C 646 212 577 203 579 248 C 581 281 675 262 697 227"
-            stroke="#9b4b4a"
-            strokeWidth="2.7"
-            strokeLinecap="round"
-          />
-          <g
-            className="hand-person"
-            stroke="#75573e"
-            strokeWidth="1.65"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M175 166c-10-6-10-23 0-28 12-5 23 9 17 20-2 5-7 9-17 8Z M172 140c5-10 18-5 18 2M179 167l-2 47 15 0-7-46M178 179l-12 19M187 178l13 16M179 215l-5 30M188 215l6 29M175 246l-7 1M194 245l6 2" />
-            <path d="M175 151h1M184 151h1M178 158q3 2 5-1" />
-          </g>
-          <g
-            className="hand-person"
-            stroke="#75573e"
-            strokeWidth="1.65"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M527 188c-12-2-13-22-3-28 12-8 24 4 20 17-2 8-7 12-17 11ZM519 164c-9 6-9 24-8 32M538 162c10 5 9 20 9 31M526 189l-14 42 34-1-11-41M522 204l-14 15M539 204l14 11M522 233l-1 27M536 232l4 28M521 260l-6 1M540 260l6 1" />
-            <path d="M525 172h1M534 172h1M527 179q4 3 6-1" />
-          </g>
-        </svg>
-        <span className="characters-caption">{ui.illustrationCaption}</span>
-        <PressedBotanical />
-      </div>
+      <InkFigures caption />
     </section>
   );
 }
+
 function ArtifactPhoto({ data }: { data: LetterContent["belfiMemory"] }) {
   if (data.image)
     return (
@@ -227,15 +170,25 @@ export function BelfiMemory({ data }: { data: LetterContent["belfiMemory"] }) {
   const root = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
   useEffect(() => {
-    const trigger = ScrollTrigger.create({
-      trigger: root.current,
-      start: "top 65%",
-      once: true,
-      onEnter: () => setRevealed(true),
-    });
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    const section = root.current;
+    if (!section) return;
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      !("IntersectionObserver" in window)
+    ) {
       setRevealed(true);
-    return () => trigger.kill();
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setRevealed(true);
+        observer.disconnect();
+      },
+      { rootMargin: "0px 0px -24% 0px" },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
   return (
     <section id="belfi" ref={root} className="belfi-section story-section">
@@ -301,7 +254,7 @@ export function HandmadeEnvelope({
   return (
     <details className="handmade-envelope reveal">
       <summary>
-        <span className="pocket-flap" />
+        <span className="pocket-art" aria-hidden="true" />
         <span className="pocket-number" aria-hidden="true">
           ❧
         </span>

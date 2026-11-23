@@ -1,104 +1,179 @@
 "use client";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger);
-/** A single measured path follows the book's real height, including arbitrary content edits. */
-export function RedThreadJourney() {
-  const svg = useRef<SVGSVGElement>(null);
-  const path = useRef<SVGPathElement>(null);
-  useEffect(() => {
-    const book = svg.current?.parentElement;
-    if (!book || !path.current || !svg.current) return;
-    let ctx: gsap.Context | undefined;
-    let frame = 0;
-    const draw = () => {
-      ctx?.revert();
-      const w = book.clientWidth,
-        h = book.scrollHeight;
-      if (!w || !h) return;
-      const narrow = w < 760,
-        edge = narrow ? 8 : 25,
-        loop = narrow ? 13 : 34;
-      const sections = Array.from(
-        book.querySelectorAll<HTMLElement>(".story-section"),
-      );
-      svg.current!.setAttribute("viewBox", `0 0 ${w} ${h}`);
-      svg.current!.style.height = `${h}px`;
-      let right = true;
-      let d = `M ${w - edge} 60`;
-      sections.forEach((el, i) => {
-        const y = el.offsetTop,
-          bottom = y + el.offsetHeight - 22,
-          mid = y + el.offsetHeight * 0.52;
-        const x = right ? w - edge : edge,
-          inside = right ? x - loop : x + loop;
-        d += ` C ${inside} ${y + 70}, ${inside} ${mid - 90}, ${x} ${mid - 35}`;
-        d += ` C ${right ? x + edge * 0.5 : x - edge * 0.5} ${mid + 20}, ${right ? inside - loop : inside + loop} ${mid + 25}, ${inside} ${mid - 8}`;
-        d += ` C ${right ? x + edge * 0.5 : x - edge * 0.5} ${mid - 40}, ${x} ${mid + 80}, ${x} ${bottom - 30}`;
-        if (i < sections.length - 1) {
-          const nextX = right ? edge : w - edge;
-          d += ` C ${x} ${bottom + 35}, ${nextX} ${bottom - 35}, ${nextX} ${bottom + 28}`;
-        } else
-          d += ` C ${x} ${bottom}, ${w * 0.55} ${bottom + 8}, ${w * 0.5} ${bottom + 8}`;
-        right = !right;
+
+import { useEffect, useRef, useState } from "react";
+
+type InkSegment = {
+  top: number;
+  height: number;
+  width: number;
+  path: string;
+  documentTop: number;
+};
+
+function threadPath(
+  width: number,
+  height: number,
+  right: boolean,
+  cross: boolean,
+) {
+  const narrow = width < 760;
+  const edge = narrow ? 10 : 27;
+  const inward = narrow ? 13 : 30;
+  const x = right ? width - edge : edge;
+  const direction = right ? -1 : 1;
+  const bend = height * 0.37;
+  const curl = Math.min(66, height * 0.16);
+  const p = (distance: number) => x + direction * distance;
+
+  const wave = [
+    `M ${x} 0`,
+    `C ${x} ${bend * 0.45}, ${p(inward * 0.55)} ${bend * 0.72}, ${p(inward * 0.38)} ${bend}`,
+    `C ${p(inward * 0.2)} ${bend + curl * 0.45}, ${p(inward * 1.28)} ${bend + curl * 0.5}, ${p(inward)} ${bend + curl * 0.14}`,
+    `C ${p(inward * 0.74)} ${bend - curl * 0.35}, ${p(-edge * 0.44)} ${bend - curl * 0.05}, ${p(1)} ${bend + curl * 0.55}`,
+  ];
+  if (cross) {
+    const next = right ? edge : width - edge;
+    const curveHeight = Math.min(narrow ? 44 : 76, height * 0.15);
+    wave.push(
+      `C ${p(inward * 0.3)} ${height * 0.72}, ${x} ${height - curveHeight}, ${x} ${height - curveHeight * 0.74}`,
+      `C ${x} ${height + 3}, ${next} ${height - curveHeight}, ${next} ${height}`,
+    );
+  } else {
+    wave.push(
+      `C ${p(inward * 0.54)} ${height * 0.74}, ${x} ${height * 0.88}, ${x} ${height}`,
+    );
+  }
+  return wave.join(" ");
+}
+
+function measureThread(book: HTMLElement, content: HTMLElement) {
+  const width = book.clientWidth;
+  if (!width) return [];
+  const origin = content.getBoundingClientRect().top;
+  const absoluteOrigin = Math.round(origin + window.scrollY);
+  const starts = [
+    ...content.querySelectorAll<HTMLElement>(".story-section"),
+  ].map((section) =>
+    Math.max(0, Math.round(section.getBoundingClientRect().top - origin)),
+  );
+  const end = Math.round(content.getBoundingClientRect().height);
+  const segments: InkSegment[] = [];
+
+  starts.forEach((top, index) => {
+    const span = (starts[index + 1] ?? end) - top;
+    // Long letters use small independent tiles, so no single painted SVG spans the entire book.
+    const count = Math.max(1, Math.ceil(span / 900));
+    for (let i = 0; i < count; i++) {
+      const start = Math.round((span * i) / count);
+      const height = Math.round((span * (i + 1)) / count) - start;
+      if (height <= 0) continue;
+      segments.push({
+        top: top + start,
+        documentTop: absoluteOrigin + top + start,
+        height,
+        width,
+        path: threadPath(
+          width,
+          height,
+          index % 2 === 0,
+          i === count - 1 && index < starts.length - 1,
+        ),
       });
-      path.current!.setAttribute("d", d);
-      const length = path.current!.getTotalLength();
-      ctx = gsap.context(() => {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          gsap.set(path.current, {
-            strokeDasharray: "none",
-            strokeDashoffset: 0,
-          });
-          return;
-        }
-        gsap.fromTo(
-          path.current,
-          { strokeDasharray: length, strokeDashoffset: length },
-          {
-            strokeDashoffset: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: book,
-              start: "top 80%",
-              end: "bottom 85%",
-              scrub: 0.65,
-            },
-          },
-        );
-      }, book);
+    }
+  });
+  return segments;
+}
+
+export function RedThreadJourney() {
+  const layer = useRef<HTMLDivElement>(null);
+  const [segments, setSegments] = useState<InkSegment[]>([]);
+
+  useEffect(() => {
+    const book = layer.current?.parentElement;
+    const content = book?.querySelector<HTMLElement>(".scrapbook-content");
+    if (!book || !content) return;
+
+    let frame = 0;
+    let lastGeometry = "";
+    const update = () => {
+      const next = measureThread(book, content);
+      const key = next
+        .map(
+          ({ top, height, width, documentTop }) =>
+            `${top}:${height}:${width}:${documentTop}`,
+        )
+        .join("|");
+      if (key !== lastGeometry) {
+        lastGeometry = key;
+        setSegments(next);
+      }
     };
     const observer = new ResizeObserver(() => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(draw);
+      frame = requestAnimationFrame(update);
     });
-    observer.observe(book);
-    draw();
+    observer.observe(content);
+    update();
     return () => {
-      observer.disconnect();
       cancelAnimationFrame(frame);
-      ctx?.revert();
+      observer.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      CSS.supports("animation-timeline", "scroll(root block)") ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add("ink-visible");
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: "0px 0px -35% 0px" },
+    );
+    layer.current
+      ?.querySelectorAll("svg")
+      .forEach((segment) => observer.observe(segment));
+    return () => observer.disconnect();
+  }, [segments]);
+
   return (
-    <svg
-      ref={svg}
-      className="red-thread-journey"
-      aria-hidden="true"
-      preserveAspectRatio="none"
-    >
-      <path
-        ref={path}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <div className="red-thread-journey" ref={layer} aria-hidden="true">
+      {segments.map(({ top, height, width, path, documentTop }) => (
+        <svg
+          key={top}
+          className="ink-segment"
+          viewBox={`0 0 ${width} ${height}`}
+          style={
+            {
+              top,
+              height,
+              "--ink-start": `calc(${documentTop}px - 62svh)`,
+              "--ink-end": `calc(${documentTop + height}px - 62svh)`,
+            } as React.CSSProperties
+          }
+          preserveAspectRatio="none"
+        >
+          <path
+            className="ink-path"
+            d={path}
+            pathLength={1}
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+      ))}
+    </div>
   );
 }
+
 export function MemoryScrapbook({ children }: { children: React.ReactNode }) {
   return (
     <div className="memory-scrapbook">

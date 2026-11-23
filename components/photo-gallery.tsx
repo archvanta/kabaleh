@@ -16,13 +16,15 @@ export function Photo({
 }) {
   return (
     <img
-      className={className}
+      className={`photo-load ${className}`}
       src={asset(image.src)}
       alt={image.alt}
       width={image.width}
       height={image.height}
       loading={eager ? "eager" : "lazy"}
       decoding="async"
+      onLoad={(event) => event.currentTarget.classList.add("photo-decoded")}
+      onError={(event) => event.currentTarget.classList.add("photo-decoded")}
     />
   );
 }
