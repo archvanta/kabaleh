@@ -30,6 +30,37 @@ const artifact = z.object({
   image: image.nullable(),
   relatedImages: z.array(image).default([]),
   pendingLabel: z.string(),
+  caption: z.string().optional(),
+  hiddenNote: z.string().nullable().optional(),
+});
+const narrativeSection = z.object({
+  id: z.string().regex(/^[a-zA-Z0-9-]+$/),
+  order: z.number().int().positive(),
+  variant: z.enum([
+    "greeting",
+    "paper",
+    "autumn",
+    "memory",
+    "belfi",
+    "original",
+    "keepsakes",
+    "pin",
+    "pocket",
+    "gift",
+    "wishes",
+    "letter",
+    "closing",
+  ]),
+  title: z.string(),
+  body: z.string(),
+  caption: z.string(),
+  hiddenNote: z.string().nullable(),
+  visible: z.boolean(),
+  images: z.array(image.extend({ id: z.string(), caption: z.string() })),
+  reviewStatus: z.enum(["approved", "needs_confirmation"]),
+  sourceGroup: z.string().optional(),
+  highlight: z.string().optional(),
+  threadText: z.string().optional(),
 });
 const modelPath = z.string().regex(/^\/models\/[a-zA-Z0-9/_\-.]+\.glb$/);
 const keepsakeItem = z.object({
@@ -50,6 +81,19 @@ export const contentSchema = z.object({
   sender: z.string().min(1),
   birthday: z.string().nullable(),
   edition: z.string().min(1),
+  envelope: z.object({
+    title: z.string(),
+    subtitle: z.string(),
+    button: z.string(),
+  }),
+  narrative: z
+    .array(narrativeSection)
+    .refine(
+      (items) =>
+        items.every((item, i) => item.order === i + 1) &&
+        new Set(items.map((item) => item.id)).size === items.length,
+      "Narrative order must be unique and sequential",
+    ),
   intro: z.object({ eyebrow: z.string(), title: z.string(), text: z.string() }),
   sections: z
     .array(z.object({ id: z.enum(sectionIds), visible: z.boolean() }))
@@ -112,4 +156,5 @@ export const contentSchema = z.object({
 });
 export type LetterContent = z.infer<typeof contentSchema>;
 export type LetterImage = z.infer<typeof image>;
+export type NarrativeSection = z.infer<typeof narrativeSection>;
 export const content = contentSchema.parse(raw);

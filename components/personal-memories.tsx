@@ -6,7 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { LetterContent } from "@/lib/content";
 import { Photo } from "./photo-gallery";
 import { Flourish } from "./scene";
-
+import { asset } from "@/lib/assets";
+import { ui } from "@/lib/ui";
 gsap.registerPlugin(ScrollTrigger);
 export function PressedBotanical({ className = "" }: { className?: string }) {
   return (
@@ -60,8 +61,10 @@ export function PressedBotanical({ className = "" }: { className?: string }) {
 }
 export function HandDrawnCharacters({
   data,
+  embedded = false,
 }: {
   data: LetterContent["redThreadScene"];
+  embedded?: boolean;
 }) {
   const root = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -99,12 +102,15 @@ export function HandDrawnCharacters({
   return (
     <section
       ref={root}
-      id="red-thread"
-      className="characters-section story-section"
+      id={embedded ? undefined : "red-thread"}
+      className={
+        embedded
+          ? "characters-section characters-embedded"
+          : "characters-section story-section"
+      }
     >
       <div className="scrapbook-heading reveal">
-        <span className="eyebrow latin">THE RED THREAD</span>
-        <h2>{data.title}</h2>
+        {data.title && <h2>{data.title}</h2>}
         <p>{data.text}</p>
       </div>
       <div className="characters-paper paper">
@@ -143,24 +149,29 @@ export function HandDrawnCharacters({
             <path d="M525 172h1M534 172h1M527 179q4 3 6-1" />
           </g>
         </svg>
-        <span className="characters-caption">
-          طرحی مستقل، الهام‌گرفته از یادگاری اصلی
-        </span>
+        <span className="characters-caption">{ui.illustrationCaption}</span>
         <PressedBotanical />
       </div>
-      <p className="artifact-caption latin">
-        AN ILLUSTRATION INSPIRED BY THE GIFT · NOT THE ORIGINAL
-      </p>
     </section>
   );
 }
 function ArtifactPhoto({ data }: { data: LetterContent["belfiMemory"] }) {
-  if (data.image) return <Photo image={data.image} />;
+  if (data.image)
+    return (
+      <a
+        href={asset(data.image.src)}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={ui.viewOriginalPhoto}
+      >
+        <Photo image={data.image} />
+      </a>
+    );
   return (
     <div className="artifact-pending" role="img" aria-label={data.pendingLabel}>
       <span className="artifact-outline" aria-hidden="true" />
       <span>{data.pendingLabel}</span>
-      <small>عکس اصلی بدون تغییر در این قاب قرار می‌گیرد.</small>
+      <small>عکس اصلی بدون تغییر در این قاب قرار میگیرد</small>
     </div>
   );
 }
@@ -175,10 +186,20 @@ export function OriginalLetterMemory({
       className="original-letter-section story-section"
     >
       <div className="artifact-copy reveal">
-        <span className="eyebrow latin">A KEEPSAKE, UNCHANGED</span>
         <h2>{data.title}</h2>
+        {data.caption && <p className="narrative-caption">{data.caption}</p>}
         <Flourish />
         <p>{data.text}</p>
+        {data.hiddenNote && (
+          <HandmadeEnvelope
+            note={{
+              id: "original-note",
+              title: ui.noteTitle,
+              text: data.hiddenNote,
+            }}
+            index={0}
+          />
+        )}
         <span className="preservation-label">
           عکس اصلی · بدون بازطراحی یا تغییر
         </span>
@@ -193,7 +214,7 @@ export function OriginalLetterMemory({
           <figure key={i} className="related-artifact artifact-photo">
             <Photo image={image} />
             <figcaption className="artifact-label">
-              یادگاری دست‌ساز · عکس اصلی
+              یادگاری دستساز · عکس اصلی
             </figcaption>
           </figure>
         ))}
@@ -236,17 +257,35 @@ export function BelfiMemory({ data }: { data: LetterContent["belfiMemory"] }) {
           className="belfi-toggle"
           onClick={() => setRevealed((v) => !v)}
           aria-expanded={revealed}
-          aria-label={revealed ? "بستن قاب بلفی" : "باز کردن قاب بلفی"}
+          aria-label={
+            revealed
+              ? "\u0628\u0633\u062A\u0646 \u0642\u0627\u0628 \u0628\u0644\u0641\u06CC"
+              : "\u0628\u0627\u0632 \u06A9\u0631\u062F\u0646 \u0642\u0627\u0628 \u0628\u0644\u0641\u06CC"
+          }
         >
           <ArrowUpLeft size={17} />
-          <span>{revealed ? "بستن قاب" : "نمایش قاب"}</span>
+          <span>
+            {revealed
+              ? "\u0628\u0633\u062A\u0646 \u0642\u0627\u0628"
+              : "\u0646\u0645\u0627\u06CC\u0634 \u0642\u0627\u0628"}
+          </span>
         </button>
         <span className="tape" />
       </div>
       <div className="artifact-copy reveal">
-        <span className="eyebrow latin">OUR LITTLE BELFI</span>
         <h2>{data.title}</h2>
+        {data.caption && <p className="narrative-caption">{data.caption}</p>}
         <p>{data.text}</p>
+        {data.hiddenNote && (
+          <HandmadeEnvelope
+            note={{
+              id: "belfi-note",
+              title: ui.noteTitle,
+              text: data.hiddenNote,
+            }}
+            index={0}
+          />
+        )}
         <PressedBotanical />
       </div>
     </section>
@@ -263,16 +302,18 @@ export function HandmadeEnvelope({
     <details className="handmade-envelope reveal">
       <summary>
         <span className="pocket-flap" />
-        <span className="pocket-number latin">N° 0{index + 1}</span>
+        <span className="pocket-number" aria-hidden="true">
+          ❧
+        </span>
         <span className="pocket-title">{note.title}</span>
         <span className="pocket-action">
-          باز کردن یادداشت <Plus size={14} />
+          {ui.revealNote} <Plus size={14} />
         </span>
       </summary>
       <div className="pocket-note paper">
         <Flourish />
         <p>{note.text}</p>
-        <small>برای بستن، پاکت را دوباره لمس کن.</small>
+        <small>{ui.noteCloseHint}</small>
       </div>
     </details>
   );

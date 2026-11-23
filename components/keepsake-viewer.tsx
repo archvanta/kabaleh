@@ -6,8 +6,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { asset } from "@/lib/assets";
 import { RotateCcw, RotateCw, ZoomIn, ZoomOut } from "lucide-react";
-
-type Props = { modelPath: string; title: string };
+type Props = {
+  modelPath: string;
+  title: string;
+};
 /** Loaded only after an explicit inspection request; the main story never owns a WebGL context. */
 export function Bracelet3DViewer({ modelPath, title }: Props) {
   const host = useRef<HTMLDivElement>(null);
@@ -93,7 +95,7 @@ export function Bracelet3DViewer({ modelPath, title }: Props) {
     canvas.setAttribute("role", "img");
     canvas.setAttribute(
       "aria-label",
-      `${title}؛ با کشیدن یا کلیدهای جهت بچرخانید`,
+      `${title} \u0628\u0627 \u06A9\u0634\u06CC\u062F\u0646 \u06CC\u0627 \u06A9\u0644\u06CC\u062F\u0647\u0627\u06CC \u062C\u0647\u062A \u0628\u0686\u0631\u062E\u0627\u0646\u06CC\u062F`,
     );
     const onKey = (e: KeyboardEvent) => {
       if (!model) return;
@@ -203,21 +205,21 @@ export function Bracelet3DViewer({ modelPath, title }: Props) {
       <div className="object-canvas" ref={host} />
       {phase === "loading" && (
         <div className="viewer-state" role="status">
-          در حال آماده‌کردن یادگاری…
+          در حال آمادهکردن یادگاری…
         </div>
       )}
       {phase === "fallback" && (
         <div className="viewer-state">
-          <p>نمایش سه‌بعدی در این مرورگر در دسترس نیست.</p>
+          <p>نمایش سه بعدی در این مرورگر در دسترس نیست</p>
           <p>
-            می‌توانی عکس اصلی یا نمای ثابت یادگاری را ببینی و خواندن دفتر را
-            ادامه بدهی.
+            میتوانی عکس اصلی یا نمای ثابت یادگاری را ببینی و خواندن دفتر را
+            ادامه بدهی
           </p>
         </div>
       )}
       {phase === "error" && (
         <div className="viewer-state">
-          <p>مدل بارگذاری نشد.</p>
+          <p>مدل بارگذاری نشد</p>
           <button
             className="text-button"
             onClick={() => setRetry((v) => v + 1)}
@@ -229,7 +231,7 @@ export function Bracelet3DViewer({ modelPath, title }: Props) {
       {phase === "ready" && (
         <>
           <p className="viewer-hint">
-            برای چرخاندن بکش؛ یا از کلیدهای جهت استفاده کن.
+            برای چرخاندن بکش یا از کلیدهای جهت استفاده کن
           </p>
           <div className="object-controls">
             <button
@@ -249,7 +251,7 @@ export function Bracelet3DViewer({ modelPath, title }: Props) {
             <button
               className="icon-button"
               onClick={() => controlsRef.current?.zoom(0.9)}
-              aria-label="نزدیک‌تر"
+              aria-label="نزدیکتر"
             >
               <ZoomIn />
             </button>

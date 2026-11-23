@@ -1,6 +1,7 @@
 "use client";
 import { forwardRef } from "react";
 import { ArrowDown } from "lucide-react";
+import { ui } from "@/lib/ui";
 import { Flourish } from "./scene";
 type Props = {
   recipient: string;
@@ -19,7 +20,7 @@ export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
       <button
         type="button"
         className="envelope"
-        aria-label={opened ? "مشاهدهٔ نامه" : `باز کردن نامه برای ${recipient}`}
+        aria-label={opened ? ui.backToBook : `${ui.openFor} ${recipient}`}
         disabled={opening}
         onClick={onOpen}
         aria-expanded={opened}
@@ -54,11 +55,7 @@ export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
         </span>
       </button>
       <span className="envelope-instruction">
-        {opening
-          ? "نامه دارد باز می‌شود…"
-          : opened
-            ? "نامه باز شده است"
-            : "آرام لمسش کن؛ این نامه برای توست"}
+        {opening ? ui.opening : opened ? ui.opened : ui.openingInstructions}
         <ArrowDown size={15} />
       </span>
     </div>

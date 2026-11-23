@@ -1,4 +1,5 @@
 "use client";
+import { NarrativeStory } from "./narrative-story";
 import { ArrowLeft, ArrowUp } from "lucide-react";
 import type { LetterContent } from "@/lib/content";
 import { Flourish } from "./scene";
@@ -10,21 +11,22 @@ import {
   OriginalLetterMemory,
 } from "./personal-memories";
 import { BraceletMemoryTimeline, BagPinMemory } from "./keepsakes";
-
 export const sectionTitles: Record<string, string> = {
-  introduction: "آغاز نامه",
-  memories: "قاب‌های خاطره",
-  chapters: "فصل‌های قصه",
-  "red-thread": "نخ سرخ",
-  "original-letter": "یادگاری دست‌ساز",
-  belfi: "قاب بلفی",
-  keepsakes: "چهار دستبند",
-  "bag-pin": "پین کوچک کیف",
-  gallery: "آلبوم کوچک",
-  details: "جزئیات کوچک",
-  comparison: "آن روز، امروز",
-  letter: "نامهٔ پایانی",
-  closing: "صفحهٔ بعد",
+  introduction: "\u0622\u063A\u0627\u0632 \u0646\u0627\u0645\u0647",
+  memories:
+    "\u0642\u0627\u0628\u0647\u0627\u06CC \u062E\u0627\u0637\u0631\u0647",
+  chapters: "\u0641\u0635\u0644\u0647\u0627\u06CC \u0642\u0635\u0647",
+  "red-thread": "\u0646\u062E \u0633\u0631\u062E",
+  "original-letter":
+    "\u06CC\u0627\u062F\u06AF\u0627\u0631\u06CC \u062F\u0633\u062A\u0633\u0627\u0632",
+  belfi: "\u0642\u0627\u0628 \u0628\u0644\u0641\u06CC",
+  keepsakes: "\u0686\u0647\u0627\u0631 \u062F\u0633\u062A\u0628\u0646\u062F",
+  "bag-pin": "\u067E\u06CC\u0646 \u06A9\u0648\u0686\u06A9 \u06A9\u06CC\u0641",
+  gallery: "\u0622\u0644\u0628\u0648\u0645 \u06A9\u0648\u0686\u06A9",
+  details: "\u062C\u0632\u0626\u06CC\u0627\u062A \u06A9\u0648\u0686\u06A9",
+  comparison: "\u0622\u0646 \u0631\u0648\u0632 \u0627\u0645\u0631\u0648\u0632",
+  letter: "\u0646\u0627\u0645\u0647\u0654 \u067E\u0627\u06CC\u0627\u0646\u06CC",
+  closing: "\u0635\u0641\u062D\u0647\u0654 \u0628\u0639\u062F",
 };
 function Heading({
   number,
@@ -56,6 +58,8 @@ export function Story({
   content: LetterContent;
   onReplay: () => void;
 }) {
+  if (content.narrative.length)
+    return <NarrativeStory content={content} onReplay={onReplay} />;
   const sections: Record<string, React.ReactNode> = {
     introduction: (
       <section id="introduction" className="intro-section story-section">
@@ -67,7 +71,7 @@ export function Story({
           <h2>{content.intro.title}</h2>
           <p className="intro-copy">{content.intro.text}</p>
           <span className="paper-signature">
-            برای {content.recipient}، از {content.sender}
+            برای {content.recipient} از {content.sender}
           </span>
           <div className="page-number">— ۰۱ —</div>
         </div>
@@ -81,8 +85,8 @@ export function Story({
         <Heading
           number="۰۲"
           en="COLLECTED MOMENTS"
-          title="بعضی لحظه‌ها، قاب می‌شوند."
-          text="تصویرهای نمایشی؛ جایی برای خاطره‌های واقعی ما."
+          title="بعضی لحظهها قاب میشوند"
+          text="تصویرهای نمایشی جایی برای خاطرههای واقعی ما"
         />
         <div className="memories-grid">
           {content.memories.map((memory, i) => (
@@ -93,7 +97,9 @@ export function Story({
                 <span className="tape" />
               </div>
               <div className="memory-copy">
-                <span className="eyebrow">{memory.date || `۰${i + 1}`}</span>
+                <span className="eyebrow">
+                  {memory.date || `\u06F0${i + 1}`}
+                </span>
                 <h3>{memory.title}</h3>
                 <p>{memory.text}</p>
               </div>
@@ -104,7 +110,7 @@ export function Story({
     ),
     chapters: (
       <section id="chapters" className="chapters-section story-section">
-        <Heading number="۰۳" en="BETWEEN THE PAGES" title="قصه، صفحه به صفحه" />
+        <Heading number="۰۳" en="BETWEEN THE PAGES" title="قصه صفحه به صفحه" />
         {content.chapters.map((chapter) => (
           <article className="chapter" key={chapter.id}>
             <div className="chapter-copy reveal">
@@ -136,8 +142,8 @@ export function Story({
         <Heading
           number="۰۴"
           en="A LITTLE ALBUM"
-          title="لای این صفحه‌ها، چند قاب"
-          text="هر عکس را لمس کن، کمی نزدیک‌تر ببین."
+          title="لای این صفحهها چند قاب"
+          text="هر عکس را لمس کن کمی نزدیکتر ببین"
         />
         <PhotoGallery photos={content.gallery} />
         <div className="gallery-footnote latin">
@@ -157,8 +163,8 @@ export function Story({
         <Heading
           number="۰۵"
           en="THE LITTLE THINGS"
-          title="کوچک، اما ماندنی"
-          text="سه کاغذ کوچک، سه جای خالی برای نوشته‌های بعدی."
+          title="کوچک اما ماندنی"
+          text="سه کاغذ کوچک سه جای خالی برای نوشتههای بعدی"
         />
         <div className="notes-grid">
           {content.notes.map((note, i) => (
@@ -202,7 +208,7 @@ export function Story({
           <Flourish />
           <p className="eyebrow">۰۷ · آخرین صفحهٔ این نامه</p>
           <h2>{content.finalLetter.title}</h2>
-          <div className="letter-salutation">{content.recipient}،</div>
+          <div className="letter-salutation">{content.recipient}</div>
           <div className="letter-paragraphs">
             {content.finalLetter.paragraphs.map((p, i) => (
               <p key={i}>{p}</p>
@@ -232,11 +238,11 @@ export function Story({
           M<span>✦</span>A
         </span>
         <button className="text-button" onClick={onReplay}>
-          یک بار دیگر، از اول <ArrowUp size={16} />
+          یک بار دیگر از اول <ArrowUp size={16} />
         </button>
         <footer>
           <span>
-            برای {content.recipient}، از {content.sender}
+            برای {content.recipient} از {content.sender}
           </span>
           <span className="latin">MADE WITH CARE · MESHKAT</span>
           <span>نسخهٔ نمایشی · محتوا قابل جایگزینی است</span>

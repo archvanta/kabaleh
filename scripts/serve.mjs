@@ -41,12 +41,7 @@ const server = http.createServer(async (req, res) => {
       pathname = pathname.slice(base.length) || "/";
     }
     let fileRoot = root;
-    if (pathname.startsWith("/images/originals/")) {
-      if (!personal) {
-        res.writeHead(404);
-        res.end();
-        return;
-      }
+    if (personal && pathname.startsWith("/images/originals/")) {
       fileRoot = privateRoot;
       pathname = pathname.slice("/images/originals".length);
       res.setHeader("Cache-Control", "no-store");

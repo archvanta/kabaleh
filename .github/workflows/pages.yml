@@ -1,5 +1,7 @@
-name: Deploy demonstration to Pages
+name: Deploy KABALEH
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,19 +20,20 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - name: Install the authorized website font
+        run: node scripts/install-deployment-font.mjs
       - run: npm test
       - uses: actions/configure-pages@v5
         id: pages
-      - name: Build demonstration only
+      - name: Build approved content and original photographs
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
         run: npm run build
-      - name: Verify no private photograph references
+      - name: Keep unrelated private files and owner documents out of publication
         run: |
-          if grep -R -q '/images/originals/' out; then
-            echo 'Refusing deployment of private content.'
-            exit 1
-          fi
+          test ! -d out/.private
+          test ! -f out/fonts/TERMS-Mahboubeh.pdf
+          test -f out/fonts/mahboubeh-mehravar.woff2
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

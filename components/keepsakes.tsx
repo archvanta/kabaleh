@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Box, MoveHorizontal, X } from "lucide-react";
 import type { LetterContent } from "@/lib/content";
+import { ui } from "@/lib/ui";
 import { asset } from "@/lib/assets";
 import { Photo } from "./photo-gallery";
 import { Flourish } from "./scene";
@@ -15,7 +16,7 @@ const Viewer = dynamic(
     ssr: false,
     loading: () => (
       <div className="viewer-loading" role="status">
-        در حال آماده‌کردن نمایشگر…
+        در حال آمادهکردن نمایشگر…
       </div>
     ),
   },
@@ -50,12 +51,12 @@ export function BraceletMemoryCard({
       <button
         className="bracelet-inspect"
         onClick={onInspect}
-        aria-label={`نمایش سه‌بعدی ${item.title}`}
+        aria-label={`\u0646\u0645\u0627\u06CC\u0634 \u0633\u0647 \u0628\u0639\u062F\u06CC ${item.title}`}
       >
         <span className="bracelet-preview">
           <img
             src={asset(`/models/${item.id}.png`)}
-            alt={`نمای ثابت بازسازی سه‌بعدی ${item.title}`}
+            alt={`\u0646\u0645\u0627\u06CC \u062B\u0627\u0628\u062A \u0628\u0627\u0632\u0633\u0627\u0632\u06CC \u0633\u0647 \u0628\u0639\u062F\u06CC ${item.title}`}
             width={520}
             height={460}
             loading="lazy"
@@ -63,11 +64,11 @@ export function BraceletMemoryCard({
         </span>
         <span className="inspect-label">
           <Box size={14} />
-          بچرخان و نزدیک‌تر ببین
+          {ui.inspect}
         </span>
       </button>
       <h3>{item.title}</h3>
-      <p>{item.date || `جایگاه ${item.order} · تاریخ قابل افزودن`}</p>
+      {item.date && <p>{item.date}</p>}
       <KeepsakeContent text={item.story} />
     </article>
   );
@@ -137,7 +138,6 @@ export function KeepsakeTimeline({
       ref={root}
     >
       <div className="scrapbook-heading reveal">
-        <span className="eyebrow latin">OUR LITTLE KEEPSAKES</span>
         <h2>{data.title}</h2>
         <p>{data.text}</p>
         <Flourish />
@@ -146,7 +146,7 @@ export function KeepsakeTimeline({
         <div
           className="bracelet-timeline"
           role="region"
-          aria-label="چهار دستبند از قدیمی‌تر به جدیدتر"
+          aria-label="چهار دستبند از قدیمیتر به جدیدتر"
           tabIndex={0}
         >
           <div className="bracelet-timeline-track">
@@ -175,31 +175,28 @@ export function KeepsakeTimeline({
           </div>
         </div>
         <p className="timeline-direction">
-          <span>قدیمی‌تر</span>
+          <span>قدیمیتر</span>
           <MoveHorizontal size={17} />
           <span>جدیدتر</span>
         </p>
-        <p className="model-accuracy-note">
-          بازسازی سه‌بعدی بر اساس نماهای مرجع؛ جایگزین عکس اصلی نیست و جزئیات
-          پنهان تقریبی است.
-        </p>
+        <p className="model-accuracy-note">{ui.accuracy}</p>
       </KeepsakeReveal>
       <dialog
         ref={dialog}
         className="keepsake-dialog"
-        aria-label="بررسی سه‌بعدی یادگاری"
+        aria-label="بررسی سه بعدی یادگاری"
         onClose={() => setActive(null)}
       >
         <button
           className="icon-button dialog-close"
           onClick={close}
-          aria-label="بستن نمایش سه‌بعدی"
+          aria-label="بستن نمایش سه بعدی"
         >
           <X />
         </button>
         {active && (
           <>
-            <span className="eyebrow latin">KEEPSAKE No. 0{active.order}</span>
+            <span className="eyebrow">{active.order}</span>
             <h3>{active.title}</h3>
             <Viewer modelPath={active.modelPath} title={active.title} />
             <p className="model-accuracy-note">{active.caption}</p>
@@ -228,10 +225,9 @@ export function BagPinMemory({ data }: { data: LetterContent["bagPin"] }) {
   return (
     <section id="bag-pin" className="bag-pin-section story-section">
       <div className="artifact-copy reveal">
-        <span className="eyebrow latin">THE LITTLE BAG PIN</span>
         <h2>{data.title}</h2>
         <Flourish />
-        <KeepsakeContent text={data.text} />
+        <p className="narrative-caption">{data.caption}</p>
       </div>
       <KeepsakeReveal className="pin-paper paper reveal">
         <span className="tape" />
@@ -241,10 +237,9 @@ export function BagPinMemory({ data }: { data: LetterContent["bagPin"] }) {
             <p className="artifact-caption">عکس اصلی · بدون تغییر</p>
           </div>
         ) : (
-          <div className="pin-awaiting">
-            <span className="pin-empty-mount" aria-hidden="true" />
+          <div className="pin-caption-paper">
+            <Flourish />
             <p>{data.caption}</p>
-            <small>تصویر دیگری جایگزین پین اصلی نمی‌شود.</small>
           </div>
         )}
         {data.modelPath && (
@@ -255,11 +250,11 @@ export function BagPinMemory({ data }: { data: LetterContent["bagPin"] }) {
               dialog.current?.showModal();
             }}
           >
-            دیدن پین سه‌بعدی <Box size={16} />
+            دیدن پین سه بعدی <Box size={16} />
           </button>
         )}
         <HandmadeEnvelope
-          note={{ id: "pin-note", title: "یادداشت کوچک", text: data.text }}
+          note={{ id: "pin-note", title: ui.noteTitle, text: data.text }}
           index={0}
         />
         <PressedBotanical />

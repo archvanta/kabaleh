@@ -1,0 +1,155 @@
+{
+  "sourceSha256": "8b8f913cc1e427a7aed51ea85da491678976ebf24575c3b863cebc48210fa652",
+  "photos": [
+    {
+      "path": "01_first_photo_elevator/photo_2026-11-22_13-02-37.jpg",
+      "sha256": "39a081e3d7dd1fed0c7aeb5b6407bf3d26c9fea647f3ec62fbefff942d099a12",
+      "width": 989,
+      "height": 1280,
+      "bytes": 112890
+    },
+    {
+      "path": "01_first_photo_elevator/photo_2026-11-22_13-03-12.jpg",
+      "sha256": "9a11b12e35b824ee06ccb0258590f3e40ab91ac2d305211c6d268fdd260bc99d",
+      "width": 720,
+      "height": 1280,
+      "bytes": 98077
+    },
+    {
+      "path": "02_pre_relationship_mirror/photo_2026-11-22_13-02-42.jpg",
+      "sha256": "ddc88260ae82f10367eb200a0fff02b24ac8e4fb532f41c7c16fd00e939e5783",
+      "width": 960,
+      "height": 1280,
+      "bytes": 232197
+    },
+    {
+      "path": "03_my_favorite_photo/photo_2026-11-22_13-02-39.jpg",
+      "sha256": "625838de3ec37843931dd1e853cec7ed341d35149895965834ba70dbabe2dc16",
+      "width": 960,
+      "height": 1280,
+      "bytes": 122981
+    },
+    {
+      "path": "04_early_days_mirror/photo_2026-11-22_13-03-09.jpg",
+      "sha256": "0bf18bad0c06689cd08c5b1f50ac76e44bf3d2f2ee6826c719d00178f50eb16c",
+      "width": 960,
+      "height": 1280,
+      "bytes": 149325
+    },
+    {
+      "path": "05_university_sketch/photo_2026-11-22_13-02-13.jpg",
+      "sha256": "106bd64c5b217050feb5b00f86a5db06bc0e09afbc29ce43025f27a49f2bd059",
+      "width": 1532,
+      "height": 1920,
+      "bytes": 458134
+    },
+    {
+      "path": "06_iranmall_fun/photo_2026-11-22_13-03-04.jpg",
+      "sha256": "7e44c1e62359ca46190555d158faa66c802a836845728d8a96db8230a4b73425",
+      "width": 960,
+      "height": 1280,
+      "bytes": 128135
+    },
+    {
+      "path": "06_iranmall_fun/photo_2026-11-22_13-03-07.jpg",
+      "sha256": "6749704e227a0d38f9a68436628e29b78277ebf174ff2949a54d7c9b696bbbb1",
+      "width": 959,
+      "height": 1280,
+      "bytes": 125194
+    },
+    {
+      "path": "07_laleh_park_flowers/photo_2026-11-22_13-03-33.jpg",
+      "sha256": "da2ac260f2ecf3ad262fb2ed62a67c9e87290b9ef330de342193acfc3de65822",
+      "width": 1500,
+      "height": 1125,
+      "bytes": 239307
+    },
+    {
+      "path": "08_first_party_together/photo_2026-11-22_13-02-28.jpg",
+      "sha256": "77e81f8ef6281943417aba8fbea86bc9dbf6e17ecbca0f50536d74d4c8239e8e",
+      "width": 1125,
+      "height": 1500,
+      "bytes": 225929
+    },
+    {
+      "path": "08_first_party_together/photo_2026-11-22_13-02-25.jpg",
+      "sha256": "a6b8944cff5edcd8830b3836b366daf9b52e275adf65abb79e16bcdd10e21276",
+      "width": 962,
+      "height": 1500,
+      "bytes": 144376
+    },
+    {
+      "path": "08_first_party_together/photo_2026-11-22_13-03-21.jpg",
+      "sha256": "e7f8b5eccfc846806f34e1c028752e1c5a674f8f0a84b6fa7c53001dd1d08c6a",
+      "width": 1125,
+      "height": 1500,
+      "bytes": 164415
+    },
+    {
+      "path": "08_first_party_together/photo_2026-11-22_13-03-15.jpg",
+      "sha256": "de16e2716234157970f7294d4d840ce78ffd145a8dc2d3c6178cda95c33e907f",
+      "width": 1124,
+      "height": 1500,
+      "bytes": 284187
+    },
+    {
+      "path": "09_good_night_cafe/photo_2026-11-22_13-02-20.jpg",
+      "sha256": "641c49808b2c7b37c38832de1ad2aa54a5cd8f774b413684bfd12b1dc8a8d789",
+      "width": 1280,
+      "height": 960,
+      "bytes": 193562
+    },
+    {
+      "path": "10_eight_hours_to_sea/photo_2026-11-22_13-02-47.jpg",
+      "sha256": "09fd4bf391a8d578f40f91cd73002de678cc484b42ae48e9a3aca03ccc9878dd",
+      "width": 1125,
+      "height": 1500,
+      "bytes": 124639
+    },
+    {
+      "path": "11_ekbatan_memories/photo_2026-11-22_13-02-31.jpg",
+      "sha256": "53a0f50991f75dd57f5f806e8fd602c5830e1edf9e7125988500f9fa009cad1a",
+      "width": 1051,
+      "height": 1314,
+      "bytes": 259855
+    },
+    {
+      "path": "11_ekbatan_memories/photo_2026-11-22_13-02-34.jpg",
+      "sha256": "d6ab6680b6a4189f858b5e4b79997e76c3708394958d0848e29f8412787a22d6",
+      "width": 1196,
+      "height": 1495,
+      "bytes": 596263
+    },
+    {
+      "path": "12_belfi_plush/photo_2026-11-22_13-03-56.jpg",
+      "sha256": "94b7a934359696708d31b8ee0695be480908876c9a08928258fff4277d471694",
+      "width": 1125,
+      "height": 1500,
+      "bytes": 225493
+    },
+    {
+      "path": "13_blue_rose_gift/photo_2026-11-22_13-03-52.jpg",
+      "sha256": "406ea5b58d971f1b567d1dc2b21ffe950cf3d6801257420f9b0d7d5201d20baf",
+      "width": 1125,
+      "height": 1500,
+      "bytes": 175500
+    },
+    {
+      "path": "14_meshkat_handmade_mementos/photo_2026-11-22_13-03-49.jpg",
+      "sha256": "afb260e47a905979266b30d7405dba80c56952bb94df1d121a9a75f949f3a798",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 213596
+    },
+    {
+      "path": "14_meshkat_handmade_mementos/photo_2026-11-22_13-03-43.jpg",
+      "sha256": "1aef9140f7a44b6fa2747180208f63c5d657da9fd354aefec202fc82de508057",
+      "width": 1920,
+      "height": 2560,
+      "bytes": 444868
+    }
+  ],
+  "review": {
+    "05_university_sketch": "needs_confirmation"
+  }
+}

@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Expand, X } from "lucide-react";
+import { CopyText } from "./copy-text";
+import { ui } from "@/lib/ui";
 import { asset } from "@/lib/assets";
 import type { LetterContent, LetterImage } from "@/lib/content";
-
 export function Photo({
   image,
   className = "",
@@ -53,10 +54,10 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
       <div className="gallery-grid">
         {photos.map((photo, i) => (
           <button
-            className={`gallery-photo reveal gallery-photo-${i % 3}`}
+            className={`gallery-photo gallery-photo-${i % 3}`}
             key={photo.id}
             onClick={() => open(i)}
-            aria-label={`بزرگ‌نمایی ${photo.caption}`}
+            aria-label={`${ui.viewOriginalPhoto} ${photo.caption}`}
           >
             <span className="photo-image">
               <Photo image={photo} />
@@ -65,8 +66,10 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
               </span>
             </span>
             <span className="photo-caption">
-              <span>{photo.caption}</span>
-              <span className="latin">0{i + 1}</span>
+              <span>
+                <CopyText text={photo.caption} />
+              </span>
+              <span className="latin">{String(i + 1).padStart(2, "0")}</span>
             </span>
           </button>
         ))}
@@ -74,7 +77,7 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
       <dialog
         ref={dialog}
         className="lightbox"
-        aria-label="نمایش بزرگ تصاویر"
+        aria-label={ui.photoViewer}
         onClose={() => setActive(false)}
         onClick={(e) => {
           if (e.target === e.currentTarget) close();
@@ -94,7 +97,7 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
           <button
             className="icon-button lightbox-close"
             onClick={close}
-            aria-label="بستن تصویر"
+            aria-label={ui.closePhoto}
           >
             <X />
           </button>
@@ -103,12 +106,12 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
             <button
               className="icon-button"
               onClick={() => move(-1)}
-              aria-label="تصویر قبلی"
+              aria-label={ui.previousPhoto}
             >
               <ArrowRight />
             </button>
             <p>
-              {selected.caption}
+              <CopyText text={selected.caption} />
               <small>
                 {index + 1} / {photos.length}
               </small>
@@ -116,7 +119,7 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
             <button
               className="icon-button"
               onClick={() => move(1)}
-              aria-label="تصویر بعدی"
+              aria-label={ui.nextPhoto}
             >
               <ArrowLeft />
             </button>
@@ -127,7 +130,7 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
             target="_blank"
             rel="noreferrer"
           >
-            باز کردن فایل تصویر
+            {ui.viewOriginalPhoto}
           </a>
         </div>
       </dialog>

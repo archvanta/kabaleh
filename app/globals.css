@@ -3364,3 +3364,630 @@ body {
     font-size: 10px;
   }
 }
+/* Approved long-form narrative retains the original photographed tabletop and paper layers. */
+.narrative-prose p {
+  white-space: pre-line;
+  line-height: 2.45;
+  font-size: 19px;
+  color: #66503f;
+  margin: 0 0 17px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.narrative-prose p:last-child {
+  margin-bottom: 0;
+}
+.narrative-prose bdi {
+  white-space: nowrap;
+}
+.narrative-paper-section {
+  padding-top: 90px;
+  padding-bottom: 90px;
+}
+.narrative-paper {
+  max-width: 790px;
+  padding: 65px 80px;
+  margin: auto;
+  transform: rotate(0.4deg);
+}
+.narrative-paper > h2 {
+  color: var(--wine);
+  font-size: 40px;
+  margin: 20px 0 36px;
+  text-align: center;
+  line-height: 1.8;
+}
+.narrative-paper > .flourish {
+  display: block;
+  margin: 0 auto 25px;
+}
+.narrative-greeting .narrative-paper {
+  max-width: 720px;
+  padding-block: 65px;
+}
+.narrative-greeting .narrative-prose p {
+  text-align: center;
+}
+.narrative-greeting h2 {
+  font-size: 39px;
+}
+.narrative-paper blockquote {
+  font-size: 23px;
+  color: var(--wine);
+  line-height: 2.1;
+  border-block: 1px solid #ab895836;
+  padding: 25px 5px;
+  margin: 38px 0 0;
+  text-align: center;
+}
+.narrative-autumn .narrative-paper {
+  background-color: #faecd6;
+}
+.narrative-autumn .pressed-botanical {
+  position: absolute;
+  left: -30px;
+  top: 35px;
+  transform: rotate(-25deg);
+  width: 90px;
+}
+.thread-interlude {
+  border-top: 1px solid #b69a742b;
+  padding-top: 30px;
+  margin-top: 35px;
+}
+.thread-interlude p {
+  color: #98745a;
+  font-size: 17px;
+}
+.narrative-memory {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 60px;
+  align-items: start;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.narrative-memory-copy > h2 {
+  font-size: 33px;
+  line-height: 1.9;
+  margin-bottom: 18px;
+}
+.narrative-caption {
+  font-size: 17px !important;
+  line-height: 2.2 !important;
+  color: #957353 !important;
+  white-space: pre-line;
+  margin-bottom: 22px !important;
+}
+.narrative-memory-copy > .flourish {
+  width: 110px;
+  margin-bottom: 25px;
+}
+.narrative-memory .narrative-prose p {
+  font-size: 18px;
+}
+.narrative-memory.memory-reversed .narrative-memory-copy {
+  order: 2;
+}
+.narrative-gallery {
+  position: sticky;
+  top: 115px;
+  min-width: 0;
+}
+.narrative-gallery .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 18px;
+  align-items: start;
+  max-width: 100%;
+  margin: 0;
+}
+.narrative-gallery.photos-1 .gallery-grid {
+  grid-template-columns: 1fr;
+  max-width: 390px;
+  margin: auto;
+}
+.narrative-gallery .gallery-photo {
+  width: 100%;
+  margin: 0;
+  grid-column: auto;
+  transform: rotate(-2deg);
+  padding: 10px 10px 0;
+  min-width: 0;
+}
+.narrative-gallery .gallery-photo:nth-child(even) {
+  transform: rotate(3deg);
+  margin-top: 40px;
+}
+.narrative-gallery .photo-caption {
+  font-size: 12px;
+  line-height: 2.2;
+  padding: 16px 4px;
+  align-items: start;
+  overflow-wrap: anywhere;
+}
+.narrative-gallery .photo-image {
+  overflow: visible;
+}
+.narrative-gallery .photo-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transform: none;
+}
+.memory-hidden-note {
+  margin-top: 35px;
+  padding: 0 23px;
+  background-color: #f9ecd6;
+  box-shadow: 0 5px 15px #64432710;
+  transform: rotate(-1deg);
+}
+.memory-hidden-note summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+  min-height: 68px;
+  padding: 15px 0;
+  font-size: 16px;
+  color: var(--wine);
+}
+.memory-hidden-note summary::-webkit-details-marker {
+  display: none;
+}
+.memory-hidden-note[open] summary svg {
+  transform: rotate(45deg);
+}
+.memory-hidden-note > div {
+  padding: 12px 0 28px;
+}
+.memory-hidden-note .narrative-prose p {
+  font-size: 17px;
+}
+.memory-hidden-note .flourish {
+  width: 90px;
+  margin: auto auto 20px;
+  display: block;
+}
+.original-thread-interlude {
+  padding: 0 55px 50px;
+}
+.characters-embedded {
+  padding: 0;
+  max-width: 760px;
+  margin: auto;
+}
+.characters-embedded .scrapbook-heading {
+  margin-bottom: 30px;
+}
+.characters-embedded .scrapbook-heading p {
+  white-space: pre-line;
+  font-size: 18px;
+  line-height: 2.4;
+}
+.artifact-copy > p,
+.keepsake-content,
+.scrapbook-heading > p,
+.pocket-note > p {
+  white-space: pre-line;
+  font-size: 18px;
+  line-height: 2.45;
+}
+.artifact-copy .handmade-envelope {
+  max-width: 300px;
+  margin: 45px auto 0;
+}
+.artifact-copy h2 {
+  font-size: 33px;
+}
+.belfi-section,
+.original-letter-section {
+  align-items: start;
+}
+.belfi-mount,
+.original-letter-mount {
+  position: sticky;
+  top: 120px;
+}
+.original-letter-mount .artifact-photo img {
+  position: relative;
+  z-index: 1;
+}
+.original-letter-mount > .pressed-botanical {
+  left: -35px;
+  z-index: 0;
+}
+.keepsakes-section .scrapbook-heading {
+  max-width: 700px;
+}
+.keepsakes-section .scrapbook-heading > p {
+  font-size: 18px;
+}
+.bracelet-memory-card .keepsake-content {
+  font-size: 16px;
+}
+.bracelet-memory-card h3 {
+  font-size: 19px;
+  min-height: 58px;
+}
+.pin-caption-paper {
+  padding: 30px 8px;
+  text-align: center;
+  color: #936c4a;
+  font-size: 20px;
+  line-height: 2.3;
+}
+.pin-caption-paper .flourish {
+  display: block;
+  margin: 0 auto 25px;
+}
+.pin-paper > .handmade-envelope {
+  margin-top: 15px;
+}
+.pin-paper .pocket-note > p {
+  font-size: 17px;
+}
+.handmade-story-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  align-items: start;
+}
+.handmade-story-layout .narrative-gallery {
+  position: relative;
+  top: auto;
+}
+.handmade-story-layout .handmade-envelope {
+  margin-top: 70px;
+}
+.handmade-story-layout .pocket-note > p {
+  font-size: 18px;
+}
+.narrative-gift .narrative-paper {
+  max-width: 760px;
+  background-color: #fff7e8;
+}
+.narrative-wishes .narrative-paper {
+  transform: rotate(-0.4deg);
+}
+.narrative-letter-section {
+  max-width: 940px;
+  padding-top: 80px;
+}
+.thread-before-letter {
+  max-width: 550px;
+  margin: 0 auto 65px;
+  text-align: center;
+}
+.thread-before-letter p {
+  text-align: center;
+  font-size: 18px;
+  color: #907053;
+}
+.thread-before-letter > .flourish {
+  margin-top: 30px;
+}
+.narrative-letter-section .final-letter {
+  padding: 65px 75px 110px;
+}
+.narrative-letter-section .letter-paragraphs p {
+  font-size: 20px;
+  line-height: 2.5;
+  margin-bottom: 24px;
+}
+.narrative-letter-section h2 {
+  font-size: 36px;
+}
+.narrative-closing > h2 {
+  font-size: 38px;
+}
+.narrative-closing > .narrative-prose {
+  max-width: 620px;
+  margin: auto;
+}
+.narrative-closing > .narrative-prose p {
+  text-align: center;
+  font-size: 21px;
+}
+.complete-album {
+  max-width: 900px;
+  margin: 60px auto 0;
+  padding: 0 30px 25px;
+  text-align: right;
+  border-top: 1px solid #a8896330;
+}
+.complete-album > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-size: 19px;
+  cursor: pointer;
+  padding: 25px;
+  list-style: none;
+}
+.complete-album > summary::-webkit-details-marker {
+  display: none;
+}
+.complete-album > .gallery-grid {
+  margin-top: 45px;
+}
+.complete-album .gallery-photo {
+  margin-top: 0 !important;
+  transform: rotate(-1deg);
+  grid-column: auto !important;
+  width: 100% !important;
+}
+.complete-album .gallery-grid {
+  align-items: start;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-inline: 0;
+}
+.complete-album .photo-caption {
+  font-size: 13px;
+  line-height: 2.2;
+}
+.complete-album[open] > summary svg {
+  transform: rotate(45deg);
+}
+.lightbox-toolbar {
+  max-width: min(720px, 95vw);
+}
+.lightbox-toolbar p {
+  font-size: 16px;
+  line-height: 2;
+  max-width: 500px;
+}
+.lightbox-inner > img {
+  max-height: calc(100svh - 240px);
+}
+.lightbox-inner {
+  padding-top: 50px;
+}
+.original-photo-link {
+  font-size: 15px;
+}
+.paper-dialog nav a {
+  line-height: 2;
+  gap: 15px;
+}
+.paper-dialog {
+  max-height: 85svh;
+}
+.paper-dialog nav a > span {
+  min-width: 25px;
+}
+.reading-final .petals {
+  opacity: 0;
+  transition: opacity 1s;
+}
+.reading-final .red-thread-journey {
+  opacity: 0.25;
+}
+@media (max-width: 1000px) {
+  .narrative-memory {
+    gap: 35px;
+  }
+  .narrative-paper {
+    padding: 55px;
+  }
+  .narrative-memory-copy > h2 {
+    font-size: 29px;
+  }
+  .narrative-gallery .gallery-grid {
+    gap: 20px 14px;
+  }
+  .narrative-gallery .photo-caption {
+    font-size: 11px;
+  }
+}
+@media (max-width: 760px) {
+  .narrative-paper-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  .narrative-paper,
+  .narrative-greeting .narrative-paper {
+    padding: 40px 24px;
+  }
+  .narrative-paper > h2,
+  .narrative-greeting h2 {
+    font-size: 30px;
+    margin-bottom: 28px;
+    line-height: 1.85;
+  }
+  .narrative-prose p,
+  .narrative-memory .narrative-prose p {
+    font-size: 18px;
+    line-height: 2.35;
+    margin-bottom: 17px;
+  }
+  .narrative-greeting .narrative-prose p {
+    font-size: 18px;
+  }
+  .narrative-paper blockquote {
+    font-size: 22px;
+    margin-top: 28px;
+  }
+  .narrative-autumn .pressed-botanical {
+    width: 62px;
+    left: -13px;
+    top: 12px;
+    opacity: 0.6;
+  }
+  .narrative-memory {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    padding-top: 65px;
+    padding-bottom: 65px;
+  }
+  .narrative-memory-copy > h2 {
+    font-size: 29px;
+    line-height: 1.9;
+  }
+  .narrative-caption {
+    font-size: 17px !important;
+    line-height: 2.3 !important;
+  }
+  .narrative-memory.memory-reversed .narrative-memory-copy {
+    order: initial;
+  }
+  .narrative-gallery {
+    position: relative;
+    top: auto;
+    width: 100%;
+    max-width: 370px;
+    margin: auto;
+  }
+  .narrative-gallery .gallery-grid {
+    gap: 23px 14px;
+  }
+  .narrative-gallery.photos-1 .gallery-grid {
+    padding: 0 8px;
+    max-width: 330px;
+  }
+  .narrative-gallery.photos-2 .gallery-grid {
+    grid-template-columns: 1fr;
+    padding-inline: 12px;
+    max-width: 310px;
+    margin: auto;
+  }
+  .narrative-gallery .gallery-photo:nth-child(even) {
+    margin-top: 7px;
+  }
+  .narrative-gallery .photo-caption {
+    font-size: 13px;
+    padding: 15px 3px;
+  }
+  .narrative-gallery .gallery-photo {
+    padding: 8px 8px 0;
+  }
+  .narrative-gallery.photos-4 .photo-caption {
+    font-size: 11px;
+  }
+  .memory-hidden-note summary {
+    font-size: 16px;
+  }
+  .memory-hidden-note {
+    padding-inline: 20px;
+    margin-top: 25px;
+  }
+  .memory-hidden-note .narrative-prose p {
+    font-size: 17px;
+  }
+  .artifact-copy > p,
+  .keepsake-content,
+  .scrapbook-heading > p,
+  .pocket-note > p {
+    font-size: 18px;
+    line-height: 2.35;
+  }
+  .artifact-copy h2 {
+    font-size: 29px;
+  }
+  .belfi-mount,
+  .original-letter-mount {
+    position: relative;
+    top: auto;
+  }
+  .belfi-section .artifact-copy {
+    grid-row: initial;
+  }
+  .belfi-section .belfi-mount {
+    grid-row: 2;
+    margin-top: 15px;
+  }
+  .original-thread-interlude {
+    padding: 0 20px 30px;
+  }
+  .characters-embedded .scrapbook-heading p {
+    font-size: 18px;
+  }
+  .handmade-story-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .handmade-story-layout .handmade-envelope {
+    width: 90%;
+    max-width: 300px;
+    margin: 35px auto;
+  }
+  .narrative-letter-section .final-letter {
+    padding: 45px 25px 95px;
+  }
+  .narrative-letter-section .letter-paragraphs p {
+    font-size: 19px;
+    line-height: 2.45;
+    margin-bottom: 22px;
+  }
+  .narrative-letter-section h2 {
+    font-size: 29px;
+  }
+  .thread-before-letter p {
+    font-size: 18px;
+  }
+  .narrative-closing > h2 {
+    font-size: 29px;
+  }
+  .narrative-closing > .narrative-prose p {
+    font-size: 19px;
+  }
+  .complete-album {
+    padding: 0 7px 20px;
+  }
+  .complete-album .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 14px;
+  }
+  .complete-album .photo-caption {
+    font-size: 11px;
+  }
+  .lightbox-toolbar p {
+    font-size: 15px;
+  }
+  .lightbox-toolbar {
+    gap: 8px;
+    width: 95vw;
+    min-width: 0;
+  }
+  .lightbox-toolbar .icon-button {
+    flex-shrink: 0;
+  }
+  .lightbox-inner > img {
+    max-height: calc(100svh - 240px);
+  }
+  .keepsakes-section .scrapbook-heading > p {
+    font-size: 18px;
+  }
+  .bracelet-memory-card .keepsake-content {
+    font-size: 17px;
+  }
+  .header-button {
+    font-size: 14px;
+  }
+  .hero h1 {
+    font-size: 53px;
+  }
+  .hero-subtitle {
+    font-size: 18px;
+  }
+  .hero-scroll {
+    max-width: 155px;
+    text-align: center;
+  }
+  .hero-scroll span {
+    max-width: 150px !important;
+  }
+  .hero-dedication {
+    font-size: 13px;
+  }
+  .envelope-instruction {
+    font-size: 14px;
+  }
+  .original-photo-link {
+    font-size: 16px;
+  }
+}

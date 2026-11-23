@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { contentSchema, content as demonstrationContent } from "./content";
-// Personal material is opt-in, local-only, gitignored, and never part of the default build.
+import { contentSchema, content as publishedContent } from "./content";
+// The default build contains the now-approved public content and photographs.
+// A retained local override remains available for editing and testing.
 export const content =
   process.env.MESHKAT_PERSONAL_PREVIEW === "1"
     ? contentSchema.parse(
@@ -9,4 +10,4 @@ export const content =
           readFileSync(resolve(process.cwd(), ".private/letter.json"), "utf8"),
         ),
       )
-    : demonstrationContent;
+    : publishedContent;

@@ -6,21 +6,22 @@ import { ArrowDown, ArrowLeft, Menu, X } from "lucide-react";
 import type { LetterContent } from "@/lib/content";
 import { Scene, Flourish } from "./scene";
 import { Envelope } from "./envelope";
-import { Story, sectionTitles } from "./story";
+import { Story } from "./story";
 import { MemoryScrapbook } from "./red-thread-journey";
-
+import { ui } from "@/lib/ui";
 gsap.registerPlugin(ScrollTrigger);
 export function LetterExperience({ content }: { content: LetterContent }) {
   const root = useRef<HTMLDivElement>(null);
   const envelope = useRef<HTMLDivElement>(null);
   const story = useRef<HTMLElement>(null);
   const menu = useRef<HTMLDialogElement>(null);
-  const info = useRef<HTMLDialogElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const [opened, setOpened] = useState(false);
   const [opening, setOpening] = useState(false);
   const [progress, setProgress] = useState(0);
-  const visible = content.sections.filter((s) => s.visible);
+  const visible = content.narrative
+    .filter((s) => s.visible)
+    .map((s) => ({ id: s.id, title: s.title }));
   useEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
@@ -90,6 +91,12 @@ export function LetterExperience({ content }: { content: LetterContent }) {
         start: "top top",
         end: "bottom bottom",
         onUpdate: (self) => setProgress(Math.round(self.progress * 100)),
+      });
+      ScrollTrigger.create({
+        trigger: story.current?.querySelector("#letter"),
+        start: "top 80%",
+        end: "bottom 20%",
+        toggleClass: { targets: root.current!, className: "reading-final" },
       });
     }, story);
     const frame = requestAnimationFrame(() => {
@@ -185,10 +192,10 @@ export function LetterExperience({ content }: { content: LetterContent }) {
     <div ref={root} className={`experience ${opened ? "is-open" : ""}`}>
       <Scene />
       <a href={opened ? "#story" : "#open-letter"} className="skip-link">
-        رفتن به نامه
+        {ui.skipToLetter}
       </a>
       <header className="site-header">
-        <a className="wordmark" href="#" aria-label="مشکات، ابتدای نامه">
+        <a className="wordmark" href="#" aria-label="مشکات ابتدای نامه">
           <svg
             className="brand-flower"
             viewBox="0 0 40 40"
@@ -204,19 +211,18 @@ export function LetterExperience({ content }: { content: LetterContent }) {
             </g>
           </svg>
           <span className="latin">
-            MESHKAT<small>A LETTER FOR YOU</small>
+            {ui.brand}
+            <small>{ui.brandSubtitle}</small>
           </span>
         </a>
-        <span className="header-center">یک نامه، فقط برای تو</span>
+        <span className="header-center">{content.envelope.title}</span>
         <div className="header-actions">
           <span className="edition-dot" />
           <button
             className="header-button"
-            onClick={() =>
-              opened ? menu.current?.showModal() : info.current?.showModal()
-            }
+            onClick={() => (opened ? menu.current?.showModal() : open())}
           >
-            {opened ? "فهرست نامه" : "دربارهٔ نامه"}
+            {opened ? ui.contents : ui.openEnvelope}
             {opened ? <Menu size={16} /> : <ArrowLeft size={15} />}
           </button>
         </div>
@@ -237,14 +243,14 @@ export function LetterExperience({ content }: { content: LetterContent }) {
         <div className="hero-heading">
           <p className="eyebrow hero-reveal">
             <span />
-            به وقتِ یک روزِ خاص
+            {ui.brandSubtitle}
             <span />
           </p>
           <h1 id="hero-title" className="hero-reveal">
-            برای تو، <span>{content.recipient}</span>
+            {content.envelope.title}
           </h1>
           <p className="hero-subtitle hero-reveal">
-            یک دنیای کوچک، در پاکتی برای تو.
+            {content.envelope.subtitle}
           </p>
         </div>
         <div id="open-letter">
@@ -257,32 +263,23 @@ export function LetterExperience({ content }: { content: LetterContent }) {
             onOpen={open}
           />
         </div>
-        <span className="hero-side hero-side-left latin">
-          A LITTLE WORLD, SEALED FOR YOU.
-        </span>
+        <span className="hero-side hero-side-left latin">{ui.brand}</span>
         <span className="hero-side hero-side-right latin">
           {content.edition}
         </span>
         <div className="hero-bottom hero-reveal">
-          <span className="hero-dedication">
-            از {content.sender}، برای {content.recipient}
-            <small className="latin">A PERSONAL BIRTHDAY LETTER</small>
-          </span>
+          <span className="hero-dedication">{ui.fromSender}</span>
           <button
             className="hero-scroll"
             onClick={open}
             disabled={opening}
-            aria-label={
-              opened ? "ادامهٔ خواندن نامه" : "باز کردن و خواندن نامه"
-            }
+            aria-label={opened ? ui.continueMemories : ui.openEnvelope}
           >
-            <span>{opened ? "ادامهٔ نامه" : "قصه از اینجا شروع می‌شود"}</span>
+            <span>
+              {opened ? ui.continueMemories : content.envelope.button}
+            </span>
             <ArrowDown size={18} />
           </button>
-          <span className="demo-label">
-            <span />
-            نسخهٔ نمایشی<small>متن‌ها و تصاویر قابل جایگزینی‌اند</small>
-          </span>
         </div>
       </section>
       <main
@@ -299,13 +296,9 @@ export function LetterExperience({ content }: { content: LetterContent }) {
         )}
       </main>
       <div className="sr-only" aria-live="polite">
-        {opening
-          ? "در حال باز کردن پاکت"
-          : opened
-            ? "نامه باز شد. برای ادامه به پایین بروید."
-            : "نامه آمادهٔ باز کردن است."}
+        {opening ? ui.opening : opened ? ui.opened : ui.openEnvelope}
       </div>
-      <dialog className="paper-dialog" ref={menu} aria-label="فهرست نامه">
+      <dialog className="paper-dialog" ref={menu} aria-label={ui.contents}>
         <button
           className="icon-button dialog-close"
           onClick={() => menu.current?.close()}
@@ -313,8 +306,7 @@ export function LetterExperience({ content }: { content: LetterContent }) {
         >
           <X />
         </button>
-        <span className="latin eyebrow">INSIDE THE LETTER</span>
-        <h2>صفحه به صفحه</h2>
+        <h2>{ui.contents}</h2>
         <Flourish />
         <nav>
           {visible.map((s, i) => (
@@ -323,47 +315,16 @@ export function LetterExperience({ content }: { content: LetterContent }) {
               href={`#${s.id}`}
               onClick={() => menu.current?.close()}
             >
-              <span className="latin">0{i + 1}</span>
-              {sectionTitles[s.id]}
+              <span className="latin">{String(i + 1).padStart(2, "0")}</span>
+              {s.title}
               <ArrowLeft size={17} />
             </a>
           ))}
         </nav>
       </dialog>
-      <dialog
-        className="paper-dialog info-dialog"
-        ref={info}
-        aria-label="دربارهٔ نامه"
-      >
-        <button
-          className="icon-button dialog-close"
-          onClick={() => info.current?.close()}
-          aria-label="بستن توضیحات"
-        >
-          <X />
-        </button>
-        <Flourish />
-        <h2>نامه‌ای برای {content.recipient}</h2>
-        <p>
-          این نسخه، ساختار و طراحی نامه را نمایش می‌دهد. همهٔ نوشته‌ها و عکس‌های
-          داخل آن نمونه هستند و بعداً با محتوای واقعی جایگزین می‌شوند.
-        </p>
-        <p>
-          برای شروع، پاکت را لمس کن. با باز شدن نامه، صفحه‌های بعدی را ورق بزن.
-        </p>
-        <button
-          className="text-button"
-          onClick={() => {
-            info.current?.close();
-            open();
-          }}
-        >
-          نامه را باز کن <ArrowLeft size={16} />
-        </button>
-      </dialog>
       <noscript>
         <div className="noscript-note">
-          برای باز شدن پاکت و نمایش نامه، جاوااسکریپت مرورگر را فعال کنید.
+          برای باز شدن پاکت و نمایش نامه جاوااسکریپت مرورگر را فعال کنید
         </div>
       </noscript>
     </div>
