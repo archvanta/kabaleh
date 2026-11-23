@@ -1,6 +1,5 @@
 "use client";
 import { forwardRef } from "react";
-import { ArrowDown } from "lucide-react";
 import { ui } from "@/lib/ui";
 import { Flourish } from "./scene";
 type Props = {
@@ -37,7 +36,8 @@ export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
         <span className="envelope-flap" />
         <span className="envelope-fold left" />
         <span className="envelope-fold right" />
-        <span className="envelope-front">
+        <span className="envelope-front" />
+        <span className="envelope-print">
           <span className="envelope-address">
             به: {recipient}
             <small>از طرف {sender}</small>
@@ -54,10 +54,6 @@ export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
           </span>
         </span>
       </button>
-      <span className="envelope-instruction">
-        {opening ? ui.opening : opened ? ui.opened : ui.openingInstructions}
-        <ArrowDown size={15} />
-      </span>
     </div>
   );
 });

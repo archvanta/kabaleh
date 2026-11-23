@@ -69,8 +69,8 @@ test("the complete approved narrative opens with the birthday greeting and remai
   await expect(page.locator("#handmade-envelope .pocket-note")).toContainText(
     copy.handmadeEnvelope.body.split("\n\n")[0],
   );
-  await page.getByRole("button", { name: ui.contents, exact: true }).click();
-  await page.getByRole("link", { name: new RegExp(copy.letter.title) }).click();
+  await expect(page.locator("header, .reading-progress")).toHaveCount(0);
+  await page.locator("#letter h2").scrollIntoViewIfNeeded();
   await expect(page.locator("#letter")).toBeInViewport();
   await page.waitForTimeout(1100);
   await page.screenshot({

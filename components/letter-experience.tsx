@@ -2,9 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowDown, ArrowLeft, Menu, X } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import type { LetterContent } from "@/lib/content";
-import { Scene, Flourish } from "./scene";
+import { Scene } from "./scene";
 import { Envelope } from "./envelope";
 import { Story } from "./story";
 import { MemoryScrapbook } from "./red-thread-journey";
@@ -14,14 +14,9 @@ export function LetterExperience({ content }: { content: LetterContent }) {
   const root = useRef<HTMLDivElement>(null);
   const envelope = useRef<HTMLDivElement>(null);
   const story = useRef<HTMLElement>(null);
-  const menu = useRef<HTMLDialogElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const [opened, setOpened] = useState(false);
   const [opening, setOpening] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const visible = content.narrative
-    .filter((s) => s.visible)
-    .map((s) => ({ id: s.id, title: s.title }));
   useEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
@@ -86,12 +81,6 @@ export function LetterExperience({ content }: { content: LetterContent }) {
           );
         });
       }
-      ScrollTrigger.create({
-        trigger: story.current,
-        start: "top top",
-        end: "bottom bottom",
-        onUpdate: (self) => setProgress(Math.round(self.progress * 100)),
-      });
       ScrollTrigger.create({
         trigger: story.current?.querySelector("#letter"),
         start: "top 80%",
@@ -178,7 +167,6 @@ export function LetterExperience({ content }: { content: LetterContent }) {
     window.scrollTo({ top: 0, behavior: "instant" });
     setOpened(false);
     setOpening(false);
-    setProgress(0);
     timeline.current?.kill();
     const q = gsap.utils.selector(envelope);
     gsap.set(q(".wax-seal"), { clearProps: "all" });
@@ -189,56 +177,11 @@ export function LetterExperience({ content }: { content: LetterContent }) {
     envelope.current?.querySelector("button")?.focus({ preventScroll: true });
   };
   return (
-    <div ref={root} className={`experience ${opened ? "is-open" : ""}`}>
+    <div ref={root} className="experience">
       <Scene />
       <a href={opened ? "#story" : "#open-letter"} className="skip-link">
         {ui.skipToLetter}
       </a>
-      <header className="site-header">
-        <a className="wordmark" href="#" aria-label="مشکات ابتدای نامه">
-          <svg
-            className="brand-flower"
-            viewBox="0 0 40 40"
-            fill="none"
-            aria-hidden="true"
-          >
-            <g stroke="currentColor" strokeWidth="1">
-              <ellipse cx="20" cy="13" rx="5" ry="11" />
-              <ellipse cx="20" cy="27" rx="5" ry="11" />
-              <ellipse cx="13" cy="20" rx="11" ry="5" />
-              <ellipse cx="27" cy="20" rx="11" ry="5" />
-              <circle cx="20" cy="20" r="3" fill="currentColor" />
-            </g>
-          </svg>
-          <span className="latin">
-            {ui.brand}
-            <small>{ui.brandSubtitle}</small>
-          </span>
-        </a>
-        <span className="header-center">{content.envelope.title}</span>
-        <div className="header-actions">
-          <span className="edition-dot" />
-          <button
-            className="header-button"
-            onClick={() => (opened ? menu.current?.showModal() : open())}
-          >
-            {opened ? ui.contents : ui.openEnvelope}
-            {opened ? <Menu size={16} /> : <ArrowLeft size={15} />}
-          </button>
-        </div>
-        {opened && (
-          <div
-            className="reading-progress"
-            role="progressbar"
-            aria-label="پیشرفت خواندن نامه"
-            aria-valuenow={progress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <span style={{ width: `${progress}%` }} />
-          </div>
-        )}
-      </header>
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-heading">
           <p className="eyebrow hero-reveal">
@@ -276,7 +219,11 @@ export function LetterExperience({ content }: { content: LetterContent }) {
             aria-label={opened ? ui.continueMemories : ui.openEnvelope}
           >
             <span>
-              {opened ? ui.continueMemories : content.envelope.button}
+              {opening
+                ? ui.opening
+                : opened
+                  ? ui.continueMemories
+                  : content.envelope.button}
             </span>
             <ArrowDown size={18} />
           </button>
@@ -298,30 +245,6 @@ export function LetterExperience({ content }: { content: LetterContent }) {
       <div className="sr-only" aria-live="polite">
         {opening ? ui.opening : opened ? ui.opened : ui.openEnvelope}
       </div>
-      <dialog className="paper-dialog" ref={menu} aria-label={ui.contents}>
-        <button
-          className="icon-button dialog-close"
-          onClick={() => menu.current?.close()}
-          aria-label="بستن فهرست"
-        >
-          <X />
-        </button>
-        <h2>{ui.contents}</h2>
-        <Flourish />
-        <nav>
-          {visible.map((s, i) => (
-            <a
-              key={s.id}
-              href={`#${s.id}`}
-              onClick={() => menu.current?.close()}
-            >
-              <span className="latin">{String(i + 1).padStart(2, "0")}</span>
-              {s.title}
-              <ArrowLeft size={17} />
-            </a>
-          ))}
-        </nav>
-      </dialog>
       <noscript>
         <div className="noscript-note">
           برای باز شدن پاکت و نمایش نامه جاوااسکریپت مرورگر را فعال کنید

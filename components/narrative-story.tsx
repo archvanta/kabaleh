@@ -63,7 +63,7 @@ function MemoryPage({ section }: { section: NarrativeSection }) {
       className={`story-section narrative-memory ${section.order % 2 ? "memory-reversed" : ""}`}
       data-review={section.reviewStatus}
     >
-      <div className="narrative-memory-copy reveal">
+      <div className="narrative-memory-heading reveal">
         <h2>
           <CopyText text={section.title} />
         </h2>
@@ -73,13 +73,18 @@ function MemoryPage({ section }: { section: NarrativeSection }) {
           </p>
         )}
         <Flourish />
-        <Paragraphs text={section.body} />
-        <HiddenNote text={section.hiddenNote} />
       </div>
       <div
         className={`narrative-gallery reveal photos-${section.images.length}`}
       >
-        <PhotoGallery photos={section.images} />
+        <PhotoGallery
+          photos={section.images}
+          swipeable={section.images.length > 1}
+        />
+      </div>
+      <div className="narrative-memory-copy reveal">
+        <Paragraphs text={section.body} />
+        <HiddenNote text={section.hiddenNote} />
       </div>
     </section>
   );

@@ -8,9 +8,11 @@ import type { LetterContent, LetterImage } from "@/lib/content";
 export function Photo({
   image,
   className = "",
+  eager = false,
 }: {
   image: LetterImage;
   className?: string;
+  eager?: boolean;
 }) {
   return (
     <img
@@ -19,13 +21,20 @@ export function Photo({
       alt={image.alt}
       width={image.width}
       height={image.height}
-      loading="lazy"
+      loading={eager ? "eager" : "lazy"}
       decoding="async"
     />
   );
 }
-export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
+export function PhotoGallery({
+  photos,
+  swipeable = false,
+}: {
+  photos: LetterContent["gallery"];
+  swipeable?: boolean;
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
   const [index, setIndex] = useState(0);
   const [active, setActive] = useState(false);
   const selected = photos[index];
@@ -51,7 +60,7 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
   if (!photos.length) return null;
   return (
     <>
-      <div className="gallery-grid">
+      <div className={`gallery-grid${swipeable ? " gallery-swipeable" : ""}`}>
         {photos.map((photo, i) => (
           <button
             className={`gallery-photo gallery-photo-${i % 3}`}
@@ -93,7 +102,29 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
           }
         }}
       >
-        <div className="lightbox-inner">
+        <div
+          className="lightbox-inner"
+          onTouchStart={(event) => {
+            const touch = event.touches[0];
+            touchStart.current =
+              event.touches.length === 1
+                ? { x: touch.clientX, y: touch.clientY }
+                : null;
+          }}
+          onTouchEnd={(event) => {
+            const start = touchStart.current;
+            touchStart.current = null;
+            if (!start || photos.length < 2) return;
+            const touch = event.changedTouches[0];
+            const x = touch.clientX - start.x;
+            const y = touch.clientY - start.y;
+            if (Math.abs(x) > 45 && Math.abs(x) > Math.abs(y) * 1.5)
+              move(x < 0 ? 1 : -1);
+          }}
+          onTouchCancel={() => {
+            touchStart.current = null;
+          }}
+        >
           <button
             className="icon-button lightbox-close"
             onClick={close}
@@ -101,7 +132,7 @@ export function PhotoGallery({ photos }: { photos: LetterContent["gallery"] }) {
           >
             <X />
           </button>
-          <Photo image={selected} />
+          {active && <Photo image={selected} eager />}
           <div className="lightbox-toolbar">
             <button
               className="icon-button"
