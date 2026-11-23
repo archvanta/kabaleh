@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.env*
+!.env.example
+
+.private/
+
+# Licensed font is supplied locally, never redistributed in Git.
+public/fonts/mahboubeh-mehravar.woff2
+next-env.d.ts

@@ -1,0 +1,294 @@
+{
+  "recipient": "مشکات",
+  "sender": "امین",
+  "birthday": null,
+  "edition": "A LETTER FOR YOU · VOL. 01",
+  "intro": {
+    "eyebrow": "فصل اول · یک آغاز کوچک",
+    "title": "از اینجا،\nقصه آغاز می‌شود.",
+    "text": "[متن نمونه] مقدمهٔ کوتاه تولد در این قسمت قرار می‌گیرد. این نوشته بعداً با متن شخصی جایگزین می‌شود."
+  },
+  "sections": [
+    {
+      "id": "introduction",
+      "visible": true
+    },
+    {
+      "id": "memories",
+      "visible": true
+    },
+    {
+      "id": "chapters",
+      "visible": true
+    },
+    {
+      "id": "red-thread",
+      "visible": true
+    },
+    {
+      "id": "original-letter",
+      "visible": true
+    },
+    {
+      "id": "belfi",
+      "visible": true
+    },
+    {
+      "id": "keepsakes",
+      "visible": true
+    },
+    {
+      "id": "bag-pin",
+      "visible": true
+    },
+    {
+      "id": "gallery",
+      "visible": true
+    },
+    {
+      "id": "details",
+      "visible": true
+    },
+    {
+      "id": "comparison",
+      "visible": true
+    },
+    {
+      "id": "letter",
+      "visible": true
+    },
+    {
+      "id": "closing",
+      "visible": true
+    }
+  ],
+  "memories": [
+    {
+      "id": "memory-1",
+      "title": "عنوان خاطرهٔ اول",
+      "text": "[متن نمونه] روایت این خاطره و تاریخ آن اینجا اضافه می‌شود.",
+      "date": "تاریخ نمونه · ۰۱",
+      "image": {
+        "src": "/images/still-life.webp",
+        "alt": "تصویر نمایشی یک گلدان رز روی پارچهٔ روشن؛ جایگزین عکس شخصی",
+        "width": 960,
+        "height": 1200
+      }
+    },
+    {
+      "id": "memory-2",
+      "title": "عنوان خاطرهٔ دوم",
+      "text": "[متن نمونه] چند خط دربارهٔ یک لحظه؛ آماده برای روایت واقعی.",
+      "date": "تاریخ نمونه · ۰۲",
+      "image": {
+        "src": "/images/garden.webp",
+        "alt": "تصویر نمایشی باغ و نور عصر؛ جایگزین عکس شخصی",
+        "width": 1200,
+        "height": 900
+      }
+    },
+    {
+      "id": "memory-3",
+      "title": "عنوان خاطرهٔ سوم",
+      "text": "[متن نمونه] این قاب بعداً با عکس و خاطرهٔ واقعی کامل می‌شود.",
+      "date": "تاریخ نمونه · ۰۳",
+      "image": {
+        "src": "/images/window.webp",
+        "alt": "تصویر نمایشی میز کنار پنجره؛ جایگزین عکس شخصی",
+        "width": 960,
+        "height": 1200
+      }
+    }
+  ],
+  "chapters": [
+    {
+      "id": "chapter-one",
+      "number": "۰۱",
+      "title": "یک فصل،\nهزار جزئیات",
+      "text": "[متن نمونه] روایت فصل اول اینجا نوشته می‌شود. می‌توان چند عکس و چند بند کوتاه به هر فصل اضافه کرد.",
+      "images": [
+        {
+          "src": "/images/garden.webp",
+          "alt": "باغ نمایشی در نور عصر",
+          "width": 1200,
+          "height": 900
+        },
+        {
+          "src": "/images/still-life.webp",
+          "alt": "گل‌های رز نمایشی",
+          "width": 960,
+          "height": 1200
+        }
+      ]
+    },
+    {
+      "id": "chapter-two",
+      "number": "۰۲",
+      "title": "در امتداد\nاین صفحه‌ها",
+      "text": "[متن نمونه] روایت فصل دوم؛ این بخش برای داستان و تصاویر بعدی آماده است.",
+      "images": [
+        {
+          "src": "/images/window.webp",
+          "alt": "میز نمایشی در نور پنجره",
+          "width": 960,
+          "height": 1200
+        }
+      ]
+    }
+  ],
+  "gallery": [
+    {
+      "id": "photo-1",
+      "caption": "قاب شمارهٔ یک · تصویر نمایشی",
+      "src": "/images/still-life.webp",
+      "alt": "رزهای صورتی و زرشکی در گلدان؛ تصویر نمایشی",
+      "width": 960,
+      "height": 1200
+    },
+    {
+      "id": "photo-2",
+      "caption": "قاب شمارهٔ دو · تصویر نمایشی",
+      "src": "/images/garden.webp",
+      "alt": "مسیر سنگی یک باغ؛ تصویر نمایشی",
+      "width": 1200,
+      "height": 900
+    },
+    {
+      "id": "photo-3",
+      "caption": "قاب شمارهٔ سه · تصویر نمایشی",
+      "src": "/images/window.webp",
+      "alt": "فنجان و کتاب کنار پنجره؛ تصویر نمایشی",
+      "width": 960,
+      "height": 1200
+    }
+  ],
+  "notes": [
+    {
+      "id": "note-1",
+      "title": "جزئیات اول",
+      "text": "[یادداشت نمونه] متن این یادداشت کوچک بعداً اضافه می‌شود."
+    },
+    {
+      "id": "note-2",
+      "title": "جزئیات دوم",
+      "text": "[یادداشت نمونه] یک جزئیات شخصی در این قسمت قرار خواهد گرفت."
+    },
+    {
+      "id": "note-3",
+      "title": "جزئیات سوم",
+      "text": "[یادداشت نمونه] این کاغذ کوچک منتظر نوشتهٔ واقعی است."
+    }
+  ],
+  "comparison": {
+    "title": "آن روز، امروز",
+    "text": "[متن نمونه] روایت کوتاهی که این دو قاب را به هم پیوند می‌دهد، اینجا نوشته می‌شود.",
+    "before": {
+      "src": "/images/garden.webp",
+      "alt": "قاب نمایشی آن روز؛ باغ",
+      "width": 1200,
+      "height": 900
+    },
+    "after": {
+      "src": "/images/window.webp",
+      "alt": "قاب نمایشی امروز؛ پنجره",
+      "width": 960,
+      "height": 1200
+    }
+  },
+  "finalLetter": {
+    "title": "چند خط، برای تو",
+    "paragraphs": [
+      "[نامهٔ نمونه — بند اول] متن اصلی نامهٔ پایانی در این بخش قرار می‌گیرد. این فضا برای یک نوشتهٔ بلند فارسی با فاصله‌گذاری خوانا آماده شده است.",
+      "[نامهٔ نمونه — بند دوم] این نوشته صرفاً برای نمایش اندازه و چیدمان نامه است و بعداً به طور کامل جایگزین می‌شود.",
+      "[نامهٔ نمونه — بند سوم] بند پایانی و امضای شخصی اینجا اضافه خواهد شد."
+    ]
+  },
+  "closing": {
+    "title": "و این،\nآغاز صفحهٔ بعد است.",
+    "text": "[متن نمونه] پیام کوتاه پایانی تولد اینجا قرار می‌گیرد."
+  },
+  "redThreadScene": {
+    "title": "دو طرح کوچک، یک نخ سرخ",
+    "text": "[متن نمونه] توضیح این طرح و پیوند آن با هدیهٔ دست‌ساز اینجا اضافه می‌شود."
+  },
+  "originalHandwrittenLetter": {
+    "title": "یک یادگاری، همان‌طور که هست",
+    "text": "[متن نمونه] توضیح شخصی دربارهٔ نامهٔ دست‌ساز در این قسمت قرار می‌گیرد.",
+    "image": null,
+    "label": "نامهٔ دست‌ساز مشکات",
+    "pendingLabel": "در انتظار فایل اصلی عکس نامهٔ دست‌ساز"
+  },
+  "belfiMemory": {
+    "title": "بلفی، در یک قاب کوچک",
+    "text": "[متن نمونه] یادداشت مربوط به بلفی اینجا اضافه خواهد شد.",
+    "image": null,
+    "label": "بلفی",
+    "pendingLabel": "در انتظار فایل اصلی عکس بلفی"
+  },
+  "keepsakes": {
+    "title": "یادگاری‌های کوچک ما",
+    "text": "چهار دستبند، از قدیمی‌تر به جدیدتر؛ برای دیدن جزئیات هر کدام را لمس کن.",
+    "items": [
+      {
+        "id": "black-detail",
+        "type": "bracelet",
+        "title": "بند مشکی با جزئیات فلزی کوچک",
+        "order": 1,
+        "modelPath": "/models/black-detail.glb",
+        "referenceImage": null,
+        "story": "[متن نمونه] داستان این دستبند بعداً اینجا نوشته می‌شود.",
+        "date": null,
+        "caption": "بازسازی مستقل سه‌بعدی از نمای مرجع؛ جزئیات پنهان تقریبی است.",
+        "visible": true,
+        "animate": true
+      },
+      {
+        "id": "brown-strands",
+        "type": "bracelet",
+        "title": "بند قهوه‌ای چندرشته‌ای",
+        "order": 2,
+        "modelPath": "/models/brown-strands.glb",
+        "referenceImage": null,
+        "story": "[متن نمونه] داستان این دستبند بعداً اینجا نوشته می‌شود.",
+        "date": null,
+        "caption": "بازسازی مستقل سه‌بعدی از نمای مرجع؛ جزئیات پنهان تقریبی است.",
+        "visible": true,
+        "animate": true
+      },
+      {
+        "id": "silver-cord",
+        "type": "bracelet",
+        "title": "بند مشکی با قطعهٔ نقره‌ای کشیده",
+        "order": 3,
+        "modelPath": "/models/silver-cord.glb",
+        "referenceImage": null,
+        "story": "[متن نمونه] داستان این دستبند بعداً اینجا نوشته می‌شود.",
+        "date": null,
+        "caption": "بازسازی مستقل سه‌بعدی از نمای مرجع؛ جزئیات پنهان تقریبی است.",
+        "visible": true,
+        "animate": true
+      },
+      {
+        "id": "tiger-eye",
+        "type": "bracelet",
+        "title": "مهره‌های قهوه‌ای و طلایی",
+        "order": 4,
+        "modelPath": "/models/tiger-eye.glb",
+        "referenceImage": null,
+        "story": "[متن نمونه] داستان این دستبند بعداً اینجا نوشته می‌شود.",
+        "date": null,
+        "caption": "بازسازی مستقل سه‌بعدی از نمای مرجع؛ جزئیات پنهان تقریبی است.",
+        "visible": true,
+        "animate": true
+      }
+    ]
+  },
+  "bagPin": {
+    "title": "یک پین کوچک، یک جای مخصوص",
+    "text": "[متن نمونه] یادداشت شخصی این پین بعداً در این قسمت قرار می‌گیرد.",
+    "caption": "در انتظار فایل اصلی عکس پین برای آماده‌سازی بافت دقیق.",
+    "referenceImage": null,
+    "modelPath": null,
+    "visible": true
+  }
+}
