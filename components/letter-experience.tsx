@@ -200,7 +200,7 @@ export function LetterExperience({ content }: { content: LetterContent }) {
           <Envelope
             ref={envelope}
             recipient={content.recipient}
-            sender={content.sender}
+            inscription={content.envelope.inscription ?? content.envelope.title}
             opening={opening}
             opened={opened}
             onOpen={open}

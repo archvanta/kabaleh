@@ -85,6 +85,7 @@ export const contentSchema = z.object({
     title: z.string(),
     subtitle: z.string(),
     button: z.string(),
+    inscription: z.string().min(1).optional(),
   }),
   narrative: z
     .array(narrativeSection)

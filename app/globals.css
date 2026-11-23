@@ -419,19 +419,15 @@ h3 {
   z-index: 4;
   pointer-events: none;
 }
-.envelope-address {
+.envelope-inscription {
   position: absolute;
-  bottom: 27px;
-  right: 32px;
-  text-align: right;
-  font-size: 12px;
-  color: #76614d;
-}
-.envelope-address small {
-  display: block;
-  margin-top: 6px;
-  font-size: 9px;
-  color: #9c866b;
+  inset-inline-start: 7%;
+  bottom: 12%;
+  max-width: 72%;
+  line-height: 1.35;
+  text-align: start;
+  font-size: clamp(15px, 4.5vw, 22px);
+  color: #674733;
 }
 .envelope-postmark {
   position: absolute;
@@ -1425,14 +1421,6 @@ dialog::backdrop {
   .seal-sprig {
     font-size: 19px;
   }
-  .envelope-address {
-    font-size: 11px;
-    bottom: 21px;
-    right: 24px;
-  }
-  .envelope-address small {
-    font-size: 8px;
-  }
   .envelope-postmark {
     width: 47px;
     height: 47px;
@@ -1836,10 +1824,6 @@ dialog::backdrop {
   }
   .envelope-stage {
     height: 265px;
-  }
-  .envelope-address {
-    bottom: 15px;
-    font-size: 10px;
   }
   .envelope-postmark {
     bottom: 12px;
@@ -3043,12 +3027,6 @@ body {
 .bracelet-memory-card .keepsake-content {
   font-size: 13px;
 }
-.envelope-address {
-  font-size: 16px;
-}
-.envelope-address small {
-  font-size: 12px;
-}
 .letter-signature > span:first-child {
   font-size: 14px;
 }
@@ -3107,12 +3085,6 @@ body {
   }
   .pocket-action {
     font-size: 12px;
-  }
-  .envelope-address {
-    font-size: 14px;
-  }
-  .envelope-address small {
-    font-size: 11px;
   }
   .hero-dedication small {
     font-size: 8px;

@@ -4,13 +4,13 @@ import { ui } from "@/lib/ui";
 import { Flourish } from "./scene";
 type Props = {
   recipient: string;
-  sender: string;
+  inscription: string;
   opening: boolean;
   opened: boolean;
   onOpen: () => void;
 };
 export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
-  { recipient, sender, opening, opened, onOpen },
+  { recipient, inscription, opening, opened, onOpen },
   ref,
 ) {
   return (
@@ -38,10 +38,7 @@ export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
         <span className="envelope-fold right" />
         <span className="envelope-front" />
         <span className="envelope-print">
-          <span className="envelope-address">
-            به: {recipient}
-            <small>از طرف {sender}</small>
-          </span>
+          <span className="envelope-inscription">{inscription}</span>
           <span className="envelope-postmark" aria-hidden="true">
             M<br />
             <span>WITH CARE</span>
