@@ -7,7 +7,7 @@ import { ui } from "@/lib/ui";
 const closedArt = asset("/images/stationery/envelope-closed.webp");
 const openArt = asset("/images/stationery/envelope-open.webp");
 const motionArt = asset("/images/stationery/envelope-opening.webp");
-const duration = 3000; // 100 rendered frames at 30 ms each, one playback.
+const duration = 2100; // 100 rendered frames at 21 ms each, one playback.
 
 type Props = {
   recipient: string;
@@ -95,6 +95,7 @@ export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
         </span>
         <span className="envelope-inscription">{inscription}</span>
       </button>
+      {opening && <button type="button" className="envelope-skip" onClick={finish}>رفتن به نامه</button>}
     </div>
   );
 });

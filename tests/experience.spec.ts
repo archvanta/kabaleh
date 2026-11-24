@@ -69,6 +69,7 @@ test("the complete approved narrative opens with the birthday greeting and remai
     copy.handmadeEnvelope.body.split("\n\n")[0],
   );
   await expect(page.locator("header, .reading-progress")).toHaveCount(0);
+  await page.locator("#letter .full-letter-fold > summary").click();
   await page.locator("#letter h2").scrollIntoViewIfNeeded();
   await expect(page.locator("#letter")).toBeInViewport();
   await page.waitForTimeout(1100);
@@ -165,6 +166,7 @@ test("320px keyboard and reduced-motion reading keeps original text and the surp
   await expect(page.locator("#birthdayGiftNote")).toContainText(
     copy.gift.body.split("\n\n")[0],
   );
+  await page.locator("#letter .full-letter-fold > summary").click();
   const normalize = (text: string) => text.replace(/\s+/g, " ").trim();
   expect(normalize(await page.locator("#letter .letter-paragraphs").innerText())).toBe(normalize(copy.letter.body));
   await page.locator("#birthday-wishes summary").click();
@@ -188,4 +190,19 @@ test("the story has no 3D gallery and music follows the reader control", async (
   expect(await player.evaluate((element: HTMLAudioElement) => element.paused)).toBe(true);
   await page.getByRole("button", { name: "پخش موسیقی", exact: true }).click();
   await expect.poll(() => player.evaluate((element: HTMLAudioElement) => !element.paused)).toBe(true);
+});
+
+test("a failed opening still enters the story and the folded letter returns focus", async ({page})=>{
+ await page.route("**/envelope-opening.webp",route=>route.abort());
+ await page.goto("/");
+ await page.locator(".envelope").click();
+ await expect(page.locator("#story")).toBeVisible();
+ await expect(page.locator(".full-letter-fold")).not.toHaveAttribute("open","");
+ await page.locator(".full-letter-fold > summary").click();
+ await expect(page.locator("#letter .letter-paragraphs")).toBeVisible();
+ await page.getByRole("button",{name:"تا کردن نامه",exact:true}).click();
+ await expect(page.locator(".full-letter-fold > summary")).toBeFocused();
+ await expect(page.locator(".full-letter-fold")).not.toHaveAttribute("open","");
+ const family=await page.locator("#birthday-greeting .narrative-prose p").first().evaluate(el=>getComputedStyle(el).fontFamily);
+ expect(family).toContain("Mahboubeh Mehravar");
 });

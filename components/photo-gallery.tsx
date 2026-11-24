@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Expand, X } from "lucide-react";
+import { photoFastener } from "@/lib/photo-fasteners";
 import { CopyText } from "./copy-text";
+import responsiveImages from "@/content/responsive-images.json";
 import { ui } from "@/lib/ui";
 import { asset } from "@/lib/assets";
 import type { LetterContent, LetterImage } from "@/lib/content";
@@ -18,6 +20,8 @@ export function Photo({
     <img
       className={`photo-load ${className}`}
       src={asset(image.src)}
+      srcSet={!eager ? (responsiveImages as Record<string, {width:number;src:string}[]>)[image.src]?.map(copy=>`${asset(copy.src)} ${copy.width}w`).join(", ") : undefined}
+      sizes={!eager ? "(max-width: 760px) 88vw, (max-width: 1100px) 40vw, 500px" : undefined}
       alt={image.alt}
       width={image.width}
       height={image.height}
@@ -67,6 +71,7 @@ export function PhotoGallery({
           <button
             className={`gallery-photo gallery-photo-${i % 3}`}
             key={photo.id}
+            data-fastener={photoFastener(photo.src)}
             onClick={() => open(i)}
             aria-label={`${ui.viewOriginalPhoto} ${photo.caption}`}
           >

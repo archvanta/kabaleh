@@ -58,18 +58,23 @@ function HiddenNote({ text }: { text: string | null }) {
     </details>
   );
 }
+const compositions: Record<string,number> = {
+ "memory-01":0,"memory-02":1,"memory-03":2,"memory-04":4,
+ "memory-05":3,"memory-06":1,"memory-07":0,"memory-08":1,
+ "memory-09":0,"memory-10":2,"memory-11":4,"memory-13":2,
+};
 function MemoryPage({ section }: { section: NarrativeSection }) {
   return (
     <section
       id={section.id}
-      className={`story-section narrative-memory composition-${section.order % 5} ${section.order % 2 ? "memory-reversed" : ""}`}
+      className={`story-section narrative-memory composition-${compositions[section.id] ?? 1} ${section.order % 2 ? "memory-reversed" : ""}`}
       data-review={section.reviewStatus}
     >
       <div className="narrative-memory-heading reveal">
         <h2>
           <CopyText text={section.title} />
         </h2>
-        {section.caption && (
+        {section.caption && !section.images.some(image=>image.caption===section.caption) && (
           <p className="narrative-caption">
             <CopyText text={section.caption} />
           </p>
@@ -91,7 +96,9 @@ function MemoryPage({ section }: { section: NarrativeSection }) {
     </section>
   );
 }
-function PaperPage({ section }: { section: NarrativeSection }) {
+function PaperPage({ section, preview }: { section: NarrativeSection; preview?: LetterContent["gallery"] }) {
+  const intro = section.id === "introduction" || section.variant === "autumn";
+  const parts = section.body.split(/\n\s*\n/);
   return (
     <section
       id={section.id}
@@ -102,20 +109,27 @@ function PaperPage({ section }: { section: NarrativeSection }) {
         <h2>
           <CopyText text={section.title} />
         </h2>
-        {section.variant === "wishes" ? (
+        {intro || section.variant === "greeting" ? <>
+          <Paragraphs text={parts[0]} />
+          <details className="opening-note"><summary>{section.variant === "greeting" ? "چند خط برای شروع این دفتر" : "بقیه این نامه"} <Plus size={17}/></summary>
+            <Paragraphs text={parts.slice(1).join("\n\n")} />
+            {section.threadText && <Paragraphs text={section.threadText} />}
+          </details>
+        </> : section.variant === "wishes" ? (
           <details className="folded-wishes" open={undefined}>
             <summary><span>آرزوهایم برای تو</span><Plus size={17} /></summary>
             <div className="unfolded-wishes"><Paragraphs text={section.body} /></div>
           </details>
         ) : <Paragraphs text={section.body} />}
+        {preview && <div className="opening-photo-preview"><PhotoGallery photos={preview} /></div>}
         {section.highlight && <blockquote>{section.highlight}</blockquote>}
-        {section.threadText && (
+        {section.threadText && !intro && (
           <div className="thread-interlude">
             <InkFigures />
             <Paragraphs text={section.threadText} />
           </div>
         )}
-        {section.variant === "autumn" && <PressedBotanical />}
+
       </article>
     </section>
   );
@@ -144,6 +158,9 @@ export function NarrativeStory({
                 />
                 <div className="original-thread-interlude">
                   <HandDrawnCharacters embedded data={content.redThreadScene} />
+                  <details className="opening-note preserved-keepsake-copy"><summary>یادداشت یادگاری ها <Plus size={17}/></summary>
+                    <Paragraphs text={content.narrative.find(item=>item.variant==="keepsakes")?.body || ""} />
+                  </details>
                 </div>
               </div>
             );
@@ -189,7 +206,9 @@ export function NarrativeStory({
                   <Paragraphs text={section.threadText || ""} />
                   <Flourish />
                 </div>
-                <article className="final-letter paper reveal">
+                <details className="full-letter-fold">
+                  <summary><span>نامه ام برای تو</span><span>باز کردن و خواندن کامل نامه</span><Plus size={20}/></summary>
+                <article className="final-letter paper">
                   <Flourish />
                   <h2>
                     <CopyText text={section.title} />
@@ -204,7 +223,16 @@ export function NarrativeStory({
                     <span className="signature-line" />
                   </div>
                   <span className="letter-wax" aria-hidden="true" />
+                  <button className="text-button fold-letter-close" type="button" onClick={event=>{
+                    const fold=event.currentTarget.closest("details");
+                    if(!fold)return;
+                    fold.open=false;
+                    const summary=fold.querySelector("summary");
+                    summary?.scrollIntoView({block:"center",behavior:"instant"});
+                    summary?.focus({preventScroll:true});
+                  }}>تا کردن نامه</button>
                 </article>
+                </details>
               </section>
             );
           if (section.variant === "closing")
@@ -241,7 +269,7 @@ export function NarrativeStory({
                 </footer>
               </section>
             );
-          return <PaperPage key={section.id} section={section} />;
+          return <PaperPage key={section.id} section={section} preview={section.variant === "greeting" ? content.gallery.slice(0,1) : undefined} />;
         })}
     </>
   );

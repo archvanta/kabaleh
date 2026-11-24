@@ -19,12 +19,12 @@ function threadPath(
   cross: boolean,
 ) {
   const narrow = width < 760;
-  const edge = narrow ? 10 : 27;
-  const inward = narrow ? 16 : 45;
+  const edge = narrow ? 13 : 27;
+  const inward = narrow ? 12 : 45;
   const x = right ? width - edge : edge;
   const direction = right ? -1 : 1;
   const bend = height * 0.37;
-  const curl = Math.min(66, height * 0.16);
+  const curl = Math.min(narrow ? 42 : 66, height * 0.16);
   const p = (distance: number) => x + direction * distance;
 
   const wave = [
@@ -37,12 +37,13 @@ function threadPath(
     const next = right ? edge : width - edge;
     const y = height - Math.min(78, height * 0.18);
     const middle = width / 2;
-    const heart = narrow ? 12 : 22;
+    const heart = narrow ? 8 : 22;
+    const landingHalf = narrow ? Math.min(56, width * 0.18) : 80;
     const along = (fraction: number) => x + (next - x) * fraction;
     wave.push(
       `C ${p(inward)} ${height * 0.7}, ${p(-edge * 0.2)} ${y - 44}, ${x} ${y}`,
-      `C ${along(.12)} ${y + 42}, ${along(.22)} ${y - 20}, ${middle - Math.sign(next-x)*80} ${y}`,
-      `L ${middle + Math.sign(next-x)*80} ${y}`,
+      `C ${along(.12)} ${y + 42}, ${along(.22)} ${y - 20}, ${middle - Math.sign(next-x)*landingHalf} ${y}`,
+      `L ${middle + Math.sign(next-x)*landingHalf} ${y}`,
       `C ${along(.63)} ${y + 30}, ${along(.74)} ${y - 18}, ${along(.74)} ${y - 18}`,
       `C ${along(.74) - heart * 2} ${y - 60}, ${along(.74) + heart} ${y - 68}, ${along(.74)} ${y - 42}`,
       `C ${along(.74) + heart * 2} ${y - 65}, ${along(.74) + heart * 2} ${y - 21}, ${along(.74)} ${y - 18}`,

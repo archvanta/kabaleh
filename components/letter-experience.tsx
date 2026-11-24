@@ -2,10 +2,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import type { LetterContent } from "@/lib/content";
+import { ChapterIndex } from "./chapter-index";
 import { Scene } from "./scene";
 import { Envelope } from "./envelope";
 import { Story } from "./story";
 import { MemoryScrapbook } from "./red-thread-journey";
+import { asset } from "@/lib/assets";
 import { ui } from "@/lib/ui";
 import { BackgroundMusic, type MusicHandle } from "./background-music";
 import { stationery } from "@/lib/stationery";
@@ -91,6 +93,13 @@ export function LetterExperience({ content }: { content: LetterContent }) {
       className={`experience${opened ? " book-open" : ""}${opening ? " opening-letter" : ""}`}
       style={
         {
+          "--photo-pushpin": `url("${asset("/images/stationery/photo-pushpin.webp")}")`,
+          "--photo-paperclip": `url("${asset("/images/stationery/photo-paperclip.webp")}")`,
+          "--photo-tape": `url("${asset("/images/stationery/photo-tape.webp")}")`,
+          "--continuous-paper": `url("${asset("/images/stationery/continuous-paper.webp")}")`,
+          "--layered-mat": `url("${asset("/images/stationery/layered-mat.webp")}")`,
+          "--journal-mat": `url("${asset("/images/stationery/journal-mat.webp")}")`,
+          "--folded-mat": `url("${asset("/images/stationery/folded-mat.webp")}")`,
           "--bears": `url("${stationery.bears}")`,
           "--purple-figures": `url("${stationery.purpleFigures}")`,
           "--deckled-paper": `url("${stationery.paper}")`,
@@ -113,6 +122,7 @@ export function LetterExperience({ content }: { content: LetterContent }) {
     >
       <Scene petals={!opened} />
       <BackgroundMusic ref={music} />
+      {opened && <ChapterIndex />}
       <a href={opened ? "#story" : "#open-letter"} className="skip-link">
         {ui.skipToLetter}
       </a>

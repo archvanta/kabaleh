@@ -6,6 +6,7 @@ import { Photo } from "./photo-gallery";
 import { Flourish } from "./scene";
 import { asset } from "@/lib/assets";
 import { ui } from "@/lib/ui";
+import { photoFastener } from "@/lib/photo-fasteners";
 import { stationery } from "@/lib/stationery";
 export function PressedBotanical({ className = "" }: { className?: string }) {
   return <img className={`pressed-botanical ${className}`} src={stationery.botanical}
@@ -103,13 +104,13 @@ export function OriginalLetterMemory({
         </span>
       </div>
       <div className="original-letter-mount reveal">
-        <div className="artifact-photo">
+        <div className="artifact-photo" data-fastener={data.image ? photoFastener(data.image.src) : "clip"}>
           <span className="tape" />
           <ArtifactPhoto data={data} />
           <span className="artifact-label">{data.label}</span>
         </div>
         {data.relatedImages.map((image, i) => (
-          <figure key={i} className="related-artifact artifact-photo">
+          <figure key={i} className="related-artifact artifact-photo" data-fastener={photoFastener(image.src)}>
             <Photo image={image} />
             <figcaption className="artifact-label">
               یادگاری دستساز · عکس اصلی
@@ -149,7 +150,7 @@ export function BelfiMemory({ data }: { data: LetterContent["belfiMemory"] }) {
     <section id="belfi" ref={root} className="belfi-section story-section">
       <div className={`belfi-mount ${revealed ? "is-revealed" : ""}`}>
         <div className="belfi-underlay" />
-        <div className="belfi-photo artifact-photo">
+        <div className="belfi-photo artifact-photo" data-fastener={data.image ? photoFastener(data.image.src) : "pin"}>
           <ArtifactPhoto data={data} />
           <span className="artifact-label">
             {data.label} <span className="latin">BELFI</span>

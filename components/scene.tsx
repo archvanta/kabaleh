@@ -1,13 +1,17 @@
+"use client";
+import { useEffect, useState } from "react";
 import { asset } from "@/lib/assets";
 export function Scene({ petals = true }: { petals?: boolean }) {
+  const [flourish,setFlourish]=useState(true);
+  useEffect(()=>{const timer=setTimeout(()=>setFlourish(false),4500);return()=>clearTimeout(timer)},[]);
   return (
     <div className="scene" aria-hidden="true">
       <div
         className="scene-photo"
-        style={{ backgroundImage: `url("${asset("/images/stationery/scrapbook-table.webp")}")` }}
+        style={{ backgroundImage: `url("${asset("/images/stationery/autumn-table.webp")}")` }}
       />
       <div className="scene-light" />
-      {petals && (
+      {petals && flourish && (
         <div className="petals">
           {Array.from({ length: 6 }, (_, i) => (
             <i key={i} style={{ "--i": i } as React.CSSProperties} />

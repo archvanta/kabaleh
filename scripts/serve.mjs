@@ -72,7 +72,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 // Personal preview is intentionally bound to loopback only. Never expose or tunnel it.
-server.listen(port, personal ? "127.0.0.1" : "0.0.0.0", () =>
+server.listen(port, "127.0.0.1", () =>
   console.log(
     `MESHKAT ${personal ? "PRIVATE LOCAL PREVIEW" : "static preview"} listening on port ${port}`,
   ),

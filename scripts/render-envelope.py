@@ -38,7 +38,7 @@ for i in range(100):
  frames.append(im)
 frames[0].save(out/'envelope-closed.webp',quality=88,method=6)
 frames[-1].save(out/'envelope-open.webp',quality=88,method=6)
-frames[0].save(out/'envelope-opening.webp',save_all=True,append_images=frames[1:],duration=30,loop=1,quality=78,method=4,minimize_size=True,allow_mixed=True)
+frames[0].save(out/'envelope-opening.webp',save_all=True,append_images=frames[1:],duration=21,loop=1,quality=78,method=4,minimize_size=True,allow_mixed=True)
 sheet=Image.new('RGB',(1800,2190),'#fff7e9')
 for i,im in enumerate(frames):
  small=im.resize((180,219),Image.Resampling.LANCZOS); sheet.paste(small,((i%10)*180,(i//10)*219),small)

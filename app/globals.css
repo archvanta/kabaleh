@@ -4228,3 +4228,219 @@ body {
  #original-letter.story-section::after { width: 90px; height: 85px; }
  .kabaleh-signoff img { width: 95px; }
 }
+
+/* Locally reviewed edition: generated ink rather than procedural SVG outlines. */
+.red-thread-journey { overflow: clip; }
+.painted-segment { pointer-events: none; }
+.ink-raster { position:absolute;top:0; width:76px; object-fit:fill; max-width:none; clip-path:inset(0 0 100%); opacity:.94; }
+.ink-right .ink-raster { right:-22px; }
+.ink-left .ink-raster { left:-22px; }
+.ink-connector {position:absolute;bottom:18px;left:0;width:100%;height:120px;object-fit:fill;max-width:none;clip-path:inset(0 100% 0 0);}
+.ink-right .ink-connector { transform:scaleX(-1); }
+.painted-segment .thread-figures {position:absolute;max-width:none;object-fit:contain;}
+.ink-visible .ink-raster,.ink-visible .ink-connector {clip-path:inset(0);transition:clip-path 1200ms ease-out;}
+@keyframes reveal-painted-ink {from{clip-path:inset(0 0 100%)}to{clip-path:inset(0)}}
+@keyframes reveal-painted-bridge {from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
+@supports(animation-timeline:scroll(root block)){
+ .ink-raster {animation:reveal-painted-ink steps(1000,end) both;animation-timeline:scroll(root block);animation-range:var(--ink-start) var(--ink-end)}
+ .ink-connector {animation:reveal-painted-bridge steps(1000,end) both;animation-timeline:scroll(root block);animation-range:var(--fig-start) var(--fig-end)}
+}
+.memory-scrapbook .narrative-prose p,
+.memory-scrapbook .artifact-copy > p,
+.memory-scrapbook .pocket-note p,
+.memory-scrapbook .photo-caption,
+.memory-scrapbook .narrative-caption {font-family:var(--font-site),"Vazirmatn",sans-serif; color:#49392f; font-weight:400;}
+.memory-scrapbook .narrative-prose p{line-height:1.95;font-size:18px;}
+.memory-scrapbook .narrative-prose p:first-child{color:#653429;}
+.memory-scrapbook .photo-caption {font-size:14px;line-height:1.8;}
+.memory-scrapbook .narrative-caption{color:#674a36!important;font-size:15px!important;}
+.memory-scrapbook .story-section {padding-bottom:170px;}
+.memory-scrapbook #birthday-greeting {padding-top:50px;padding-bottom:150px;}
+.memory-scrapbook #introduction,.memory-scrapbook #azar{padding-top:35px;padding-bottom:45px;}
+#introduction .narrative-paper>h2,#azar .narrative-paper>h2 {font-size:28px;margin-block:5px 18px;}
+#introduction .thread-interlude,#azar .thread-interlude {margin-top:15px;padding-top:15px;}
+.opening-note>summary,.full-letter-fold>summary {list-style:none;cursor:pointer;display:flex;gap:15px;align-items:center;justify-content:space-between;min-height:52px;color:#7a263c;}
+.opening-note>summary::-webkit-details-marker,.full-letter-fold>summary::-webkit-details-marker {display:none;}
+.opening-note {margin-top:15px;}
+.opening-note[open] .narrative-prose {margin-top:22px;}
+.opening-photo-preview {width:min(100%,290px);margin:28px auto 0;}
+.opening-photo-preview .gallery-grid {display:block;}
+.opening-photo-preview .photo-image img {max-height:280px;object-fit:contain;}
+.opening-photo-preview .photo-caption {font-size:13px;}
+.opening-photo-preview .gallery-photo {width:100%;}
+.full-letter-fold {border:18px solid transparent;border-image:var(--curled-paper) 45 fill / 18px;}
+.full-letter-fold>summary {min-height:150px;flex-wrap:wrap;padding:25px 20px;}
+.full-letter-fold>summary>span:first-child {font-size:32px;}
+.full-letter-fold>summary>span:nth-child(2) {font-size:17px;}
+.full-letter-fold[open]>.final-letter {padding:28px 25px 85px;}
+.full-letter-fold[open]>summary svg {transform:rotate(45deg);}
+.memory-scrapbook .narrative-letter-section {padding-block:45px 150px;}
+.memory-scrapbook .narrative-letter-section:before {background-image:var(--wax);width:75px;height:75px;}
+.chapter-index {position:fixed;bottom:max(12px,env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right));z-index:34;max-width:240px;color:#582a2c;background:#fff5e8f5;border:1px solid #a989674d;box-shadow:0 4px 14px #4e30221a;}
+.chapter-index>summary{padding:12px 18px;min-height:44px;cursor:pointer;font-size:14px;list-style:none;}
+.chapter-index nav{display:grid;padding:6px 12px 12px;}
+.chapter-index a{min-height:44px;padding:10px;color:#582a2c;text-decoration:none;}
+.chapter-index[open]{max-height:70svh;overflow:auto;}
+.envelope-skip{position:absolute;bottom:-45px;left:50%;transform:translateX(-50%);min-height:44px;white-space:nowrap;color:#652f35;background:#fff4e5;border:1px solid #ac8a6544;padding:8px 22px;z-index:4;}
+.memory-scrapbook .composition-2 .narrative-gallery {background:var(--layered-mat) center/100% 100% no-repeat;padding:30px;}
+.memory-scrapbook .composition-4 .narrative-memory-copy {border:0;background:var(--journal-mat) center/100% 100% no-repeat;padding:35px 32px;}
+.memory-scrapbook .narrative-gift article {border:0;background:var(--folded-mat) center/100% 100% no-repeat;padding:45px;}
+.memory-scrapbook #memory-05 .narrative-gallery .gallery-grid {display:flex;overflow-x:auto;gap:22px;scroll-snap-type:x mandatory;padding:20px 12px 30px;}
+.memory-scrapbook #memory-05 .gallery-photo {flex:0 0 85%;scroll-snap-align:center;}
+.memory-scrapbook #memory-09 .narrative-gallery {background:#573d3020;padding:22px 16px;}
+.memory-scrapbook #memory-10 .narrative-memory-copy {border-inline-start:3px solid #7a263c;padding-inline-start:20px;}
+.memory-scrapbook #memory-13 .narrative-gallery {background:var(--layered-mat) center/100% 100% no-repeat;padding:35px 25px;}
+.memory-scrapbook #bag-pin {padding-top:50px;padding-bottom:120px;}
+#bag-pin .pin-caption-paper{min-height:0;padding:15px;}
+@media(max-width:760px){
+ .ink-raster{width:60px;}.ink-right .ink-raster{right:-16px;}.ink-left .ink-raster{left:-16px;}
+ .ink-connector{height:100px;bottom:28px;}
+ .memory-scrapbook .narrative-prose p{font-size:17px;line-height:1.9;margin-bottom:18px;}
+ .memory-scrapbook #birthday-greeting{padding:45px 22px 145px;}
+ .memory-scrapbook #introduction,.memory-scrapbook #azar{padding:26px 22px 40px;}
+ .memory-scrapbook #introduction::after,.memory-scrapbook #azar::after{display:none;}
+ #introduction .thread-interlude .ink-figures{display:none;}
+ .memory-scrapbook .narrative-greeting .narrative-prose p{text-align:right;}
+ .memory-scrapbook .narrative-paper>h2{font-size:28px;line-height:1.55;}
+ .opening-photo-preview{max-width:215px;margin-top:22px;}
+ .opening-photo-preview .photo-image img{max-height:230px;}
+ .full-letter-fold{border-width:10px;}
+ .full-letter-fold>summary{min-height:140px;padding:15px 10px;}
+ .full-letter-fold>summary>span:first-child{font-size:27px;}
+ .full-letter-fold>summary>span:nth-child(2){font-size:15px;}
+ .full-letter-fold[open]>.final-letter{padding:20px 10px 70px!important;}
+ .memory-scrapbook .composition-4 .narrative-memory-copy{padding:28px 22px;}
+ .memory-scrapbook .narrative-gift article{padding:35px 25px;}
+ .chapter-index>summary {font-size:12px;padding-inline:12px;}
+}
+@media(prefers-reduced-motion:reduce){.ink-raster,.ink-connector{animation:none!important;clip-path:none!important;transition:none!important;opacity:1;}}
+@media(max-height:450px) and (orientation:landscape){.lightbox{max-height:96svh;overflow:auto}.lightbox-inner>img{max-height:65svh}.lightbox-close{position:sticky;top:0;z-index:4}.lightbox-toolbar{position:relative;bottom:auto}.chapter-index[open]{max-height:80svh}}
+.memory-scrapbook #birthday-greeting {padding-bottom:195px;}
+.preserved-keepsake-copy {padding:20px 35px;background:#fff4de;max-width:720px;margin:auto;}
+.memory-scrapbook .opening-note p {text-align:right!important;}
+@media(max-width:760px){.memory-scrapbook #birthday-greeting{padding-bottom:185px;}.memory-scrapbook #introduction,.memory-scrapbook #azar{margin-block:8px 12px;}}
+.fold-letter-close{min-height:44px;margin-top:35px;position:relative;z-index:3;}
+.ink-tail {position:absolute;bottom:0;height:78px;width:76px;max-width:none;object-fit:fill;clip-path:inset(0 0 100%);}
+.ink-right .ink-tail{left:-22px;}.ink-left .ink-tail{right:-22px;}
+.ink-visible .ink-tail{clip-path:inset(0);transition:clip-path 500ms ease-out 700ms;}
+@supports(animation-timeline:scroll(root block)){
+ .ink-tail{animation:reveal-painted-ink steps(1000,end) both;animation-timeline:scroll(root block);animation-range:var(--fig-start) var(--fig-end);}
+}
+.memory-scrapbook .photo-caption{font-size:15px;}.opening-photo-preview .photo-caption{font-size:14px;}
+@media(max-width:760px){.ink-tail{width:60px;}.ink-right .ink-tail{left:-16px;}.ink-left .ink-tail{right:-16px;}}
+@media(prefers-reduced-motion:reduce){.ink-tail{animation:none!important;clip-path:none!important;transition:none!important;}}
+
+/* Reading surfaces grow by repeating clean fibers; only the fixed rim uses sheet artwork.
+   Never stretch a full photographed sheet or fill its nine-slice centre behind long copy. */
+.memory-scrapbook .story-section,
+.memory-scrapbook .full-letter-fold,
+.memory-scrapbook .pocket-note,
+.memory-scrapbook .pin-paper,
+.memory-scrapbook .pin-caption-paper,
+.memory-scrapbook .composition-4 .narrative-memory-copy,
+.memory-scrapbook .narrative-gift article,
+.memory-scrapbook .unfolded-wishes,
+.memory-scrapbook .memory-hidden-note,
+.memory-scrapbook .preserved-keepsake-copy {
+  background-color: #fff7e9;
+  background-image: var(--continuous-paper);
+  background-position: left top;
+  background-size: 360px 360px;
+  background-repeat: repeat;
+  background-origin: padding-box;
+  background-clip: padding-box;
+}
+.memory-scrapbook .story-section {
+  border-image-slice: 90;
+  border-image-repeat: round;
+}
+.memory-scrapbook .full-letter-fold,
+.memory-scrapbook .pocket-note,
+.memory-scrapbook .pin-paper,
+.memory-scrapbook .pin-caption-paper,
+.memory-scrapbook .composition-4 .narrative-memory-copy,
+.memory-scrapbook .narrative-gift article {
+  border-style: solid;
+  border-color: transparent;
+  border-image-source: var(--ink-paper);
+  border-image-slice: 90;
+  border-image-repeat: round;
+  border-image-outset: 0;
+  border-image-width: 1;
+  box-shadow: 0 5px 14px #66452a15;
+}
+.memory-scrapbook .full-letter-fold { border-image-source: var(--curled-paper); }
+.memory-scrapbook .pocket-note { border-image-source: var(--curled-paper); }
+.memory-scrapbook .composition-4 .narrative-memory-copy,
+.memory-scrapbook .narrative-gift article,
+.memory-scrapbook .pin-caption-paper { border-width: 12px; }
+.memory-scrapbook .folded-wishes > summary {
+  background-color: #fff7e9;
+  background-image: var(--continuous-paper);
+  background-position: left top;
+  background-size: 360px 360px;
+  background-repeat: repeat;
+  background-clip: padding-box;
+  border-image-slice: 90;
+  border-image-repeat: round;
+}
+@media (max-width: 760px) {
+  .memory-scrapbook .composition-4 .narrative-memory-copy,
+  .memory-scrapbook .narrative-gift article,
+  .memory-scrapbook .pin-caption-paper { border-width: 8px; }
+}
+
+/* Generated photo fasteners sit on the top mount, outside the original photograph. */
+.memory-scrapbook .gallery-photo[data-fastener]::before,
+.memory-scrapbook .artifact-photo[data-fastener]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 5;
+}
+.memory-scrapbook .gallery-photo[data-fastener="pin"]::before,
+.memory-scrapbook .artifact-photo[data-fastener="pin"]::after {
+  background-image: var(--photo-pushpin);
+  width: 30px;
+  height: 32px;
+  top: -22px;
+}
+.memory-scrapbook .gallery-photo[data-fastener="clip"]::before,
+.memory-scrapbook .artifact-photo[data-fastener="clip"]::after {
+  background-image: var(--photo-paperclip);
+  width: 25px;
+  height: 46px;
+  top: -36px;
+}
+.memory-scrapbook .gallery-photo[data-fastener="tape"]::before {
+  background-image: var(--photo-tape);
+  width: 86px;
+  height: 30px;
+  top: -20px;
+}
+.artifact-photo[data-fastener] > .tape,
+.belfi-mount > .tape { display: none; }
+/* A tall clip needs headroom inside a scrollable photo strip. */
+.memory-scrapbook .narrative-memory .narrative-gallery .gallery-swipeable,
+.memory-scrapbook .composition-3 .narrative-gallery .gallery-grid,
+.memory-scrapbook #memory-05 .narrative-gallery .gallery-grid {
+  padding-top: 38px;
+}
+.memory-scrapbook .complete-album .gallery-grid { padding-top: 38px; row-gap: 46px; }
+.memory-scrapbook .artifact-photo[data-fastener="tape"]::after {
+  background-image: var(--photo-tape);
+  width: 86px;
+  height: 30px;
+  top: -20px;
+}
+
+/* Restore the live drawn thread; mobile curls stay within the paper margins. */
+@media (max-width: 760px) {
+  .red-thread-journey .ink-path { stroke-width: 3.1px; }
+}
