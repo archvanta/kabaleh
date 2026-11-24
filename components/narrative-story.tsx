@@ -3,6 +3,7 @@ import { CopyText } from "./copy-text";
 import { ArrowUp, Plus } from "lucide-react";
 import type { LetterContent, NarrativeSection } from "@/lib/content";
 import { ui } from "@/lib/ui";
+import { stationery } from "@/lib/stationery";
 import { Flourish } from "./scene";
 import { PhotoGallery } from "./photo-gallery";
 import {
@@ -21,27 +22,27 @@ export function Paragraphs({
   text: string;
   className?: string;
 }) {
+  // Group adjacent original sentences without changing any words or their order.
+  const sentences = text.split(/\n\s*\n/).filter(Boolean);
+  const paragraphs: string[] = [];
+  let group: string[] = [];
+  for (const sentence of sentences) {
+    if (group.length && (group.join(" ").length + sentence.length > 240 || group.length >= 3)) {
+      paragraphs.push(group.join(" "));
+      group = [];
+    }
+    group.push(sentence);
+  }
+  if (group.length) paragraphs.push(group.join(" "));
   return (
     <div className={`narrative-prose ${className}`}>
-      {text
-        .split(/\n\s*\n/)
-        .filter(Boolean)
-        .map((paragraph, index) => (
-          <p key={index} dir="auto">
-            {paragraph.split(/(:\){1,3})/g).map((piece, i) =>
-              /^:\){1,3}$/.test(piece) ? (
-                <bdi dir="ltr" key={i}>
-                  {piece}
-                </bdi>
-              ) : (
-                piece
-              ),
-            )}
-          </p>
-        ))}
+      {paragraphs.map((paragraph, index) => (
+        <p key={index} dir="auto"><CopyText text={paragraph} /></p>
+      ))}
     </div>
   );
 }
+
 function HiddenNote({ text }: { text: string | null }) {
   if (!text) return null;
   return (
@@ -61,7 +62,7 @@ function MemoryPage({ section }: { section: NarrativeSection }) {
   return (
     <section
       id={section.id}
-      className={`story-section narrative-memory ${section.order % 2 ? "memory-reversed" : ""}`}
+      className={`story-section narrative-memory composition-${section.order % 5} ${section.order % 2 ? "memory-reversed" : ""}`}
       data-review={section.reviewStatus}
     >
       <div className="narrative-memory-heading reveal">
@@ -101,7 +102,12 @@ function PaperPage({ section }: { section: NarrativeSection }) {
         <h2>
           <CopyText text={section.title} />
         </h2>
-        <Paragraphs text={section.body} />
+        {section.variant === "wishes" ? (
+          <details className="folded-wishes" open={undefined}>
+            <summary><span>آرزوهایم برای تو</span><Plus size={17} /></summary>
+            <div className="unfolded-wishes"><Paragraphs text={section.body} /></div>
+          </details>
+        ) : <Paragraphs text={section.body} />}
         {section.highlight && <blockquote>{section.highlight}</blockquote>}
         {section.threadText && (
           <div className="thread-interlude">
@@ -197,9 +203,7 @@ export function NarrativeStory({
                     <strong>{content.sender}</strong>
                     <span className="signature-line" />
                   </div>
-                  <span className="letter-wax" aria-hidden="true">
-                    A
-                  </span>
+                  <span className="letter-wax" aria-hidden="true" />
                 </article>
               </section>
             );
@@ -227,6 +231,10 @@ export function NarrativeStory({
                   </summary>
                   <PhotoGallery photos={content.gallery} />
                 </details>
+                <div className="kabaleh-signoff" aria-hidden="true">
+                  <img src={stationery.bears} width={145} height={130} alt="" loading="lazy" />
+                  <span className="latin">Kabaleh</span>
+                </div>
                 <footer>
                   <span>{ui.footer}</span>
                   <span>{ui.brandSubtitle}</span>

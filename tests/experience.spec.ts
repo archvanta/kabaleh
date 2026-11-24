@@ -165,9 +165,11 @@ test("320px keyboard and reduced-motion reading keeps original text and the surp
   await expect(page.locator("#birthdayGiftNote")).toContainText(
     copy.gift.body.split("\n\n")[0],
   );
-  await expect(page.locator("#letter .letter-paragraphs p")).toHaveCount(
-    copy.letter.body.split("\n\n").length,
-  );
+  const normalize = (text: string) => text.replace(/\s+/g, " ").trim();
+  expect(normalize(await page.locator("#letter .letter-paragraphs").innerText())).toBe(normalize(copy.letter.body));
+  await page.locator("#birthday-wishes summary").click();
+  await expect(page.locator("#birthday-wishes details")).toHaveAttribute("open", "");
+  await expect(page.locator(".thread-figures").first()).toBeAttached();
 });
 
 test("the story has no 3D gallery and music follows the reader control", async ({ page }) => {

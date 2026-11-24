@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { stationery } from "@/lib/stationery";
 
 type InkSegment = {
   top: number;
@@ -8,6 +9,7 @@ type InkSegment = {
   width: number;
   path: string;
   documentTop: number;
+  figures: boolean;
 };
 
 function threadPath(
@@ -18,7 +20,7 @@ function threadPath(
 ) {
   const narrow = width < 760;
   const edge = narrow ? 10 : 27;
-  const inward = narrow ? 13 : 30;
+  const inward = narrow ? 16 : 45;
   const x = right ? width - edge : edge;
   const direction = right ? -1 : 1;
   const bend = height * 0.37;
@@ -33,10 +35,18 @@ function threadPath(
   ];
   if (cross) {
     const next = right ? edge : width - edge;
-    const curveHeight = Math.min(narrow ? 44 : 76, height * 0.15);
+    const y = height - Math.min(78, height * 0.18);
+    const middle = width / 2;
+    const heart = narrow ? 12 : 22;
+    const along = (fraction: number) => x + (next - x) * fraction;
     wave.push(
-      `C ${p(inward * 0.3)} ${height * 0.72}, ${x} ${height - curveHeight}, ${x} ${height - curveHeight * 0.74}`,
-      `C ${x} ${height + 3}, ${next} ${height - curveHeight}, ${next} ${height}`,
+      `C ${p(inward)} ${height * 0.7}, ${p(-edge * 0.2)} ${y - 44}, ${x} ${y}`,
+      `C ${along(.12)} ${y + 42}, ${along(.22)} ${y - 20}, ${middle - Math.sign(next-x)*80} ${y}`,
+      `L ${middle + Math.sign(next-x)*80} ${y}`,
+      `C ${along(.63)} ${y + 30}, ${along(.74)} ${y - 18}, ${along(.74)} ${y - 18}`,
+      `C ${along(.74) - heart * 2} ${y - 60}, ${along(.74) + heart} ${y - 68}, ${along(.74)} ${y - 42}`,
+      `C ${along(.74) + heart * 2} ${y - 65}, ${along(.74) + heart * 2} ${y - 21}, ${along(.74)} ${y - 18}`,
+      `C ${along(.87)} ${y + 32}, ${next} ${y + 16}, ${next} ${height}`,
     );
   } else {
     wave.push(
@@ -72,6 +82,7 @@ function measureThread(book: HTMLElement, content: HTMLElement) {
         documentTop: absoluteOrigin + top + start,
         height,
         width,
+        figures: i === count - 1 && index < starts.length - 1 && index % 3 === 0,
         path: threadPath(
           width,
           height,
@@ -144,7 +155,7 @@ export function RedThreadJourney() {
 
   return (
     <div className="red-thread-journey" ref={layer} aria-hidden="true">
-      {segments.map(({ top, height, width, path, documentTop }) => (
+      {segments.map(({ top, height, width, path, documentTop, figures }) => (
         <svg
           key={top}
           className="ink-segment"
@@ -155,6 +166,8 @@ export function RedThreadJourney() {
               height,
               "--ink-start": `calc(${documentTop}px - 62svh)`,
               "--ink-end": `calc(${documentTop + height}px - 62svh)`,
+              "--fig-start": `calc(${documentTop + height - 190}px - 80svh)`,
+              "--fig-end": `calc(${documentTop + height - 75}px - 62svh)`,
             } as React.CSSProperties
           }
           preserveAspectRatio="none"
@@ -168,6 +181,13 @@ export function RedThreadJourney() {
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
           />
+          {figures && (
+            <image className="thread-figures" href={stationery.figures}
+              x={(width - Math.min(240, width * .65)) / 2}
+              y={height - Math.min(78, height * .18) - Math.min(240, width * .65) / 2}
+              width={Math.min(240, width * .65)} height={Math.min(240, width * .65) / 2}
+              preserveAspectRatio="xMidYMid meet" />
+          )}
         </svg>
       ))}
     </div>

@@ -4,7 +4,7 @@ export function Scene({ petals = true }: { petals?: boolean }) {
     <div className="scene" aria-hidden="true">
       <div
         className="scene-photo"
-        style={{ backgroundImage: `url("${asset("/images/tabletop.webp")}")` }}
+        style={{ backgroundImage: `url("${asset("/images/stationery/scrapbook-table.webp")}")` }}
       />
       <div className="scene-light" />
       {petals && (

@@ -18,7 +18,7 @@ export function InkFigures({ caption = false }: { caption?: boolean }) {
       <img
         src={stationery.figures}
         width={1000}
-        height={333}
+        height={500}
         alt=""
         loading="lazy"
         decoding="async"

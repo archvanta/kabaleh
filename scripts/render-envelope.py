@@ -8,6 +8,12 @@ src=Image.open(root/'artwork/envelope-layers.png').convert('RGBA')
 def cut(a,b):
  im=src.crop((a,0,b,724)); alpha=im.getchannel('A').point(lambda p: p if p>95 else 0); im.putalpha(alpha); return im.crop(alpha.getbbox())
 body=cut(0,724).resize((490,308),Image.Resampling.LANCZOS)
+# Generated personal motifs stay attached to the same paper body in every frame.
+doodles=Image.open(root/'public/images/stationery/thought-figures.webp').convert('RGBA').resize((150,75),Image.Resampling.LANCZOS)
+botanical=Image.open(root/'public/images/stationery/maple-sprig.webp').convert('RGBA')
+botanical.thumbnail((72,72),Image.Resampling.LANCZOS)
+body.alpha_composite(doodles,(88,210))
+body.alpha_composite(botanical,(12,215))
 flap=cut(724,1448).resize((490,184),Image.Resampling.LANCZOS)
 seal=Image.open(root/'public/images/stationery/wax-seal.webp').convert('RGBA').resize((54,54),Image.Resampling.LANCZOS)
 letter=cut(1448,2172).resize((350,450),Image.Resampling.LANCZOS)

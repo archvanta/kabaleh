@@ -91,6 +91,19 @@ export function LetterExperience({ content }: { content: LetterContent }) {
       className={`experience${opened ? " book-open" : ""}${opening ? " opening-letter" : ""}`}
       style={
         {
+          "--bears": `url("${stationery.bears}")`,
+          "--purple-figures": `url("${stationery.purpleFigures}")`,
+          "--deckled-paper": `url("${stationery.paper}")`,
+          "--curled-paper": `url("${stationery.curled}")`,
+          "--warm-paper": `url("${stationery.warm}")`,
+          "--ink-paper": `url("${stationery.ink}")`,
+          "--maple": `url("${stationery.maple}")`,
+          "--bloom": `url("${stationery.bloom}")`,
+          "--stamp": `url("${stationery.stamp}")`,
+          "--ribbon": `url("${stationery.ribbon}")`,
+          "--ginkgo": `url("${stationery.ginkgo}")`,
+          "--graph-tape": `url("${stationery.tape}")`,
+          "--wax": `url("${stationery.wax}")`,
           "--paper-grain": `url("${stationery.grain}")`,
           "--pocket-closed": `url("${stationery.pocketClosed}")`,
           "--pocket-open": `url("${stationery.pocketOpen}")`,
