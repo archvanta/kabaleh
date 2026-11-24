@@ -8,55 +8,10 @@ import { asset } from "@/lib/assets";
 import { ui } from "@/lib/ui";
 import { stationery } from "@/lib/stationery";
 export function PressedBotanical({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={`pressed-botanical ${className}`}
-      viewBox="0 0 130 190"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M60 181C57 134 78 97 72 32M63 145C40 122 33 109 24 90M64 128C90 100 96 80 102 69M67 108C54 85 45 73 39 55"
-        stroke="#85805d"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M64 144C39 141 29 126 32 114C45 116 60 129 64 144ZM64 128C73 102 86 97 92 102C88 116 76 127 64 128ZM69 98C49 96 42 83 44 76C56 78 66 85 69 98Z"
-        fill="#8c8a6555"
-      />
-      <g fill="#b79756">
-        <ellipse
-          cx="72"
-          cy="31"
-          rx="10"
-          ry="17"
-          transform="rotate(-15 72 31)"
-        />
-        <ellipse
-          cx="68"
-          cy="34"
-          rx="10"
-          ry="17"
-          transform="rotate(-65 68 34)"
-        />
-        <ellipse cx="77" cy="34" rx="10" ry="17" transform="rotate(65 77 34)" />
-      </g>
-      <g fill="#9c635a">
-        <ellipse cx="39" cy="54" rx="9" ry="13" transform="rotate(-35 39 54)" />
-        <ellipse cx="35" cy="59" rx="9" ry="12" transform="rotate(-80 35 59)" />
-        <ellipse cx="44" cy="59" rx="8" ry="12" transform="rotate(60 44 59)" />
-      </g>
-      <g fill="#b79b62">
-        <circle cx="101" cy="64" r="7" />
-        <circle cx="106" cy="72" r="6" />
-        <circle cx="96" cy="74" r="6" />
-        <circle cx="25" cy="88" r="7" />
-        <circle cx="20" cy="94" r="5" />
-      </g>
-      <path d="m48 160 27 6-4 16-28-7Z" fill="#d1b98d88" />
-    </svg>
-  );
+  return <img className={`pressed-botanical ${className}`} src={stationery.botanical}
+    width={260} height={390} alt="" aria-hidden="true" loading="lazy" decoding="async" />;
 }
+
 export function InkFigures({ caption = false }: { caption?: boolean }) {
   return (
     <figure className="ink-figures reveal">

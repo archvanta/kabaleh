@@ -13,7 +13,7 @@ import {
   OriginalLetterMemory,
   PressedBotanical,
 } from "./personal-memories";
-import { BraceletMemoryTimeline, BagPinMemory } from "./keepsakes";
+import { BagPinMemory } from "./keepsakes";
 export function Paragraphs({
   text,
   className = "",
@@ -141,13 +141,7 @@ export function NarrativeStory({
                 </div>
               </div>
             );
-          if (section.variant === "keepsakes")
-            return (
-              <BraceletMemoryTimeline
-                key={section.id}
-                data={content.keepsakes}
-              />
-            );
+          if (section.variant === "keepsakes") return null;
           if (section.variant === "pin")
             return <BagPinMemory key={section.id} data={content.bagPin} />;
           if (section.variant === "pocket")

@@ -367,7 +367,7 @@ h3 {
   max-width: 72%;
   line-height: 1.35;
   text-align: start;
-  font-size: clamp(15px, 4.5vw, 22px);
+  font-size: clamp(11px, 3vw, 15px);
   color: #674733;
 }
 /* The open letter keeps the tabletop visible in its outer margins. */
@@ -3779,20 +3779,16 @@ body {
     auto,
     440px 330px;
 }
+/* One continuous cream canvas with no simulated page fold or colour split. */
 .memory-scrapbook {
-  background-image:
-    linear-gradient(
-      90deg,
-      #f9eddb94,
-      #f6ead790 49%,
-      #aa815822 50%,
-      #f6ead790 51%,
-      #f9eddb94
-    ),
-    var(--paper-grain);
-  background-size:
-    auto,
-    560px 420px;
+  background: #fff7e9;
+}
+.memory-scrapbook::before {
+  display: none;
+}
+.memory-scrapbook .narrative-paper {
+  background: transparent;
+  box-shadow: none;
 }
 .book-open .scene-photo {
   animation: none;
@@ -3964,4 +3960,29 @@ body {
     opacity: 1;
     transform: none;
   }
+}
+.music-control{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));z-index:35;width:44px;height:44px;display:grid;place-items:center;border:1px solid #a989674d;border-radius:50%;background:#fff5e8ee;color:#793f3d;box-shadow:0 3px 10px #60402715;}
+
+/* A single decoded animation replaces the old eight-image crossfade stack. */
+.envelope-art { aspect-ratio: 600 / 728; }
+.envelope-still, .envelope-motion {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.envelope-motion { opacity: 0; }
+.envelope-motion[data-ready="true"] { opacity: 1; }
+.envelope-inscription {
+  font-size: clamp(11px, 3vw, 15px);
+  bottom: 24%;
+  max-width: 66%;
+}
+.opening-letter .envelope-inscription {
+  opacity: 0;
+  transition: opacity 280ms;
+}
+@media (max-width: 760px) {
+  .envelope-inscription { bottom: 24%; }
 }

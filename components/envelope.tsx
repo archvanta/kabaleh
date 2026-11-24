@@ -1,15 +1,13 @@
 "use client";
 
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/assets";
 import { ui } from "@/lib/ui";
 
-const frames = Array.from({ length: 8 }, (_, index) =>
-  asset(`/images/stationery/envelope-${index + 1}.webp`),
-);
-const cues = [0, 0.13, 0.25, 0.39, 0.53, 0.65, 0.77, 0.89];
-const blend = 0.065;
-const duration = 2080;
+const closedArt = asset("/images/stationery/envelope-closed.webp");
+const openArt = asset("/images/stationery/envelope-open.webp");
+const motionArt = asset("/images/stationery/envelope-opening.webp");
+const duration = 3000; // 100 rendered frames at 30 ms each, one playback.
 
 type Props = {
   recipient: string;
@@ -21,108 +19,79 @@ type Props = {
 };
 
 export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
-  { recipient, inscription, opening, opened, onOpen, onOpened },
-  ref,
+  { recipient, inscription, opening, opened, onOpen, onOpened }, ref,
 ) {
-  const art = useRef<HTMLSpanElement>(null);
+  const [animation, setAnimation] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
+  const timer = useRef(0);
+  const completed = useRef(false);
+  const finish = useCallback(() => {
+    if (completed.current) return;
+    completed.current = true;
+    window.clearTimeout(timer.current);
+    onOpened();
+  }, [onOpened]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const controller = new AbortController();
     const preload = window.setTimeout(() => {
-      for (const src of frames.slice(1)) {
-        const image = new Image();
-        image.src = src;
-      }
-    }, 500);
-    return () => window.clearTimeout(preload);
+      // Fetch bytes only; don't decode a hundred full-sized images on mobile.
+      void fetch(motionArt, { signal: controller.signal, cache: "force-cache" }).catch(() => {});
+    }, 600);
+    return () => { window.clearTimeout(preload); controller.abort(); };
   }, []);
 
   useEffect(() => {
+    setReady(false);
+    setAnimation(null);
     if (!opening) return;
+    completed.current = false;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      onOpened();
+      finish();
       return;
     }
-    let cancelled = false;
-    let readinessTimer = 0;
-    const animations: Animation[] = [];
-    const layers = [...(art.current?.querySelectorAll("img") ?? [])];
-    const decode = Promise.all(layers.map((layer) => layer.decode())).then(
-      () => true,
-      () => false,
-    );
-    const deadline = new Promise<boolean>((resolve) => {
-      readinessTimer = window.setTimeout(() => resolve(false), 1400);
-    });
-
-    void Promise.race([decode, deadline]).then(async (ready) => {
-      window.clearTimeout(readinessTimer);
-      if (cancelled) return;
-      if (ready && layers.length === frames.length) {
-        layers.forEach((layer, index) => {
-          const start = cues[index];
-          const end = cues[index + 1] ?? 1;
-          const keyframes: Keyframe[] =
-            index === 0
-              ? [{ opacity: 1, offset: 0 }]
-              : [
-                  { opacity: 0, offset: start },
-                  { opacity: 1, offset: start + blend },
-                ];
-          keyframes.push({ opacity: 1, offset: end });
-          if (index !== layers.length - 1) {
-            keyframes.push({ opacity: 0, offset: end + blend });
-          }
-          animations.push(layer.animate(keyframes, { duration, fill: "both" }));
-        });
-        await Promise.allSettled(
-          animations.map((animation) => animation.finished),
-        );
-      }
-      if (!cancelled) onOpened();
-    });
-
+    const controller = new AbortController();
+    let objectURL: string | null = null;
+    // Bound loading time and recover to the letter if the asset is unavailable.
+    timer.current = window.setTimeout(finish, 8000);
+    void fetch(motionArt, { signal: controller.signal, cache: "force-cache" })
+      .then(response => {
+        if (!response.ok) throw new Error("Envelope asset unavailable");
+        return response.blob();
+      })
+      .then(blob => {
+        if (controller.signal.aborted) return;
+        // A fresh URL restarts one-shot playback when the reader reopens it.
+        objectURL = URL.createObjectURL(blob);
+        setAnimation(objectURL);
+      })
+      .catch(() => { if (!controller.signal.aborted) finish(); });
     return () => {
-      cancelled = true;
-      window.clearTimeout(readinessTimer);
-      animations.forEach((animation) => animation.cancel());
+      controller.abort();
+      window.clearTimeout(timer.current);
+      if (objectURL) URL.revokeObjectURL(objectURL);
     };
-  }, [opening, onOpened]);
+  }, [opening, finish]);
+
+  const loaded = () => {
+    setReady(true);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(finish, duration);
+  };
 
   return (
     <div className="envelope-stage" ref={ref}>
-      <button
-        type="button"
-        className="envelope"
-        data-opened={opened}
+      <button type="button" className="envelope" data-opened={opened}
         aria-label={opened ? ui.backToBook : `${ui.openFor} ${recipient}`}
-        aria-disabled={opening}
-        onClick={onOpen}
-        aria-expanded={opened}
-        aria-controls="story"
-      >
-        <span ref={art} className="envelope-art" aria-hidden="true">
-          {frames.map((src, index) => {
-            if (
-              index !== 0 &&
-              !opening &&
-              !(opened && index === frames.length - 1)
-            )
-              return null;
-            return (
-              <img
-                key={src}
-                className="envelope-frame"
-                data-frame={index}
-                src={src}
-                width={365}
-                height={443}
-                alt=""
-                fetchPriority={index === 0 ? "high" : "auto"}
-                decoding="async"
-              />
-            );
-          })}
+        aria-disabled={opening} onClick={onOpen} aria-expanded={opened} aria-controls="story">
+        <span className="envelope-art" aria-hidden="true">
+          <img className="envelope-still" src={opened ? openArt : closedArt}
+            width={600} height={728} alt="" fetchPriority="high" decoding="async" />
+          {opening && animation && (
+            <img className="envelope-motion" src={animation} width={600} height={728}
+              alt="" data-ready={ready} onLoad={loaded} onError={finish} />
+          )}
         </span>
         <span className="envelope-inscription">{inscription}</span>
       </button>

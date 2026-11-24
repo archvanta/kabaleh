@@ -10,7 +10,7 @@ import {
   HandmadeEnvelope,
   OriginalLetterMemory,
 } from "./personal-memories";
-import { BraceletMemoryTimeline, BagPinMemory } from "./keepsakes";
+import { BagPinMemory } from "./keepsakes";
 export const sectionTitles: Record<string, string> = {
   introduction: "\u0622\u063A\u0627\u0632 \u0646\u0627\u0645\u0647",
   memories:
@@ -156,7 +156,7 @@ export function Story({
       <OriginalLetterMemory data={content.originalHandwrittenLetter} />
     ),
     belfi: <BelfiMemory data={content.belfiMemory} />,
-    keepsakes: <BraceletMemoryTimeline data={content.keepsakes} />,
+    keepsakes: null,
     "bag-pin": <BagPinMemory data={content.bagPin} />,
     details: (
       <section id="details" className="notes-section story-section">

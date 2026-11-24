@@ -7,8 +7,10 @@ import { Envelope } from "./envelope";
 import { Story } from "./story";
 import { MemoryScrapbook } from "./red-thread-journey";
 import { ui } from "@/lib/ui";
+import { BackgroundMusic, type MusicHandle } from "./background-music";
 import { stationery } from "@/lib/stationery";
 export function LetterExperience({ content }: { content: LetterContent }) {
+  const music = useRef<MusicHandle>(null);
   const envelope = useRef<HTMLDivElement>(null);
   const story = useRef<HTMLElement>(null);
   const [opened, setOpened] = useState(false);
@@ -64,6 +66,7 @@ export function LetterExperience({ content }: { content: LetterContent }) {
   }, [opened]);
 
   const open = () => {
+    music.current?.start();
     if (opening) return;
     if (opened) {
       story.current?.scrollIntoView({
@@ -96,6 +99,7 @@ export function LetterExperience({ content }: { content: LetterContent }) {
       }
     >
       <Scene petals={!opened} />
+      <BackgroundMusic ref={music} />
       <a href={opened ? "#story" : "#open-letter"} className="skip-link">
         {ui.skipToLetter}
       </a>

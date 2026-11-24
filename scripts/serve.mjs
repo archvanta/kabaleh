@@ -14,6 +14,7 @@ const types = {
   ".json": "application/json; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
   ".webp": "image/webp",
+  ".mp3": "audio/mpeg",
   ".jpg": "image/jpeg",
   ".png": "image/png",
   ".svg": "image/svg+xml",

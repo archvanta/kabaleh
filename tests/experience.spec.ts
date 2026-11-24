@@ -25,7 +25,7 @@ test("the complete approved narrative opens with the birthday greeting and remai
   if (testInfo.project.name === "mobile") await opener.tap();
   else await opener.click();
   await expect(page.locator("#story")).toBeVisible();
-  await expect(page.locator("#story .story-section")).toHaveCount(24);
+  await expect(page.locator("#story .story-section")).toHaveCount(23);
   await expect(page.locator(".story-section").first().locator("h2")).toHaveText(
     copy.greeting.birthdayGreetingTitle,
   );
@@ -42,7 +42,6 @@ test("the complete approved narrative opens with the birthday greeting and remai
     "belfi",
     "memory-13",
     "original-letter",
-    "keepsakes",
     "bag-pin",
     "handmade-envelope",
     "birthdayGiftNote",
@@ -152,7 +151,6 @@ test("320px keyboard and reduced-motion reading keeps original text and the surp
     "azar",
     "memory-08",
     "belfi",
-    "keepsakes",
     "birthdayGiftNote",
     "letter",
   ]) {
@@ -172,61 +170,20 @@ test("320px keyboard and reduced-motion reading keeps original text and the surp
   );
 });
 
-test("the preserved 3D inspection renders and rotates an independent bracelet", async ({
-  page,
-}, testInfo) => {
-  test.setTimeout(90000);
+test("the story has no 3D gallery and music follows the reader control", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.locator(".envelope").click();
-  await expect(page.locator(".bracelet-memory-card")).toHaveCount(4);
-  expect(
-    await page
-      .locator(".bracelet-memory-card")
-      .evaluateAll((cards) => cards.map((c) => c.getAttribute("data-order"))),
-  ).toEqual(["1", "2", "3", "4"]);
-  await expect(page.locator("canvas")).toHaveCount(0);
-  await page.locator(".bracelet-inspect").last().click();
-  await expect(page.locator(".object-viewer")).toHaveAttribute(
-    "data-phase",
-    "ready",
-    { timeout: 25000 },
-  );
-  const canvas = page.locator(".object-viewer canvas");
-  const before = await canvas.screenshot();
-  await page.getByRole("button", { name: "چرخش به راست", exact: true }).click();
-  expect(Buffer.compare(before, await canvas.screenshot())).not.toBe(0);
-  await page.screenshot({
-    path: `test-results/${testInfo.project.name}-approved-keepsake.png`,
-  });
-  await page
-    .getByRole("button", { name: "بستن نمایش سه بعدی", exact: true })
-    .click();
-  await expect(page.locator("canvas")).toHaveCount(0);
-});
-
-test("a browser without WebGL can return to the story", async ({ page }) => {
-  await page.addInitScript(() => {
-    const original = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function (
-      this: HTMLCanvasElement,
-      type: string,
-      ...args: unknown[]
-    ) {
-      if (type === "webgl2" || type === "webgl") return null;
-      return Reflect.apply(original, this, [type, ...args]);
-    } as typeof original;
-  });
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await expect(page.locator("#story")).toBeVisible();
+  await expect(page.locator("#keepsakes, .bracelet-memory-card, .object-viewer, canvas")).toHaveCount(0);
+  const player = page.locator("audio");
+  await expect.poll(() => player.evaluate((element: HTMLAudioElement) => !element.paused && element.currentTime > 0)).toBe(true);
+  await page.getByRole("button", { name: "قطع موسیقی", exact: true }).click();
+  await expect.poll(() => player.evaluate((element: HTMLAudioElement) => element.paused)).toBe(true);
+  await page.reload();
   await page.locator(".envelope").click();
-  await page.locator(".bracelet-inspect").first().click();
-  await expect(page.locator(".object-viewer")).toHaveAttribute(
-    "data-phase",
-    "fallback",
-  );
-  await page
-    .getByRole("button", { name: "بستن نمایش سه بعدی", exact: true })
-    .click();
-  await expect(page.locator(".bracelet-inspect").first()).toBeFocused();
+  await expect(page.locator("#story")).toBeVisible();
+  expect(await player.evaluate((element: HTMLAudioElement) => element.paused)).toBe(true);
+  await page.getByRole("button", { name: "پخش موسیقی", exact: true }).click();
+  await expect.poll(() => player.evaluate((element: HTMLAudioElement) => !element.paused)).toBe(true);
 });
