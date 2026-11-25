@@ -1,28 +1,27 @@
 "use client";
 import type { LetterContent } from "@/lib/content";
-import { Flourish } from "./scene";
 import { Photo } from "./photo-gallery";
-import { HandmadeEnvelope, PressedBotanical } from "./personal-memories";
+import { HandmadeEnvelope } from "./personal-memories";
+import { CopyText } from "./copy-text";
 import { ui } from "@/lib/ui";
 
 export function BagPinMemory({ data }: { data: LetterContent["bagPin"] }) {
   if (!data.visible) return null;
   return (
     <section id="bag-pin" className="bag-pin-section story-section">
-      <div className="artifact-copy reveal">
-        <h2>{data.title}</h2>
-        <Flourish />
-        <p className="narrative-caption">{data.caption}</p>
+      <div className="object-heading reveal">
+        <h2><CopyText text={data.title} /></h2>
       </div>
-      <div className="pin-paper paper reveal">
-        <span className="tape" />
-        {data.referenceImage ? (
-          <div className="pin-original-photo"><Photo image={data.referenceImage} /></div>
-        ) : (
-          <div className="pin-caption-paper"><Flourish /><p>{data.caption}</p></div>
-        )}
-        <HandmadeEnvelope note={{ id: "pin-note", title: ui.noteTitle, text: data.text }} index={0} />
-        <PressedBotanical />
+      <div className="pin-board reveal">
+        <div className="pin-paper">
+          <span className="pin-badge" aria-hidden="true" />
+          {data.referenceImage ? (
+            <div className="pin-original-photo"><Photo image={data.referenceImage} /></div>
+          ) : (
+            <p className="pin-caption"><CopyText text={data.caption} /></p>
+          )}
+        </div>
+        <HandmadeEnvelope note={{ id: "pin-note", title: ui.noteTitle, text: data.text }} index={1} />
       </div>
     </section>
   );

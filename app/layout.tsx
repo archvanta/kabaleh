@@ -6,6 +6,9 @@ import "@fontsource/vazirmatn/arabic-400.css";
 import "@fontsource/vazirmatn/arabic-500.css";
 import "@fontsource/vazirmatn/arabic-600.css";
 import "./globals.css";
+import "./styles/book.css";
+import "./styles/objects.css";
+import "./styles/chrome.css";
 const hasCustomFont = existsSync(
   resolve(process.cwd(), "public/fonts/mahboubeh-mehravar.woff2"),
 );

@@ -1,0 +1,884 @@
+/* ───── The diary page ─────
+   One long ivory page. Its texture is tiled at a fixed scale, so however long
+   the story grows the middle stays clean and no folds or shadows stretch. */
+.memory-scrapbook {
+  position: relative;
+  overflow-x: clip;
+  width: min(100% - 16px, 1080px);
+  margin: 0 auto clamp(18px, 4vw, 48px);
+  border-radius: 4px 10px 10px 4px;
+  background:
+    linear-gradient(90deg, transparent calc(100% - 22px), rgb(var(--shade) / 0.07) calc(100% - 6px), rgb(var(--shade) / 0.12)),
+    var(--continuous-paper) 0 0 / var(--grain-size),
+    var(--paper);
+  box-shadow:
+    0 0 0 1px rgb(122 92 64 / 0.08),
+    1px 2px 2px rgb(var(--shade) / 0.08),
+    6px 14px 40px rgb(var(--shade) / 0.18);
+}
+/* Soft page edges, each a fixed-size strip. */
+.memory-scrapbook::before,
+.memory-scrapbook::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 10px;
+  pointer-events: none;
+  background-repeat: repeat-y;
+  background-size: 10px 120px;
+}
+.memory-scrapbook::before {
+  left: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='120'%3E%3Cpath d='M0 0h3c2 8-1 14 1 22s3 13 0 21 1 15 2 24-2 14 0 22 2 17-1 31H0z' fill='%23e6d8c4' opacity='.55'/%3E%3C/svg%3E");
+}
+.memory-scrapbook::after {
+  right: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='120'%3E%3Cpath d='M10 0H7c-2 9 1 15-1 23s-3 12 0 20-1 16-2 25 2 13 0 21-2 17 1 31h5z' fill='%23d9c7ad' opacity='.5'/%3E%3C/svg%3E");
+}
+.scrapbook-content {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(36px, 8vw, 80px) clamp(28px, 6vw, 64px);
+}
+.story-section {
+  position: relative;
+  padding: calc(var(--section-space) / 2) var(--gutter);
+  scroll-margin-top: 8px;
+}
+
+/* ───── Type ───── */
+.story-section h2 {
+  color: var(--wine-deep);
+  font-size: clamp(1.75rem, 1.35rem + 2vw, 2.7rem);
+  line-height: 1.55;
+}
+.narrative-prose {
+  max-width: var(--measure);
+}
+.narrative-prose p,
+.narrative-prose li {
+  color: var(--ink);
+  font-size: var(--text);
+  line-height: var(--leading);
+}
+.narrative-prose p + p {
+  margin-top: 0.85em;
+}
+.narrative-caption {
+  color: var(--muted);
+  font-size: var(--text-small);
+  line-height: 1.8;
+}
+blockquote {
+  position: relative;
+  margin-top: 26px;
+  padding: 6px 0;
+  color: var(--wine);
+  font-size: clamp(1.22rem, 1.1rem + 0.7vw, 1.55rem);
+  line-height: 1.95;
+  text-align: center;
+}
+blockquote::before,
+blockquote::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 10px;
+  margin: 6px auto;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 10'%3E%3Cpath d='M2 5c10-6 14 6 24 0s14-6 24 0 10 3 12 1' fill='none' stroke='%23a52638' stroke-width='1.3' stroke-linecap='round' opacity='.55'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ───── Shared paper card ───── */
+.opening-card,
+.gift-tag,
+.final-letter,
+.pocket-note,
+.unfolded-wishes,
+.pin-paper,
+.preserved-keepsake-copy .opening-note-body {
+  position: relative;
+  background:
+    var(--continuous-paper) 0 0 / var(--grain-size),
+    var(--ivory);
+  box-shadow: var(--shadow-2);
+  border-radius: var(--radius);
+}
+
+/* Disclosure rows that open more of a note */
+.opening-note > summary,
+.memory-hidden-note > summary,
+.complete-album > summary,
+.folded-wishes > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.opening-note > summary::-webkit-details-marker,
+.memory-hidden-note > summary::-webkit-details-marker,
+.complete-album > summary::-webkit-details-marker,
+.folded-wishes > summary::-webkit-details-marker,
+.handmade-envelope > summary::-webkit-details-marker,
+.full-letter-fold > summary::-webkit-details-marker,
+.chapter-index > summary::-webkit-details-marker {
+  display: none;
+}
+details > summary svg {
+  flex: none;
+  transition: transform 0.3s var(--ease);
+}
+details[open] > summary svg {
+  transform: rotate(45deg);
+}
+
+/* ───── Opening pages: greeting, introduction, Azar ───── */
+.opening-page {
+  display: grid;
+  justify-items: center;
+}
+.opening-card {
+  width: min(100%, 620px);
+  padding: clamp(30px, 7vw, 56px) clamp(22px, 6vw, 52px) clamp(26px, 6vw, 44px);
+  text-align: center;
+}
+.opening-card > h2 {
+  margin-bottom: 14px;
+}
+.opening-card .narrative-prose {
+  margin-inline: auto;
+}
+.lead-prose p {
+  color: var(--ink-soft);
+  font-size: calc(var(--text) * 1.06);
+}
+.card-ribbon {
+  position: absolute;
+  top: -30px;
+  left: -16px;
+  width: 78px;
+  height: 78px;
+  background: var(--ribbon) center / contain no-repeat;
+  filter: var(--lift);
+  transform: rotate(-14deg);
+  pointer-events: none;
+}
+.narrative-greeting .opening-card {
+  transform: rotate(-0.6deg);
+}
+.narrative-greeting .opening-card::after {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  right: -10px;
+  width: 92px;
+  height: 92px;
+  background: var(--bloom) center / contain no-repeat;
+  filter: var(--lift);
+  transform: rotate(12deg);
+  pointer-events: none;
+}
+.opening-photo-preview {
+  width: min(78%, 300px);
+  margin: 26px auto 8px;
+}
+.opening-photo-preview .gallery-photo {
+  transform: rotate(2deg);
+}
+.opening-note {
+  margin-top: 18px;
+}
+.opening-note > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 4px 18px;
+  border-radius: 999px;
+  color: var(--wine);
+  background: rgb(160 40 61 / 0.07);
+  box-shadow: inset 0 0 0 1px rgb(160 40 61 / 0.18);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  transition: background 0.2s;
+}
+.opening-note > summary:hover {
+  background: rgb(160 40 61 / 0.12);
+}
+.opening-note-body {
+  padding-top: 18px;
+  text-align: start;
+  animation: unfold 0.45s var(--ease);
+}
+.opening-note-body .narrative-prose {
+  margin-inline: auto;
+}
+.opening-note-body .narrative-prose + .narrative-prose {
+  margin-top: 0.85em;
+}
+@keyframes unfold {
+  from { opacity: 0; transform: translateY(-6px); }
+}
+/* The introduction reads as a folded note with one soft crease. */
+.narrative-paper .opening-card {
+  background:
+    linear-gradient(180deg, transparent calc(50% - 1px), rgb(var(--shade) / 0.05) 50%, transparent calc(50% + 12px)),
+    var(--continuous-paper) 0 0 / var(--grain-size),
+    var(--paper);
+  background-size: 100% 520px, var(--grain-size), auto;
+  background-repeat: no-repeat, repeat, repeat;
+  transform: rotate(0.5deg);
+}
+.narrative-paper .opening-card::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  width: 104px;
+  height: 30px;
+  background: var(--graph-tape) center / 100% 100% no-repeat;
+  transform: translateX(-50%) rotate(-2deg);
+  opacity: 0.9;
+}
+/* Azar: the autumn page, with leaves pressed at its corners. */
+.narrative-autumn .opening-card {
+  background:
+    radial-gradient(90% 60% at 100% 0%, rgb(201 104 52 / 0.08), transparent 70%),
+    var(--continuous-paper) 0 0 / var(--grain-size),
+    #fbf1e1;
+}
+.narrative-autumn .opening-card::before,
+.narrative-autumn .opening-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  filter: var(--lift);
+}
+.narrative-autumn .opening-card::before {
+  top: -24px;
+  right: -12px;
+  width: 96px;
+  height: 96px;
+  background: var(--maple) center / contain no-repeat;
+  transform: rotate(18deg);
+}
+.narrative-autumn .opening-card::after {
+  bottom: -20px;
+  left: -10px;
+  width: 78px;
+  height: 78px;
+  background: var(--ginkgo) center / contain no-repeat;
+  transform: rotate(-24deg);
+}
+
+/* The two figures standing on the thread */
+.ink-figures {
+  position: relative;
+  z-index: 0;
+  width: min(74%, 330px);
+  margin: 38px auto 0;
+}
+.ink-figures img {
+  width: 100%;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+.ink-figures figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ───── Memories ───── */
+.memory-page {
+  display: grid;
+  gap: clamp(22px, 5vw, 36px);
+  justify-items: center;
+}
+.memory-heading {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+  max-width: 17em;
+}
+.chapter-stamp {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: var(--crimson);
+  font-size: 1.35rem;
+  line-height: 1;
+  background: radial-gradient(circle, transparent 58%, rgb(160 40 61 / 0.5) 59% 61%, transparent 62%);
+  border: 1.5px dashed rgb(160 40 61 / 0.45);
+  transform: rotate(-8deg);
+  opacity: 0.85;
+}
+.memory-heading .highlighted {
+  background: linear-gradient(180deg, transparent 56%, rgb(241 196 186 / 0.6) 56% 86%, transparent 86%);
+  padding-inline: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.memory-stage {
+  position: relative;
+  width: min(100%, 560px);
+  display: grid;
+  justify-items: center;
+}
+.memory-copy {
+  width: min(100%, 21em);
+  display: grid;
+  gap: 20px;
+}
+.memory-copy .narrative-prose p:first-child {
+  color: var(--wine-deep);
+}
+
+/* A handwritten slip with the photo's caption */
+.memory-caption-note {
+  position: relative;
+  z-index: 3;
+  max-width: min(84%, 330px);
+  margin-top: -10px;
+  padding: 12px 18px 12px;
+  color: var(--ink-soft);
+  font-size: var(--text-small);
+  line-height: 1.85;
+  text-align: center;
+  background:
+    var(--continuous-paper) 0 0 / var(--grain-size),
+    #fffaf0;
+  box-shadow: var(--shadow-1);
+  transform: rotate(-1.4deg);
+}
+
+/* ───── Photographs and their frames ───── */
+.gallery-grid {
+  position: relative;
+  width: 100%;
+}
+.gallery-photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 10px 10px 12px;
+  border: 0;
+  border-radius: 2px;
+  background: #fffdf7;
+  box-shadow: var(--shadow-2);
+  text-align: inherit;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s;
+}
+.gallery-photo:hover {
+  box-shadow: var(--shadow-3);
+}
+.photo-image {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #efe7da;
+}
+.photo-image img {
+  width: 100%;
+  height: auto;
+}
+.photo-load {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.photo-load.photo-decoded {
+  opacity: 1;
+}
+/* The "see it whole" mark rests on the frame's corner, off the photograph. */
+.photo-expand {
+  position: absolute;
+  bottom: -33px;
+  left: -4px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--wine);
+  background: var(--paper);
+  box-shadow: var(--shadow-1), inset 0 0 0 1px rgb(160 40 61 / 0.2);
+}
+.photo-image:has(.photo-expand) {
+  overflow: visible;
+}
+.photo-image img {
+  border-radius: 1px;
+}
+.photo-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 2px 0;
+  color: var(--ink-soft);
+  font-size: var(--text-small);
+  line-height: 1.7;
+}
+.photo-number {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+/* Fasteners sit on the middle of the top edge, over the white border only. */
+.fastener {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+}
+.fastener-pin {
+  top: -16px;
+  left: 50%;
+  width: 28px;
+  height: 34px;
+  margin-left: -14px;
+  background: var(--photo-pushpin) center / contain no-repeat;
+  filter: drop-shadow(2px 4px 2px rgb(var(--shade) / 0.3));
+}
+.fastener-clip {
+  top: -24px;
+  left: 50%;
+  width: 17px;
+  height: 56px;
+  margin-left: -8px;
+  background: var(--photo-paperclip) center / contain no-repeat;
+  filter: drop-shadow(1px 2px 1px rgb(var(--shade) / 0.3));
+  transform: rotate(5deg);
+}
+.fastener-tape {
+  top: -15px;
+  left: 50%;
+  width: 98px;
+  height: 34px;
+  margin-left: -49px;
+  background: var(--photo-tape) center / 100% 100% no-repeat;
+  opacity: 0.92;
+  transform: rotate(-3deg);
+}
+.fastener-corners {
+  inset: 4px;
+}
+.fastener-corners i {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #6b4a3a 50%, transparent 50%);
+  filter: drop-shadow(1px 1px 1px rgb(var(--shade) / 0.25));
+  opacity: 0.88;
+}
+.fastener-corners i:nth-child(1) { top: 0; left: 0; }
+.fastener-corners i:nth-child(2) { top: 0; right: 0; transform: rotate(90deg); }
+.fastener-corners i:nth-child(3) { bottom: 0; right: 0; transform: rotate(180deg); }
+.fastener-corners i:nth-child(4) { bottom: 0; left: 0; transform: rotate(270deg); }
+
+/* Per-memory compositions (mobile first, 390px) */
+
+/* 01 — two first photos side by side, like prints laid out on the page */
+.stage-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
+  padding-top: 14px;
+}
+.stage-pair .gallery-photo { padding: 7px 7px 26px; }
+.stage-pair .gallery-photo:nth-child(1) { transform: rotate(-2.5deg); }
+.stage-pair .gallery-photo:nth-child(2) { transform: rotate(3deg); margin-top: 34px; }
+
+/* 02 — one large print with mounting corners */
+.stage-hero {
+  width: min(92%, 440px);
+  padding-top: 6px;
+}
+.stage-hero .gallery-photo {
+  padding: 14px 14px 30px;
+  transform: rotate(-1deg);
+}
+.layout-hero .memory-caption-note {
+  margin-top: -26px;
+  margin-inline-start: auto;
+  transform: rotate(2deg);
+}
+
+/* 03 — the favourite photo clipped beside a ruled notebook slip */
+.stage-notebook {
+  width: min(80%, 380px);
+  padding-top: 18px;
+  margin-inline-end: auto;
+}
+.stage-notebook .gallery-photo {
+  transform: rotate(1.6deg);
+}
+.layout-notebook .memory-caption-note {
+  margin-top: -40px;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+  max-width: min(66%, 270px);
+  padding: 18px 26px 14px 16px;
+  text-align: start;
+  line-height: 1.9;
+  background:
+    linear-gradient(90deg, transparent 0 calc(100% - 16px), rgb(160 40 61 / 0.35) calc(100% - 16px) calc(100% - 15px), transparent calc(100% - 15px)),
+    repeating-linear-gradient(180deg, transparent 0 calc(1.9em - 1px), rgb(70 110 150 / 0.2) calc(1.9em - 1px) 1.9em),
+    #fffdf6;
+  background-position: 0 0, 0 18px, 0 0;
+  transform: rotate(-2.4deg);
+}
+
+/* 04 — a keepsake print with a deckled cream border, pinned */
+.stage-keepsake {
+  width: min(84%, 400px);
+  padding-top: 16px;
+}
+.stage-keepsake .gallery-photo {
+  padding: 18px 18px 22px;
+  background: #f7eedd;
+  border-radius: 4px;
+  transform: rotate(2deg);
+  box-shadow: var(--shadow-2), inset 0 0 0 1px rgb(150 120 80 / 0.12), inset 0 0 0 7px #fbf5ea, inset 0 0 0 8px rgb(150 120 80 / 0.14);
+}
+
+/* 05 — the sketch on a kraft mat */
+.stage-mat {
+  width: min(94%, 440px);
+  padding: 22px;
+  background:
+    var(--paper-grain) 0 0 / 320px,
+    var(--kraft);
+  background-blend-mode: multiply;
+  box-shadow: var(--shadow-2), inset 0 0 0 1px rgb(80 50 20 / 0.18);
+  transform: rotate(-0.8deg);
+}
+.stage-mat .gallery-photo {
+  padding: 8px;
+  box-shadow: 0 0 0 1px rgb(80 50 20 / 0.2), 1px 2px 4px rgb(var(--shade) / 0.25);
+}
+.layout-mat .memory-caption-note {
+  margin-top: -14px;
+  font-size: 0.95rem;
+  background: #fbf6ea;
+  transform: rotate(0.8deg);
+  border-inline-start: 3px solid var(--crimson);
+}
+
+/* 06 — a strip of film */
+.stage-filmstrip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: min(100%, 500px);
+  padding: 26px 12px;
+  border-radius: 3px;
+  background:
+    radial-gradient(circle, #f2e7d4 0 3.5px, transparent 4px) 6px 8px / 20px 100% repeat-x,
+    radial-gradient(circle, #f2e7d4 0 3.5px, transparent 4px) 6px calc(100% - 8px) / 20px 100% repeat-x,
+    var(--film);
+  background-size: 20px 16px, 20px 16px, auto;
+  background-position: 6px 4px, 6px calc(100% - 4px), 0 0;
+  background-repeat: repeat-x, repeat-x, no-repeat;
+  box-shadow: var(--shadow-2);
+  transform: rotate(-1.6deg);
+}
+.stage-filmstrip .gallery-photo {
+  padding: 0;
+  background: #120d0b;
+  box-shadow: none;
+}
+.stage-filmstrip .photo-image {
+  aspect-ratio: 3 / 4;
+  background: #120d0b;
+}
+.stage-filmstrip .photo-image img {
+  height: 100%;
+  object-fit: contain;
+}
+.stage-filmstrip .photo-caption {
+  position: absolute;
+  inset: auto 6px -21px auto;
+  padding: 0;
+}
+.stage-filmstrip .photo-number {
+  color: #e0b25c;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+}
+.layout-filmstrip .memory-caption-note {
+  margin-top: -6px;
+  transform: rotate(1.6deg);
+}
+
+/* 07 — a print among pressed flowers */
+.stage-botanical {
+  width: min(94%, 470px);
+  padding-top: 18px;
+}
+.stage-botanical .gallery-photo {
+  transform: rotate(-1.2deg);
+}
+.stage-decor {
+  position: absolute;
+  pointer-events: none;
+  filter: var(--lift);
+}
+.decor-botanical {
+  inset: 0;
+  z-index: 0;
+  background:
+    var(--maple) 100% 100% / 30% auto no-repeat,
+    var(--ginkgo) 0% 2% / 22% auto no-repeat;
+  margin: -6% -4% 6% -5%;
+}
+.layout-botanical .gallery-grid { z-index: 1; }
+
+/* 08 — four party photos on one contact sheet */
+.stage-contact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 8px;
+  width: min(100%, 470px);
+  padding: 14px 12px 30px;
+  background: #1d1714;
+  border-radius: 2px;
+  box-shadow: var(--shadow-2);
+  transform: rotate(0.8deg);
+}
+.stage-contact .gallery-photo {
+  padding: 0 0 18px;
+  background: transparent;
+  box-shadow: none;
+}
+.stage-contact .photo-image {
+  aspect-ratio: 3 / 4;
+  background: #0d0a09;
+}
+.stage-contact .photo-image img {
+  height: 100%;
+  object-fit: contain;
+}
+.stage-contact .photo-caption {
+  position: absolute;
+  inset: auto 2px 0 auto;
+  padding: 0;
+}
+.stage-contact .photo-number {
+  color: #e2b867;
+  letter-spacing: 0.2em;
+}
+/* A grease-pencil ring around the first frame number, off the pictures. */
+.stage-contact .gallery-photo:first-child .photo-number {
+  position: relative;
+}
+.stage-contact .gallery-photo:first-child .photo-number::after {
+  content: "";
+  position: absolute;
+  inset: -5px -9px -3px -7px;
+  border: 1.6px solid rgb(214 66 74 / 0.9);
+  border-radius: 48% 52% 46% 54%;
+  transform: rotate(-6deg);
+}
+.stage-contact .photo-expand,
+.stage-filmstrip .photo-expand,
+.stage-postcard .photo-expand { display: none; }
+.stage-filmstrip .photo-number { display: none; }
+
+/* 09 — a wide night print, taped */
+.stage-wide {
+  width: min(100%, 560px);
+  padding-top: 16px;
+}
+.stage-wide .gallery-photo {
+  padding: 10px 10px 12px;
+  transform: rotate(0.8deg);
+}
+.layout-wide .memory-caption-note {
+  margin-top: -6px;
+  margin-inline-end: auto;
+  transform: rotate(-2deg);
+}
+
+/* 10 — eight hours on the road, kept as a postcard */
+.layout-postcard .memory-stage {
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 0;
+  width: min(100%, 520px);
+  padding: 12px;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 0.5px), rgb(122 92 64 / 0.35) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    var(--continuous-paper) 0 0 / var(--grain-size),
+    #fbf4e6;
+  box-shadow: var(--shadow-2);
+  transform: rotate(-1deg);
+}
+.layout-postcard .gallery-grid {
+  grid-column: 1;
+  grid-row: 1;
+}
+.stage-postcard .gallery-photo {
+  padding: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.stage-postcard .photo-caption { display: none; }
+.layout-postcard .memory-caption-note {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  max-width: none;
+  margin: 70px 12px 6px 4px;
+  padding: 0;
+  background: repeating-linear-gradient(180deg, transparent 0 calc(1.85em - 1px), rgb(122 92 64 / 0.3) calc(1.85em - 1px) 1.85em);
+  box-shadow: none;
+  transform: none;
+  font-size: 0.92rem;
+  line-height: 1.85;
+  text-align: start;
+}
+.decor-stamp {
+  top: 12px;
+  left: 14px;
+  z-index: 2;
+  width: 58px;
+  height: 58px;
+  background: var(--stamp) center / contain no-repeat;
+  transform: rotate(6deg);
+}
+.decor-stamp::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 30px;
+  width: 64px;
+  height: 40px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 40'%3E%3Cg fill='none' stroke='%237b2537' stroke-width='1.2' opacity='.5'%3E%3Ccircle cx='18' cy='20' r='14'/%3E%3Cpath d='M30 12c6-3 10 3 16 0s10-3 16 0M30 20c6-3 10 3 16 0s10-3 16 0M30 28c6-3 10 3 16 0s10-3 16 0'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  transform: rotate(-10deg);
+}
+
+/* 11 — two Ekbatan photos stacked, the second resting on the first */
+.stage-stack {
+  display: grid;
+  width: min(92%, 440px);
+  padding-top: 18px;
+}
+.stage-stack .gallery-photo {
+  width: 68%;
+  padding: 8px 8px 28px;
+}
+.stage-stack .gallery-photo:nth-child(1) {
+  transform: rotate(2.5deg);
+}
+.stage-stack .gallery-photo:nth-child(2) {
+  justify-self: end;
+  margin-top: -24%;
+  transform: rotate(-4deg);
+  z-index: 2;
+}
+
+/* 13 — the blue rose beside a pressed rose */
+.stage-rose {
+  width: min(74%, 360px);
+  padding-top: 18px;
+  margin-inline-start: auto;
+  margin-inline-end: 6%;
+  z-index: 1;
+}
+.stage-rose .gallery-photo {
+  padding: 12px 12px 26px;
+  transform: rotate(-2deg);
+}
+.decor-rose {
+  left: -1%;
+  bottom: 18%;
+  z-index: 2;
+  width: 30%;
+  aspect-ratio: 260 / 342;
+  background: var(--botanical) center / contain no-repeat;
+  transform: rotate(-14deg);
+}
+.layout-rose .memory-caption-note {
+  margin-inline-start: auto;
+  transform: rotate(1.8deg);
+}
+
+/* ───── Hidden notes: a folded slip that opens into a sticky note ───── */
+.memory-hidden-note {
+  justify-self: start;
+  max-width: 100%;
+}
+.memory-hidden-note > summary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 8px 16px 8px 18px;
+  color: var(--wine-deep);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  background: var(--sticky);
+  box-shadow: var(--shadow-1);
+  transform: rotate(-1.5deg);
+  transition: transform 0.25s var(--ease);
+}
+.memory-hidden-note > summary:hover {
+  transform: rotate(-0.5deg) translateY(-1px);
+}
+.note-fold {
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(225deg, transparent 50%, rgb(var(--shade) / 0.18) 50%);
+  flex: none;
+}
+.hidden-note-paper {
+  position: relative;
+  margin-top: 12px;
+  padding: 22px 22px 18px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 calc(2em - 1px), rgb(150 120 60 / 0.18) calc(2em - 1px) 2em),
+    linear-gradient(180deg, #faefc6, #f6e6b0);
+  background-position: 0 22px, 0 0;
+  box-shadow: var(--shadow-2);
+  transform: rotate(0.8deg);
+  animation: unfold 0.45s var(--ease);
+}
+.hidden-note-paper::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 82px;
+  height: 26px;
+  margin-left: -41px;
+  background: var(--photo-tape) center / 100% 100% no-repeat;
+  transform: rotate(2deg);
+  opacity: 0.85;
+}
+.hidden-note-paper .narrative-prose p {
+  line-height: 2;
+}
+
+/* ───── Wider screens: photos and words share the spread ───── */
+@media (min-width: 900px) {
+  .memory-page {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-template-areas: "heading heading" "stage copy";
+    align-items: center;
+    column-gap: clamp(36px, 5vw, 72px);
+  }
+  .memory-page:nth-child(even) {
+    grid-template-areas: "heading heading" "copy stage";
+  }
+  .memory-heading { grid-area: heading; }
+  .memory-stage { grid-area: stage; }
+  .memory-copy { grid-area: copy; justify-self: start; }
+  .memory-page:nth-child(even) .memory-copy { justify-self: end; }
+  .layout-contact .memory-stage,
+  .layout-filmstrip .memory-stage { width: 100%; }
+}

@@ -1,14 +1,26 @@
 "use client";
 
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/assets";
 import { ui } from "@/lib/ui";
+import { stationery } from "@/lib/stationery";
 
-const closedArt = asset("/images/stationery/envelope-closed.webp");
-const openArt = asset("/images/stationery/envelope-open.webp");
-const motionArt = asset("/images/stationery/envelope-opening.webp");
-const duration = 2100; // 100 rendered frames at 21 ms each, one playback.
+const body = asset("/images/stationery/envelope-body.webp");
+const flap = asset("/images/stationery/envelope-flap.webp");
+const letter = asset("/images/stationery/envelope-letter.webp");
 
+// One camera, one set of parts: the seal is pressed, the flap swings open on its
+// hinge, the letter slides out and the page takes over. Timers drive the sequence,
+// so a slow or failed image never keeps the reader waiting.
+const timeline = [
+  ["press", 0],
+  ["lift", 260],
+  ["rise", 1040],
+  ["enter", 1900],
+] as const;
+const duration = 2450;
+
+type Phase = "closed" | (typeof timeline)[number][0] | "open";
 type Props = {
   recipient: string;
   inscription: string;
@@ -21,79 +33,51 @@ type Props = {
 export const Envelope = forwardRef<HTMLDivElement, Props>(function Envelope(
   { recipient, inscription, opening, opened, onOpen, onOpened }, ref,
 ) {
-  const [animation, setAnimation] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
-  const timer = useRef(0);
-  const completed = useRef(false);
-  const finish = useCallback(() => {
-    if (completed.current) return;
-    completed.current = true;
-    window.clearTimeout(timer.current);
-    onOpened();
-  }, [onOpened]);
+  const [phase, setPhase] = useState<Phase>("closed");
+  const done = useRef(onOpened);
+  done.current = onOpened;
+  const finish = () => done.current();
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const controller = new AbortController();
-    const preload = window.setTimeout(() => {
-      // Fetch bytes only; don't decode a hundred full-sized images on mobile.
-      void fetch(motionArt, { signal: controller.signal, cache: "force-cache" }).catch(() => {});
-    }, 600);
-    return () => { window.clearTimeout(preload); controller.abort(); };
-  }, []);
-
-  useEffect(() => {
-    setReady(false);
-    setAnimation(null);
-    if (!opening) return;
-    completed.current = false;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      finish();
+    if (!opening) {
+      setPhase(opened ? "open" : "closed");
       return;
     }
-    const controller = new AbortController();
-    let objectURL: string | null = null;
-    // Bound loading time and recover to the letter if the asset is unavailable.
-    timer.current = window.setTimeout(finish, 8000);
-    void fetch(motionArt, { signal: controller.signal, cache: "force-cache" })
-      .then(response => {
-        if (!response.ok) throw new Error("Envelope asset unavailable");
-        return response.blob();
-      })
-      .then(blob => {
-        if (controller.signal.aborted) return;
-        // A fresh URL restarts one-shot playback when the reader reopens it.
-        objectURL = URL.createObjectURL(blob);
-        setAnimation(objectURL);
-      })
-      .catch(() => { if (!controller.signal.aborted) finish(); });
-    return () => {
-      controller.abort();
-      window.clearTimeout(timer.current);
-      if (objectURL) URL.revokeObjectURL(objectURL);
-    };
-  }, [opening, finish]);
-
-  const loaded = () => {
-    setReady(true);
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(finish, duration);
-  };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setPhase("open");
+      done.current();
+      return;
+    }
+    const timers = timeline.map(([next, at]) => window.setTimeout(() => setPhase(next), at));
+    timers.push(window.setTimeout(() => done.current(), duration));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [opening, opened]);
 
   return (
-    <div className="envelope-stage" ref={ref}>
+    <div className="envelope-stage" ref={ref} data-phase={phase}>
       <button type="button" className="envelope" data-opened={opened}
         aria-label={opened ? ui.backToBook : `${ui.openFor} ${recipient}`}
         aria-disabled={opening} onClick={onOpen} aria-expanded={opened} aria-controls="story">
-        <span className="envelope-art" aria-hidden="true">
-          <img className="envelope-still" src={opened ? openArt : closedArt}
-            width={600} height={728} alt="" fetchPriority="high" decoding="async" />
-          {opening && animation && (
-            <img className="envelope-motion" src={animation} width={600} height={728}
-              alt="" data-ready={ready} onLoad={loaded} onError={finish} />
-          )}
+        <span className="envelope-art">
+          <span className="env-shadow" aria-hidden="true" />
+          <span className="env-body">
+            <img className="env-back" src={body} width={638} height={403} alt="" fetchPriority="high" />
+            <span className="env-well" aria-hidden="true">
+              <img className="env-letter" src={letter} width={541} height={685} alt="" />
+            </span>
+            <img className="env-front" src={body} width={638} height={403} alt="" />
+            <img className="env-sprig" src={stationery.maple} width={330} height={330} alt="" />
+            <img className="env-figures" src={stationery.figures} width={1000} height={500} alt="" />
+            <span className="envelope-inscription">{inscription}</span>
+            <span className="env-flap" aria-hidden="true">
+              <img className="env-flap-face" src={flap} width={662} height={249} alt="" />
+              <span className="env-flap-inside" />
+              <span className="env-seal">
+                <img src={stationery.wax} width={139} height={150} alt="" />
+              </span>
+            </span>
+          </span>
         </span>
-        <span className="envelope-inscription">{inscription}</span>
       </button>
       {opening && <button type="button" className="envelope-skip" onClick={finish}>رفتن به نامه</button>}
     </div>

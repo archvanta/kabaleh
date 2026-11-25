@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Expand, X } from "lucide-react";
-import { photoFastener } from "@/lib/photo-fasteners";
+import { photoFastener, type Fastener } from "@/lib/photo-fasteners";
 import { CopyText } from "./copy-text";
 import responsiveImages from "@/content/responsive-images.json";
 import { ui } from "@/lib/ui";
@@ -11,17 +11,19 @@ export function Photo({
   image,
   className = "",
   eager = false,
+  sizes = "(max-width: 760px) 88vw, (max-width: 1100px) 40vw, 500px",
 }: {
   image: LetterImage;
   className?: string;
   eager?: boolean;
+  sizes?: string;
 }) {
   return (
     <img
       className={`photo-load ${className}`}
       src={asset(image.src)}
       srcSet={!eager ? (responsiveImages as Record<string, {width:number;src:string}[]>)[image.src]?.map(copy=>`${asset(copy.src)} ${copy.width}w`).join(", ") : undefined}
-      sizes={!eager ? "(max-width: 760px) 88vw, (max-width: 1100px) 40vw, 500px" : undefined}
+      sizes={!eager ? sizes : undefined}
       alt={image.alt}
       width={image.width}
       height={image.height}
@@ -32,12 +34,31 @@ export function Photo({
     />
   );
 }
+// Pins, clips and tape are drawn over the frame edge, never over the photograph itself.
+export function FastenerMark({ kind }: { kind: Fastener }) {
+  if (kind === "none") return null;
+  if (kind === "corners")
+    return (
+      <span className="fastener fastener-corners" aria-hidden="true">
+        <i /><i /><i /><i />
+      </span>
+    );
+  return <span className={`fastener fastener-${kind}`} aria-hidden="true" />;
+}
 export function PhotoGallery({
   photos,
   swipeable = false,
+  fasteners,
+  captions = true,
+  sizes,
+  className = "",
 }: {
   photos: LetterContent["gallery"];
   swipeable?: boolean;
+  fasteners?: Fastener[];
+  captions?: boolean;
+  sizes?: string;
+  className?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
@@ -66,29 +87,35 @@ export function PhotoGallery({
   if (!photos.length) return null;
   return (
     <>
-      <div className={`gallery-grid${swipeable ? " gallery-swipeable" : ""}`}>
-        {photos.map((photo, i) => (
-          <button
-            className={`gallery-photo gallery-photo-${i % 3}`}
-            key={photo.id}
-            data-fastener={photoFastener(photo.src)}
-            onClick={() => open(i)}
-            aria-label={`${ui.viewOriginalPhoto} ${photo.caption}`}
-          >
-            <span className="photo-image">
-              <Photo image={photo} />
-              <span className="photo-expand">
-                <Expand size={18} />
+      <div className={`gallery-grid${swipeable ? " gallery-swipeable" : ""} ${className}`}>
+        {photos.map((photo, i) => {
+          const fastener = fasteners?.[i] ?? photoFastener(photo.src);
+          return (
+            <button
+              className={`gallery-photo gallery-photo-${i % 3}`}
+              key={photo.id}
+              data-fastener={fastener}
+              onClick={() => open(i)}
+              aria-label={`${ui.viewOriginalPhoto} ${photo.caption}`}
+            >
+              <FastenerMark kind={fastener} />
+              <span className="photo-image">
+                <Photo image={photo} sizes={sizes} />
+                <span className="photo-expand">
+                  <Expand size={16} />
+                </span>
               </span>
-            </span>
-            <span className="photo-caption">
-              <span>
-                <CopyText text={photo.caption} />
+              <span className="photo-caption">
+                {captions && (
+                  <span>
+                    <CopyText text={photo.caption} />
+                  </span>
+                )}
+                <span className="latin photo-number">{String(i + 1).padStart(2, "0")}</span>
               </span>
-              <span className="latin">{String(i + 1).padStart(2, "0")}</span>
-            </span>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
       <dialog
         ref={dialog}
@@ -139,18 +166,21 @@ export function PhotoGallery({
           >
             <X />
           </button>
-          {active && <Photo image={selected} eager />}
+          <div className="lightbox-frame">
+            {active && <Photo image={selected} eager />}
+          </div>
           <div className="lightbox-toolbar">
             <button
               className="icon-button"
               onClick={() => move(-1)}
               aria-label={ui.previousPhoto}
+              disabled={photos.length < 2}
             >
               <ArrowRight />
             </button>
             <p>
               <CopyText text={selected.caption} />
-              <small>
+              <small className="latin">
                 {index + 1} / {photos.length}
               </small>
             </p>
@@ -158,6 +188,7 @@ export function PhotoGallery({
               className="icon-button"
               onClick={() => move(1)}
               aria-label={ui.nextPhoto}
+              disabled={photos.length < 2}
             >
               <ArrowLeft />
             </button>

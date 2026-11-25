@@ -2,21 +2,23 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpLeft, Plus } from "lucide-react";
 import type { LetterContent } from "@/lib/content";
-import { Photo } from "./photo-gallery";
+import { FastenerMark, Photo } from "./photo-gallery";
 import { Flourish } from "./scene";
 import { asset } from "@/lib/assets";
 import { ui } from "@/lib/ui";
-import { photoFastener } from "@/lib/photo-fasteners";
 import { stationery } from "@/lib/stationery";
+import { CopyText } from "./copy-text";
 export function PressedBotanical({ className = "" }: { className?: string }) {
   return <img className={`pressed-botanical ${className}`} src={stationery.botanical}
-    width={260} height={390} alt="" aria-hidden="true" loading="lazy" decoding="async" />;
+    width={260} height={342} alt="" aria-hidden="true" loading="lazy" decoding="async" />;
 }
 
+// The two figures stand on the red thread; their feet mark where the path runs.
 export function InkFigures({ caption = false }: { caption?: boolean }) {
   return (
     <figure className="ink-figures reveal">
       <img
+        className="thread-figures"
         src={stationery.figures}
         width={1000}
         height={500}
@@ -45,25 +47,25 @@ export function HandDrawnCharacters({
           : "characters-section story-section"
       }
     >
-      <div className="scrapbook-heading reveal">
+      <div className="characters-copy reveal">
         {data.title && <h2>{data.title}</h2>}
-        <p>{data.text}</p>
+        <p><CopyText text={data.text} /></p>
       </div>
       <InkFigures caption />
     </section>
   );
 }
 
-function ArtifactPhoto({ data }: { data: LetterContent["belfiMemory"] }) {
+function ArtifactPhoto({ data, sizes }: { data: LetterContent["belfiMemory"]; sizes?: string }) {
   if (data.image)
     return (
       <a
         href={asset(data.image.src)}
         target="_blank"
         rel="noreferrer"
-        aria-label={ui.viewOriginalPhoto}
+        aria-label={`${ui.viewOriginalPhoto} ${data.image.alt}`}
       >
-        <Photo image={data.image} />
+        <Photo image={data.image} sizes={sizes} />
       </a>
     );
   return (
@@ -76,19 +78,39 @@ function ArtifactPhoto({ data }: { data: LetterContent["belfiMemory"] }) {
 }
 export function OriginalLetterMemory({
   data,
+  children,
 }: {
   data: LetterContent["originalHandwrittenLetter"];
+  children?: React.ReactNode;
 }) {
   return (
     <section
       id="original-letter"
       className="original-letter-section story-section"
     >
+      <div className="object-heading reveal">
+        <h2><CopyText text={data.title} /></h2>
+        {data.caption && <p className="narrative-caption"><CopyText text={data.caption} /></p>}
+      </div>
+      <div className="original-letter-mount reveal">
+        <span className="mount-botanical" aria-hidden="true" />
+        <div className="artifact-photo keepsake-hero" data-fastener="corners">
+          <FastenerMark kind="corners" />
+          <ArtifactPhoto data={data} sizes="(max-width: 760px) 78vw, 440px" />
+          <span className="artifact-label">{data.label}</span>
+        </div>
+        {data.relatedImages.map((image, i) => (
+          <figure key={i} className="related-artifact artifact-photo" data-fastener="tape">
+            <FastenerMark kind="tape" />
+            <Photo image={image} />
+            <figcaption className="artifact-label">
+              یادگاری دستساز · عکس اصلی
+            </figcaption>
+          </figure>
+        ))}
+      </div>
       <div className="artifact-copy reveal">
-        <h2>{data.title}</h2>
-        {data.caption && <p className="narrative-caption">{data.caption}</p>}
-        <Flourish />
-        <p>{data.text}</p>
+        <Paragraphs text={data.text} />
         {data.hiddenNote && (
           <HandmadeEnvelope
             note={{
@@ -103,25 +125,21 @@ export function OriginalLetterMemory({
           عکس اصلی · بدون بازطراحی یا تغییر
         </span>
       </div>
-      <div className="original-letter-mount reveal">
-        <div className="artifact-photo" data-fastener={data.image ? photoFastener(data.image.src) : "clip"}>
-          <span className="tape" />
-          <ArtifactPhoto data={data} />
-          <span className="artifact-label">{data.label}</span>
-        </div>
-        {data.relatedImages.map((image, i) => (
-          <figure key={i} className="related-artifact artifact-photo" data-fastener={photoFastener(image.src)}>
-            <Photo image={image} />
-            <figcaption className="artifact-label">
-              یادگاری دستساز · عکس اصلی
-            </figcaption>
-          </figure>
-        ))}
-        <PressedBotanical />
-      </div>
+      {children}
     </section>
   );
 }
+
+function Paragraphs({ text }: { text: string }) {
+  return (
+    <div className="narrative-prose">
+      {text.split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => (
+        <p key={index}><CopyText text={paragraph} /></p>
+      ))}
+    </div>
+  );
+}
+
 export function BelfiMemory({ data }: { data: LetterContent["belfiMemory"] }) {
   const root = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -141,17 +159,20 @@ export function BelfiMemory({ data }: { data: LetterContent["belfiMemory"] }) {
         setRevealed(true);
         observer.disconnect();
       },
-      { rootMargin: "0px 0px -24% 0px" },
+      { rootMargin: "0px 0px -30% 0px" },
     );
     observer.observe(section);
     return () => observer.disconnect();
   }, []);
   return (
     <section id="belfi" ref={root} className="belfi-section story-section">
+      <div className="object-heading reveal">
+        <h2><CopyText text={data.title} /></h2>
+      </div>
       <div className={`belfi-mount ${revealed ? "is-revealed" : ""}`}>
-        <div className="belfi-underlay" />
-        <div className="belfi-photo artifact-photo" data-fastener={data.image ? photoFastener(data.image.src) : "pin"}>
-          <ArtifactPhoto data={data} />
+        <div className="belfi-photo artifact-photo" data-fastener="tape">
+          <FastenerMark kind="tape" />
+          <ArtifactPhoto data={data} sizes="(max-width: 760px) 76vw, 420px" />
           <span className="artifact-label">
             {data.label} <span className="latin">BELFI</span>
           </span>
@@ -160,31 +181,20 @@ export function BelfiMemory({ data }: { data: LetterContent["belfiMemory"] }) {
           <span className="latin">A LITTLE KEEPSAKE</span>
           <Flourish />
           <span>یک گوشهٔ کوچک از آلبوم</span>
-          <ArrowUpLeft size={20} />
         </div>
         <button
           className="belfi-toggle"
           onClick={() => setRevealed((v) => !v)}
           aria-expanded={revealed}
-          aria-label={
-            revealed
-              ? "\u0628\u0633\u062A\u0646 \u0642\u0627\u0628 \u0628\u0644\u0641\u06CC"
-              : "\u0628\u0627\u0632 \u06A9\u0631\u062F\u0646 \u0642\u0627\u0628 \u0628\u0644\u0641\u06CC"
-          }
+          aria-label={revealed ? ui.closeBelfi : ui.openBelfi}
         >
-          <ArrowUpLeft size={17} />
-          <span>
-            {revealed
-              ? "\u0628\u0633\u062A\u0646 \u0642\u0627\u0628"
-              : "\u0646\u0645\u0627\u06CC\u0634 \u0642\u0627\u0628"}
-          </span>
+          <ArrowUpLeft size={16} />
+          <span>{revealed ? ui.closeFrame : ui.showFrame}</span>
         </button>
-        <span className="tape" />
       </div>
+      {data.caption && <p className="memory-caption-note"><CopyText text={data.caption} /></p>}
       <div className="artifact-copy reveal">
-        <h2>{data.title}</h2>
-        {data.caption && <p className="narrative-caption">{data.caption}</p>}
-        <p>{data.text}</p>
+        <Paragraphs text={data.text} />
         {data.hiddenNote && (
           <HandmadeEnvelope
             note={{
@@ -195,7 +205,6 @@ export function BelfiMemory({ data }: { data: LetterContent["belfiMemory"] }) {
             index={0}
           />
         )}
-        <PressedBotanical />
       </div>
     </section>
   );
@@ -208,20 +217,16 @@ export function HandmadeEnvelope({
   index: number;
 }) {
   return (
-    <details className="handmade-envelope reveal">
+    <details className="handmade-envelope reveal" data-index={index}>
       <summary>
         <span className="pocket-art" aria-hidden="true" />
-        <span className="pocket-number" aria-hidden="true">
-          ❧
-        </span>
         <span className="pocket-title">{note.title}</span>
         <span className="pocket-action">
           {ui.revealNote} <Plus size={14} />
         </span>
       </summary>
-      <div className="pocket-note paper">
-        <Flourish />
-        <p>{note.text}</p>
+      <div className="pocket-note">
+        <Paragraphs text={note.text} />
         <small>{ui.noteCloseHint}</small>
       </div>
     </details>

@@ -93,19 +93,14 @@ export function LetterExperience({ content }: { content: LetterContent }) {
       className={`experience${opened ? " book-open" : ""}${opening ? " opening-letter" : ""}`}
       style={
         {
+          // CSS cannot see the base path, so every texture URL is resolved here.
           "--photo-pushpin": `url("${asset("/images/stationery/photo-pushpin.webp")}")`,
           "--photo-paperclip": `url("${asset("/images/stationery/photo-paperclip.webp")}")`,
           "--photo-tape": `url("${asset("/images/stationery/photo-tape.webp")}")`,
           "--continuous-paper": `url("${asset("/images/stationery/continuous-paper.webp")}")`,
-          "--layered-mat": `url("${asset("/images/stationery/layered-mat.webp")}")`,
-          "--journal-mat": `url("${asset("/images/stationery/journal-mat.webp")}")`,
-          "--folded-mat": `url("${asset("/images/stationery/folded-mat.webp")}")`,
+          "--autumn-table": `url("${asset("/images/stationery/autumn-table.webp")}")`,
           "--bears": `url("${stationery.bears}")`,
           "--purple-figures": `url("${stationery.purpleFigures}")`,
-          "--deckled-paper": `url("${stationery.paper}")`,
-          "--curled-paper": `url("${stationery.curled}")`,
-          "--warm-paper": `url("${stationery.warm}")`,
-          "--ink-paper": `url("${stationery.ink}")`,
           "--maple": `url("${stationery.maple}")`,
           "--bloom": `url("${stationery.bloom}")`,
           "--stamp": `url("${stationery.stamp}")`,
@@ -117,6 +112,7 @@ export function LetterExperience({ content }: { content: LetterContent }) {
           "--pocket-closed": `url("${stationery.pocketClosed}")`,
           "--pocket-open": `url("${stationery.pocketOpen}")`,
           "--flower-note": `url("${stationery.flowerNote}")`,
+          "--botanical": `url("${stationery.botanical}")`,
         } as React.CSSProperties
       }
     >

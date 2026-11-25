@@ -4,6 +4,7 @@ import { ArrowUp, Plus } from "lucide-react";
 import type { LetterContent, NarrativeSection } from "@/lib/content";
 import { ui } from "@/lib/ui";
 import { stationery } from "@/lib/stationery";
+import { compositions, fallbackComposition } from "@/lib/compositions";
 import { Flourish } from "./scene";
 import { PhotoGallery } from "./photo-gallery";
 import {
@@ -12,22 +13,23 @@ import {
   HandmadeEnvelope,
   InkFigures,
   OriginalLetterMemory,
-  PressedBotanical,
 } from "./personal-memories";
 import { BagPinMemory } from "./keepsakes";
 export function Paragraphs({
   text,
   className = "",
+  limit = 240,
 }: {
   text: string;
   className?: string;
+  limit?: number;
 }) {
   // Group adjacent original sentences without changing any words or their order.
   const sentences = text.split(/\n\s*\n/).filter(Boolean);
   const paragraphs: string[] = [];
   let group: string[] = [];
   for (const sentence of sentences) {
-    if (group.length && (group.join(" ").length + sentence.length > 240 || group.length >= 3)) {
+    if (group.length && (group.join(" ").length + sentence.length > limit || group.length >= 3)) {
       paragraphs.push(group.join(" "));
       group = [];
     }
@@ -46,94 +48,145 @@ export function Paragraphs({
 function HiddenNote({ text }: { text: string | null }) {
   if (!text) return null;
   return (
-    <details className="memory-hidden-note paper">
+    <details className="memory-hidden-note">
       <summary>
-        {ui.openHiddenNote}
-        <Plus size={17} />
+        <span className="note-fold" aria-hidden="true" />
+        <span>{ui.openHiddenNote}</span>
+        <Plus size={16} />
       </summary>
-      <div>
-        <Flourish />
+      <div className="hidden-note-paper">
         <Paragraphs text={text} />
       </div>
     </details>
   );
 }
-const compositions: Record<string,number> = {
- "memory-01":0,"memory-02":1,"memory-03":2,"memory-04":4,
- "memory-05":3,"memory-06":1,"memory-07":0,"memory-08":1,
- "memory-09":0,"memory-10":2,"memory-11":4,"memory-13":2,
-};
+
+const persianNumber = (value: number) => value.toLocaleString("fa-IR");
+
 function MemoryPage({ section }: { section: NarrativeSection }) {
+  const composition = compositions[section.id] ?? fallbackComposition;
+  const number = Number(section.id.replace(/\D/g, "")) || section.order;
+  const caption = section.caption || section.images[0]?.caption;
+  const layout = composition.layout;
   return (
     <section
       id={section.id}
-      className={`story-section narrative-memory composition-${compositions[section.id] ?? 1} ${section.order % 2 ? "memory-reversed" : ""}`}
+      className={`story-section memory-page layout-${layout}`}
       data-review={section.reviewStatus}
     >
-      <div className="narrative-memory-heading reveal">
+      <div className="memory-heading reveal">
+        <span className="chapter-stamp" aria-hidden="true">{persianNumber(number)}</span>
         <h2>
-          <CopyText text={section.title} />
+          <span className="highlighted">
+            <CopyText text={section.title} />
+          </span>
         </h2>
-        {section.caption && !section.images.some(image=>image.caption===section.caption) && (
-          <p className="narrative-caption">
-            <CopyText text={section.caption} />
-          </p>
-        )}
-        <Flourish />
       </div>
-      <div
-        className={`narrative-gallery reveal photos-${section.images.length}`}
-      >
+      <div className={`memory-stage reveal photos-${section.images.length}`}>
+        {layout === "botanical" && <span className="stage-decor decor-botanical" aria-hidden="true" />}
+        {layout === "rose" && <span className="stage-decor decor-rose" aria-hidden="true" />}
+        {layout === "postcard" && <span className="stage-decor decor-stamp" aria-hidden="true" />}
         <PhotoGallery
           photos={section.images}
-          swipeable={section.images.length > 1}
+          fasteners={composition.fasteners}
+          captions={false}
+          className={`stage-${layout}`}
+          sizes={
+            layout === "contact" || layout === "filmstrip"
+              ? "(max-width: 760px) 46vw, 280px"
+              : "(max-width: 760px) 86vw, 520px"
+          }
         />
+        {caption && (
+          <p className="memory-caption-note">
+            <CopyText text={caption} />
+          </p>
+        )}
       </div>
-      <div className="narrative-memory-copy reveal">
-        <Paragraphs text={section.body} />
+      <div className="memory-copy reveal">
+        <Paragraphs text={section.body} limit={200} />
         <HiddenNote text={section.hiddenNote} />
       </div>
     </section>
   );
 }
-function PaperPage({ section, preview }: { section: NarrativeSection; preview?: LetterContent["gallery"] }) {
-  const intro = section.id === "introduction" || section.variant === "autumn";
+
+function OpeningPage({ section, preview }: { section: NarrativeSection; preview?: LetterContent["gallery"] }) {
   const parts = section.body.split(/\n\s*\n/);
+  const greeting = section.variant === "greeting";
   return (
     <section
       id={section.id}
-      className={`story-section narrative-paper-section narrative-${section.variant}`}
+      className={`story-section opening-page narrative-${section.variant}`}
     >
-      <article className="paper narrative-paper reveal">
-        <Flourish />
+      <article className="opening-card reveal">
+        {greeting && <span className="card-ribbon" aria-hidden="true" />}
         <h2>
           <CopyText text={section.title} />
         </h2>
-        {intro || section.variant === "greeting" ? <>
-          <Paragraphs text={parts[0]} />
-          <details className="opening-note"><summary>{section.variant === "greeting" ? "چند خط برای شروع این دفتر" : "بقیه این نامه"} <Plus size={17}/></summary>
-            <Paragraphs text={parts.slice(1).join("\n\n")} />
-            {section.threadText && <Paragraphs text={section.threadText} />}
-          </details>
-        </> : section.variant === "wishes" ? (
-          <details className="folded-wishes" open={undefined}>
-            <summary><span>آرزوهایم برای تو</span><Plus size={17} /></summary>
-            <div className="unfolded-wishes"><Paragraphs text={section.body} /></div>
-          </details>
-        ) : <Paragraphs text={section.body} />}
-        {preview && <div className="opening-photo-preview"><PhotoGallery photos={preview} /></div>}
-        {section.highlight && <blockquote>{section.highlight}</blockquote>}
-        {section.threadText && !intro && (
-          <div className="thread-interlude">
-            <InkFigures />
-            <Paragraphs text={section.threadText} />
+        <Paragraphs text={parts[0]} className="lead-prose" />
+        {preview && (
+          <div className="opening-photo-preview">
+            <PhotoGallery photos={preview} fasteners={["tape"]} />
           </div>
         )}
+        <details className="opening-note">
+          <summary>
+            <span>{greeting ? "چند خط برای شروع این دفتر" : "بقیه این نامه"}</span>
+            <Plus size={16} />
+          </summary>
+          <div className="opening-note-body">
+            <Paragraphs text={parts.slice(1).join("\n\n")} />
+            {section.threadText && <Paragraphs text={section.threadText} />}
+          </div>
+        </details>
+        {section.highlight && <blockquote><CopyText text={section.highlight} /></blockquote>}
+      </article>
+      {section.id === "introduction" && <InkFigures />}
+    </section>
+  );
+}
 
+function GiftPage({ section }: { section: NarrativeSection }) {
+  return (
+    <section id={section.id} className="story-section gift-page">
+      <article className="gift-tag reveal">
+        <span className="gift-string" aria-hidden="true" />
+        <h2>
+          <CopyText text={section.title} />
+        </h2>
+        <Paragraphs text={section.body} limit={160} />
       </article>
     </section>
   );
 }
+
+function WishesPage({ section }: { section: NarrativeSection }) {
+  const wishes = section.body.split(/\n\s*\n/).filter(Boolean);
+  return (
+    <section id={section.id} className="story-section wishes-page">
+      <div className="wishes-heading reveal">
+        <h2>
+          <CopyText text={section.title} />
+        </h2>
+      </div>
+      <details className="folded-wishes reveal">
+        <summary>
+          <span>آرزوهایم برای تو</span>
+          <Plus size={16} />
+        </summary>
+        <div className="unfolded-wishes">
+          <ul className="narrative-prose wish-list">
+            {wishes.map((wish, index) => (
+              <li key={index}><CopyText text={wish} /></li>
+            ))}
+          </ul>
+        </div>
+      </details>
+    </section>
+  );
+}
+
 export function NarrativeStory({
   content,
   onReplay,
@@ -152,17 +205,20 @@ export function NarrativeStory({
             return <BelfiMemory key={section.id} data={content.belfiMemory} />;
           if (section.variant === "original")
             return (
-              <div key={section.id}>
-                <OriginalLetterMemory
-                  data={content.originalHandwrittenLetter}
-                />
+              <OriginalLetterMemory
+                key={section.id}
+                data={content.originalHandwrittenLetter}
+              >
                 <div className="original-thread-interlude">
                   <HandDrawnCharacters embedded data={content.redThreadScene} />
-                  <details className="opening-note preserved-keepsake-copy"><summary>یادداشت یادگاری ها <Plus size={17}/></summary>
-                    <Paragraphs text={content.narrative.find(item=>item.variant==="keepsakes")?.body || ""} />
+                  <details className="opening-note preserved-keepsake-copy">
+                    <summary><span>یادداشت یادگاری ها</span> <Plus size={16}/></summary>
+                    <div className="opening-note-body">
+                      <Paragraphs text={content.narrative.find(item=>item.variant==="keepsakes")?.body || ""} />
+                    </div>
                   </details>
                 </div>
-              </div>
+              </OriginalLetterMemory>
             );
           if (section.variant === "keepsakes") return null;
           if (section.variant === "pin")
@@ -174,15 +230,14 @@ export function NarrativeStory({
                 id={section.id}
                 className="story-section handmade-story-section"
               >
-                <div className="scrapbook-heading reveal">
+                <div className="object-heading reveal">
                   <h2>
                     <CopyText text={section.title} />
                   </h2>
-                  <Flourish />
                 </div>
                 <div className="handmade-story-layout">
-                  <div className="narrative-gallery reveal photos-1">
-                    <PhotoGallery photos={section.images} />
+                  <div className="handmade-photo reveal">
+                    <PhotoGallery photos={section.images} fasteners={["clip"]} />
                   </div>
                   <HandmadeEnvelope
                     note={{
@@ -195,6 +250,10 @@ export function NarrativeStory({
                 </div>
               </section>
             );
+          if (section.variant === "gift")
+            return <GiftPage key={section.id} section={section} />;
+          if (section.variant === "wishes")
+            return <WishesPage key={section.id} section={section} />;
           if (section.variant === "letter")
             return (
               <section
@@ -204,34 +263,41 @@ export function NarrativeStory({
               >
                 <div className="thread-before-letter reveal">
                   <Paragraphs text={section.threadText || ""} />
-                  <Flourish />
                 </div>
                 <details className="full-letter-fold">
-                  <summary><span>نامه ام برای تو</span><span>باز کردن و خواندن کامل نامه</span><Plus size={20}/></summary>
-                <article className="final-letter paper">
-                  <Flourish />
-                  <h2>
-                    <CopyText text={section.title} />
-                  </h2>
-                  <Paragraphs
-                    className="letter-paragraphs"
-                    text={section.body}
-                  />
-                  <InkFigures />
-                  <div className="letter-signature">
-                    <strong>{content.sender}</strong>
-                    <span className="signature-line" />
-                  </div>
-                  <span className="letter-wax" aria-hidden="true" />
-                  <button className="text-button fold-letter-close" type="button" onClick={event=>{
-                    const fold=event.currentTarget.closest("details");
-                    if(!fold)return;
-                    fold.open=false;
-                    const summary=fold.querySelector("summary");
-                    summary?.scrollIntoView({block:"center",behavior:"instant"});
-                    summary?.focus({preventScroll:true});
-                  }}>تا کردن نامه</button>
-                </article>
+                  <summary>
+                    <span className="letter-envelope" aria-hidden="true">
+                      <span className="letter-envelope-seal" />
+                    </span>
+                    <span className="letter-summary-copy">
+                      <span className="letter-summary-title">نامه ام برای تو</span>
+                      <span className="letter-summary-action">باز کردن و خواندن کامل نامه</span>
+                    </span>
+                    <Plus size={20} />
+                  </summary>
+                  <article className="final-letter">
+                    <Flourish />
+                    <h2>
+                      <CopyText text={section.title} />
+                    </h2>
+                    <Paragraphs
+                      className="letter-paragraphs"
+                      text={section.body}
+                    />
+                    <div className="letter-signature">
+                      <strong>{content.sender}</strong>
+                      <span className="signature-line" />
+                    </div>
+                    <span className="letter-wax" aria-hidden="true" />
+                    <button className="text-button fold-letter-close" type="button" onClick={event=>{
+                      const fold=event.currentTarget.closest("details");
+                      if(!fold)return;
+                      fold.open=false;
+                      const summary=fold.querySelector("summary");
+                      summary?.scrollIntoView({block:"center",behavior:"instant"});
+                      summary?.focus({preventScroll:true});
+                    }}>تا کردن نامه</button>
+                  </article>
                 </details>
               </section>
             );
@@ -242,25 +308,28 @@ export function NarrativeStory({
                 id="closing"
                 className="story-section closing-section narrative-closing"
               >
-                <Flourish />
-                <h2 className="reveal">
-                  <CopyText text={section.title} />
-                </h2>
-                <Paragraphs text={section.body} />
+                <div className="closing-copy reveal">
+                  <h2>
+                    <CopyText text={section.title} />
+                  </h2>
+                  <Paragraphs text={section.body} />
+                </div>
                 <InkFigures />
-                <button className="text-button" onClick={onReplay}>
+                <details className="complete-album">
+                  <summary>
+                    <span>{ui.allPhotos}</span>
+                    <span className="latin album-count">{content.gallery.length}</span>
+                    <Plus size={16} />
+                  </summary>
+                  <PhotoGallery photos={content.gallery} captions={false} fasteners={content.gallery.map(() => "none" as const)}
+                    sizes="(max-width: 760px) 30vw, 200px" className="album-sheet" />
+                </details>
+                <button className="text-button replay-button" onClick={onReplay}>
                   {ui.revisitMemories}
                   <ArrowUp size={16} />
                 </button>
-                <details className="complete-album">
-                  <summary>
-                    {ui.allPhotos}
-                    <Plus size={17} />
-                  </summary>
-                  <PhotoGallery photos={content.gallery} />
-                </details>
                 <div className="kabaleh-signoff" aria-hidden="true">
-                  <img src={stationery.bears} width={145} height={130} alt="" loading="lazy" />
+                  <img src={stationery.bears} width={270} height={178} alt="" loading="lazy" />
                   <span className="latin">Kabaleh</span>
                 </div>
                 <footer>
@@ -269,7 +338,13 @@ export function NarrativeStory({
                 </footer>
               </section>
             );
-          return <PaperPage key={section.id} section={section} preview={section.variant === "greeting" ? content.gallery.slice(0,1) : undefined} />;
+          return (
+            <OpeningPage
+              key={section.id}
+              section={section}
+              preview={section.variant === "greeting" ? content.gallery.slice(0, 1) : undefined}
+            />
+          );
         })}
     </>
   );
