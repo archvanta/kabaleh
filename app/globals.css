@@ -4444,3 +4444,296 @@ body {
 @media (max-width: 760px) {
   .red-thread-journey .ink-path { stroke-width: 3.1px; }
 }
+
+/* ===== Mobile polish: presentation only, no content or asset changes ===== */
+h1, h2, h3 { text-wrap: balance; }
+.memory-scrapbook p, .memory-scrapbook .photo-caption > span:first-child { text-wrap: pretty; }
+@media (max-width: 760px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { overscroll-behavior-y: none; }
+
+  /* Hero: keep the inscription inside the envelope and give the call to action a finished look. */
+  .hero { padding-bottom: max(110px, calc(96px + env(safe-area-inset-bottom))); }
+  .hero h1 { text-shadow: 0 1px 0 #fff8; }
+  .envelope-inscription {
+    inset-inline-start: 14%;
+    bottom: 21%;
+    max-width: 46%;
+    font-size: clamp(10px, 2.9vw, 12.5px);
+    line-height: 1.6;
+    text-shadow: 0 1px 0 #fff6;
+  }
+  .hero-bottom { bottom: max(26px, calc(18px + env(safe-area-inset-bottom))); }
+  .hero-bottom .hero-scroll {
+    min-width: 150px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1px solid #a98a6a66;
+    background: #fff6e8d9;
+    box-shadow: 0 8px 22px #5a362624, inset 0 1px 0 #fff;
+    font-size: 11px;
+    color: var(--wine);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .hero-bottom .hero-scroll > span { max-width: none; line-height: 1.8; }
+  .hero-bottom .hero-scroll:active:not(:disabled) { transform: scale(0.97); box-shadow: 0 3px 10px #5a36262e; }
+
+  /* Photo numbers never wrap into a vertical stack. */
+  .memory-scrapbook .photo-caption { gap: 10px; align-items: flex-start; }
+  .memory-scrapbook .photo-caption .latin {
+    flex: none;
+    min-width: 2em;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    padding-top: 2px;
+  }
+
+  /* Bookmarks: a compact floating pill that sits level with the music button. */
+  .chapter-index {
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(18px, calc(10px + env(safe-area-inset-bottom)));
+    max-width: 220px;
+    border-radius: 22px;
+    background: #fff5e8e6;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px #4e302230;
+    overflow: hidden;
+  }
+  .chapter-index > summary { min-height: 44px; display: flex; align-items: center; padding: 0 18px; font-size: 12.5px; }
+  .chapter-index[open] > summary { border-bottom: 1px solid #a989672e; }
+
+  /* Reading comfort: larger line gaps and tidier paper edges. */
+  .memory-scrapbook .letter-paragraphs p,
+  .memory-scrapbook .narrative-prose > p { line-height: 2.15; }
+  .memory-scrapbook .gallery-photo { box-shadow: 0 10px 26px #5a362622; }
+  .memory-scrapbook .gallery-photo:hover { transform: none; }
+  .memory-scrapbook .gallery-photo:active { transform: scale(0.985); }
+  .folded-wishes > summary { min-height: 56px; }
+}
+@media (max-width: 380px) {
+  .hero h1 { font-size: 42px; }
+  .envelope-inscription { max-width: 50%; font-size: 10px; }
+  .hero-bottom .hero-scroll { padding: 11px 18px; min-width: 132px; }
+}
+
+/* Fasteners are absolutely positioned, so their photo frames must be the containing block. */
+.memory-scrapbook .gallery-photo,
+.memory-scrapbook .artifact-photo[data-fastener] { position: relative; }
+@media (max-width: 760px) {
+  .hero-bottom .hero-scroll { flex-direction: row; gap: 12px; min-width: 0; padding: 12px 24px; }
+  .hero-bottom .hero-scroll svg { width: 16px; height: 16px; }
+}
+
+/* ===== Bookmark behaviour and landscape phones ===== */
+.chapter-index { transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.25s ease; }
+.chapter-index[data-away] { transform: translateY(calc(100% + 28px)); opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .chapter-index { transition: none; } }
+
+@media (min-width: 761px) and (max-height: 520px) {
+  .chapter-index {
+    border-radius: 22px;
+    background: #fff5e8e6;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px #4e302230;
+    overflow: hidden;
+    max-width: 220px;
+  }
+  .chapter-index > summary { min-height: 44px; display: flex; align-items: center; padding: 0 18px; font-size: 12.5px; }
+  .chapter-index[open] > summary { border-bottom: 1px solid #a989672e; }
+  .hero-bottom .hero-scroll {
+    flex-direction: row;
+    gap: 12px;
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: 1px solid #a98a6a66;
+    background: #fff6e8d9;
+    box-shadow: 0 8px 22px #5a362624, inset 0 1px 0 #fff;
+  }
+}
+
+/* Micro-labels stay legible on phones. */
+@media (max-width: 760px) {
+  .memory-scrapbook small { font-size: 11.5px; line-height: 1.7; }
+  .text-button { font-size: 12.5px; }
+  .chapter-index a { font-size: 14px; }
+}
+
+/* ===== Visual upgrade v2: headings, polaroids, notes, washes, reveals ===== */
+.memory-scrapbook { counter-reset: mem; }
+.memory-scrapbook .story-section.narrative-memory { counter-increment: mem; }
+
+/* Chapter stamp and hand-painted marker behind each memory heading. */
+.memory-scrapbook .narrative-memory-heading::before {
+  content: counter(mem, persian);
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  margin: 0 0 14px;
+  border-radius: 50%;
+  border: 1.5px dashed #8e3b4acc;
+  color: #8e3b4a;
+  font-size: 22px;
+  line-height: 1;
+  background: radial-gradient(circle at 35% 28%, #fff4ea, #f2d6c8);
+  box-shadow: inset 0 0 0 4px #fcefe4, 0 3px 0 #fff9, 0 8px 14px #6b2c2d26;
+  transform: rotate(-9deg);
+}
+.memory-scrapbook .narrative-memory-heading > h2 {
+  display: inline;
+  padding-inline: 0.3em;
+  color: #6a2033;
+  background: linear-gradient(transparent 56%, #f0b9a666 56% 90%, transparent 90%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.memory-scrapbook .narrative-memory-heading > .flourish { margin-top: 18px; }
+
+/* Polaroids: a proper paper lip, inner keyline and layered contact shadow. */
+.memory-scrapbook .gallery-photo {
+  padding: 14px 14px 0;
+  border-radius: 3px;
+  background-image: linear-gradient(180deg, #fffefa, #fbf0dc 70%, #f6e6c9);
+  outline: 1px solid #dcc59f99;
+  outline-offset: -6px;
+  box-shadow: 0 1px 1px #5a362630, 0 9px 14px #5a362624, 0 28px 42px #5a362628;
+}
+.memory-scrapbook .gallery-photo .photo-image { box-shadow: 0 0 0 1px #3d2a1d38, 0 2px 8px #3d2a1d38; }
+.memory-scrapbook .gallery-photo .photo-caption { margin-top: 14px; padding-top: 11px; border-top: 1px dashed #b9936d66; color: #6d4a3b; }
+
+/* Sticky notes with a taped top and a turned-up corner. */
+.memory-scrapbook .memory-hidden-note {
+  position: relative;
+  border: 0;
+  border-image: none;
+  border-radius: 2px;
+  background: linear-gradient(165deg, #fff3bf, #f8de93);
+  box-shadow: 0 2px 2px #6b4a1d22, 0 14px 22px #6b4a1d26;
+  transform: rotate(-1.4deg);
+}
+.memory-scrapbook .memory-hidden-note::before {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  width: 92px;
+  height: 26px;
+  translate: -50% 0;
+  rotate: 2deg;
+  background: repeating-linear-gradient(135deg, #f1c9c7cc 0 8px, #fbeceacc 8px 16px);
+  box-shadow: 0 1px 3px #5a362626;
+}
+.memory-scrapbook .memory-hidden-note::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(45deg, #fff6e4 50%, #d9bb66 50%);
+  box-shadow: 2px -2px 5px #6b4a1d22;
+  pointer-events: none;
+}
+
+/* Soft watercolour washes give every memory its own colour mood. */
+.memory-scrapbook .story-section.narrative-memory { background-repeat: no-repeat; }
+.memory-scrapbook .story-section.narrative-memory:nth-of-type(3n + 1) {
+  background-image: radial-gradient(70% 28% at 88% 12%, #f2b9a63d, transparent 72%), radial-gradient(60% 30% at 6% 78%, #e4c98a3d, transparent 72%);
+}
+.memory-scrapbook .story-section.narrative-memory:nth-of-type(3n + 2) {
+  background-image: radial-gradient(70% 28% at 10% 14%, #b9c9a040, transparent 72%), radial-gradient(60% 30% at 94% 80%, #f0c2b43a, transparent 72%);
+}
+.memory-scrapbook .story-section.narrative-memory:nth-of-type(3n) {
+  background-image: radial-gradient(70% 28% at 92% 18%, #d9b0c03a, transparent 72%), radial-gradient(60% 30% at 4% 70%, #f1d79a3d, transparent 72%);
+}
+
+/* Photos settle onto the page instead of simply fading in. */
+.memory-scrapbook .gallery-photo.fade-on-scroll {
+  transition: opacity 600ms ease-out, transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 420ms,
+    translate 850ms cubic-bezier(0.2, 0.8, 0.2, 1), scale 850ms cubic-bezier(0.2, 0.8, 0.2, 1), rotate 850ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.memory-scrapbook .gallery-photo.fade-on-scroll:not(.has-entered) { translate: 0 38px; scale: 0.93; rotate: -4deg; }
+.memory-scrapbook .gallery-photo.fade-on-scroll.has-entered { translate: 0 0; scale: 1; rotate: 0deg; }
+
+/* The envelope breathes gently and sits in a warm pool of light. */
+.envelope-stage::before {
+  content: "";
+  position: absolute;
+  inset: -30px -26px -10px;
+  pointer-events: none;
+  background: radial-gradient(60% 55% at 50% 50%, #fff2d8b0, transparent 74%);
+}
+.envelope:not([aria-disabled="true"]) .envelope-art { animation: envelope-breathe 6.5s ease-in-out infinite; filter: drop-shadow(0 18px 18px #4a2f2238); }
+@keyframes envelope-breathe { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+@media (prefers-reduced-motion: reduce) {
+  .envelope .envelope-art { animation: none; }
+  .memory-scrapbook .gallery-photo.fade-on-scroll:not(.has-entered) { translate: none; scale: none; rotate: none; }
+}
+
+/* ===== Composition variants v3: each memory type gets its own layout (CSS only, no content changes) ===== */
+@media (max-width: 760px) {
+  /* 0 — notebook page: ruled copy with red margin line, photos overlapped */
+  .memory-scrapbook .composition-0 .narrative-memory-copy {
+    padding: 22px 18px 22px 16px;
+    background:
+      linear-gradient(to left, transparent 30px, #c4504a66 30px 31.5px, transparent 31.5px),
+      repeating-linear-gradient(#fffaf0 0 33px, #a9c4d466 33px 34px);
+    border-radius: 4px;
+    box-shadow: 0 10px 24px #5a362626, inset 0 0 0 1px #d8c29a88;
+    padding-inline-start: 44px;
+  }
+  .memory-scrapbook .composition-0 .narrative-memory-copy::before {
+    content: ""; position: absolute; inset-inline-start: 12px; top: 18px; bottom: 18px; width: 9px;
+    background: radial-gradient(circle at 50% 50%, #3d2a2166 0 3.5px, transparent 4px) 0 0 / 9px 56px repeat-y;
+  }
+  .memory-scrapbook .composition-0 .narrative-memory-copy { position: relative; }
+
+  /* 1 — keepsake print: big tilted photo, quote-style copy with a ribbon edge */
+  .memory-scrapbook .composition-1 .narrative-gallery { transform: rotate(-2.2deg); margin-inline: -4px; }
+  .memory-scrapbook .composition-1 .narrative-memory-copy {
+    position: relative; margin-top: 8px; padding: 26px 20px 8px;
+    border-inline-start: 4px solid #b04a58; border-radius: 0 10px 10px 0;
+    background: linear-gradient(180deg, #fff6e4cc, transparent 85%);
+  }
+  .memory-scrapbook .composition-1 .narrative-memory-copy::before {
+    content: "\201D"; position: absolute; top: -8px; inset-inline-end: 12px;
+    font-size: 78px; line-height: 1; color: #b04a5855; pointer-events: none;
+  }
+
+  /* 2 — folded letter: copy on a dog-eared card with fold crease */
+  .memory-scrapbook .composition-2 .narrative-memory-copy {
+    position: relative; padding: 24px 20px; background: #fffdf6; border-radius: 3px;
+    box-shadow: 0 12px 26px #5a36262e, 0 0 0 1px #e4d3b2;
+    background-image: linear-gradient(180deg, transparent 49.6%, #c9b48d55 50%, transparent 50.6%), linear-gradient(225deg, #e7d4ae 0 22px, transparent 22px);
+    transform: rotate(.9deg);
+  }
+
+  /* 3 — filmstrip: dark film stock with sprocket holes */
+  .memory-scrapbook .composition-3 .narrative-gallery {
+    margin-inline: -16px; padding-block: 34px; background: #231a17;
+    border-block: 3px solid #0f0a09; position: relative; overflow: hidden;
+  }
+  .memory-scrapbook .composition-3 .narrative-gallery::before,
+  .memory-scrapbook .composition-3 .narrative-gallery::after {
+    content: ""; position: absolute; inset-inline: 0; height: 14px; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(90deg, transparent 0 10px, #f2e7cf 10px 22px, transparent 22px 32px);
+    -webkit-mask: linear-gradient(#000, #000); opacity: .85;
+  }
+  .memory-scrapbook .composition-3 .narrative-gallery::before { top: 9px; }
+  .memory-scrapbook .composition-3 .narrative-gallery::after { bottom: 9px; }
+  .memory-scrapbook .composition-3 .photo-caption { color: #f1e4c8; border-top-color: #f1e4c855; }
+
+  /* 4 — journal mat with washi corner: copy sits beside a larger heading rule */
+  .memory-scrapbook .composition-4 .narrative-memory-copy { box-shadow: 0 12px 28px #5a362633; }
+  .memory-scrapbook .composition-4 .narrative-memory-heading { text-align: start; }
+
+  /* alternate rhythm between neighbouring memories */
+  .memory-scrapbook .story-section.narrative-memory:nth-of-type(even) .narrative-memory-heading { text-align: start; }
+  .memory-scrapbook .story-section.narrative-memory:nth-of-type(3n) .narrative-gallery { margin-inline-start: 6%; }
+  .memory-scrapbook .story-section.narrative-memory:nth-of-type(3n+1) .narrative-gallery { margin-inline-end: 6%; }
+}
